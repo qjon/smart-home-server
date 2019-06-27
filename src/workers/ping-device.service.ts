@@ -1,0 +1,63 @@
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { WorkerInterface } from './worker.interface';
+import { DeviceRepositoryService } from '../database/repository/device-repository.service';
+import { DevicesStorageService } from '../storage/devices-storage.service';
+import { DeviceEntity } from '../database/entity/device.entity';
+import { DeviceService } from '../database/services/device.service';
+import { ApplicationsStorageService } from '../storage/applications-storage.service';
+
+@Injectable()
+export class PingDeviceService implements WorkerInterface {
+  @Inject(ApplicationsStorageService)
+  protected applications: ApplicationsStorageService;
+
+  @Inject(DeviceRepositoryService)
+  protected deviceRepositoryService: DeviceRepositoryService;
+
+  @Inject(DeviceService)
+  protected deviceService: DeviceService;
+
+  @Inject(DevicesStorageService)
+  protected deviceStorage: DevicesStorageService;
+
+  protected logger = new Logger(PingDeviceService.name);
+
+  protected interval: NodeJS.Timeout;
+
+  public execute(): void {
+    this.interval = setInterval((): void => {
+      this.pingDevices();
+    }, 5000);
+  }
+
+  public stop(): void {
+    this.interval.unref();
+  }
+
+  async pingDevices(): Promise<DeviceEntity[]> {
+
+    const devices = await this.deviceRepositoryService.getDevicesToPing(5);
+
+    devices.forEach((d) => {
+      const deviceConnection = this.deviceStorage.getOne(d.deviceId);
+
+      this.deviceService.markDeviceAsDisconnected(d.deviceId);
+
+      const message = JSON.stringify({ action: 'app:isConnected', deviceId: d.deviceId, params: false });
+
+      this.applications.sendMessageToAll(message);
+
+      if (deviceConnection) {
+        deviceConnection.conn.sendPing();
+        this.logger.log(`SEND | WS | PING | Device ID: ${d.deviceId}`);
+      } else {
+        this.deviceService.incUnsuccessfulPing(d.deviceId);
+        this.logger.warn(`No device with ID: ${d.deviceId}`);
+      }
+
+    });
+
+    return devices;
+  }
+
+}
