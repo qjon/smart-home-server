@@ -99,7 +99,7 @@ export class DevicesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public renameDeviceSwitchName(@Req() req: Request,
                                 @Param('deviceId') deviceId: string,
-                                @Param('deviceId') outlet: string,
+                                @Param('outlet') outlet: string,
                                 @Body() body: { name: string }): void {
     this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
 

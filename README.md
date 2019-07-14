@@ -4,6 +4,10 @@ Simple server to manage SonOff devices.
 
 ## Change Log
 
+### v0.8.1
+* API allows to rename switch outlet
+* Add licence
+
 ### v0.8.0
 * works with SonOff light switches
 * API allows to 
