@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { environment } from './environments';
 import { SmartWsAdapterService } from './websocket/smart-ws-adapter/smart-ws-adapter.service';
 import * as express from 'express';
+import { NextFunction } from 'express';
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import * as http from 'http';
 import * as https from 'https';
@@ -34,6 +35,18 @@ async function bootstrap() {
   app.enableCors();
   app.useWebSocketAdapter(new SmartWsAdapterService());
   app.useStaticAssets(join(__dirname, '..', 'smart-home'));
+
+  const logRequestStart = (req: any, res: any, next: NextFunction) => {
+    console.info(`${req.method} ${req.originalUrl}`);
+
+    res.on('finish', () => {
+      console.info(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`);
+    });
+
+    next();
+  };
+
+  app.use(logRequestStart);
 
   await app.init();
 

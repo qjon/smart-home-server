@@ -17,8 +17,9 @@ import { DeviceInterface } from '../../interfaces/storage/device-interface';
 import { LightSwitch } from '../../interfaces/light/update-action.interface';
 import { DeviceService } from '../../database/services/device.service';
 import { DeviceRepositoryService } from '../../database/repository/device-repository.service';
-import { DeviceNotConnectedException } from '../../exceptions/device-not-connected.exception';
 import { ApiExceptionFilters } from '../filters/api.filters';
+import { DeviceAdapterInterface } from '../services/device-adapter.interface';
+import { DevicesAdapterService } from '../services/devices-adapter.service';
 
 @Controller('/api/devices')
 @UseFilters(new ApiExceptionFilters())
@@ -31,6 +32,9 @@ export class DevicesController {
 
   @Inject(DeviceRepositoryService)
   protected deviceRepositoryService: DeviceRepositoryService;
+
+  @Inject(DevicesAdapterService)
+  private deviceAdapter: DeviceAdapterInterface;
 
   public constructor(protected storage: DevicesStorageService,
                      protected deviceService: DeviceService) {
@@ -60,28 +64,38 @@ export class DevicesController {
     const sequence = Date.now().toString();
 
     const device = await this.deviceDbService.updateDevice(deviceId, <LightSwitch[]>body.switches, null);
-    const deviceConnection = this.storage.getOne(deviceId);
+    this.deviceAdapter.updateSwitches({
+      apiKey: device.apikey,
+      deviceId,
+      host: '192.168.100.201',
+      port: '8081',
+      method: 'POST',
+      path: device.model === 'multi' ? '/zeroconf/switches' : '/zeroconf/switch',
+      data: device.model === 'multi' ? body.switches : { switch: body.switches[0].switch },
+    });
 
-    if (!deviceConnection) {
-      throw new DeviceNotConnectedException(deviceId);
-    }
-
-    const value = {
-      apikey: device.apikey,
-      action: 'update',
-      deviceid: deviceId,
-      params: body,
-      userAgent: 'app',
-      sequence,
-      ts: 0,
-      from: 'app',
-    };
-
-    deviceConnection.sendMessages.set(sequence, value);
-
-    deviceConnection.conn.sendText(JSON.stringify(value));
-
-    this.logger.log(`SEND | WS | ${JSON.stringify(value)}`);
+    // const deviceConnection = this.storage.getOne(deviceId);
+    //
+    // if (!deviceConnection) {
+    //   throw new DeviceNotConnectedException(deviceId);
+    // }
+    //
+    // const value = {
+    //   apikey: device.apikey,
+    //   action: 'update',
+    //   deviceid: deviceId,
+    //   params: body,
+    //   userAgent: 'app',
+    //   sequence,
+    //   ts: 0,
+    //   from: 'app',
+    // };
+    //
+    // deviceConnection.sendMessages.set(sequence, value);
+    //
+    // deviceConnection.conn.sendText(JSON.stringify(value));
+    //
+    // this.logger.log(`SEND | WS | ${JSON.stringify(value)}`);
   }
 
   @Put(':deviceId/rename')

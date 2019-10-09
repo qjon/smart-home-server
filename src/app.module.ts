@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { environment } from './environments';
 import { WorkersModule } from './workers/workers.module';
+import { MdnsModule } from './mdns/mdns.module';
 
 @Module({
   imports: [
@@ -25,6 +26,8 @@ import { WorkersModule } from './workers/workers.module';
     }),
 
     WorkersModule,
+
+    MdnsModule,
   ],
   controllers: [AppController],
   providers: [],

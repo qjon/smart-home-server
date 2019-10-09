@@ -70,6 +70,18 @@ export class DeviceService {
     this.entityManager.save(device);
   }
 
+  async updateDeviceModel(deviceId: string, isSingleSwitch: boolean): Promise<any> {
+    const device = await this.deviceRepository.getByDeviceId(deviceId);
+
+    if (!device) {
+      throw new DeviceNotExistException(deviceId);
+    }
+
+    device.model = isSingleSwitch ? 'single' : 'multi';
+
+    this.entityManager.save(device);
+  }
+
   async updateDeviceOutletName(deviceId: string, outlet: number, name: string): Promise<any> {
     const device = await this.deviceRepository.getByDeviceId(deviceId);
 
