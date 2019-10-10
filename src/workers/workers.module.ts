@@ -31,7 +31,7 @@ export class WorkersModule {
                      private deviceStateChangeListenerWorkerService: DeviceStateChangeListenerWorkerService,
                      private deviceStateChangeUpdateWorkerService: DeviceStateChangeUpdateWorkerService) {
     // this.pingDeviceService.execute();
-    // this.deviceDiscoverService.execute();
+    this.deviceDiscoverService.execute();
 
     this.deviceStateChangeListenerWorkerService.execute();
     this.deviceStateChangeUpdateWorkerService.execute();

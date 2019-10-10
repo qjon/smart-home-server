@@ -9,12 +9,29 @@ export interface DiscoveredDeviceAnswer {
 }
 
 export enum AnswerType {
+  A = 'A',
   PTR = 'PTR',
   TXT = 'TXT',
+  SRV = 'SRV',
 }
 
 export interface DiscoveredDeviceAnswerPtr extends DiscoveredDeviceAnswer {
   type: AnswerType.PTR;
+}
+
+export interface DiscoveredDeviceAnswerSrv extends DiscoveredDeviceAnswer {
+  type: AnswerType.SRV;
+  rdata: {
+    priority: number;
+    wieght: number;
+    port: number;
+    target: string;
+  };
+}
+
+export interface DiscoveredDeviceAnswerA extends DiscoveredDeviceAnswer {
+  type: AnswerType.A;
+  rdata: string;
 }
 
 export interface DiscoveredDeviceAnswerTxt extends DiscoveredDeviceAnswer {
@@ -34,7 +51,9 @@ export interface DiscoveredDeviceAnswerTxt extends DiscoveredDeviceAnswer {
 
 export type Answers =
   DiscoveredDeviceAnswerPtr
+  | DiscoveredDeviceAnswerA
   | DiscoveredDeviceAnswerTxt
+  | DiscoveredDeviceAnswerSrv
   ;
 
 export interface DiscoveredDevicePacketInterface {

@@ -24,7 +24,7 @@ export class DeviceStateChangeListenerWorkerService implements WorkerInterface {
   public execute(): void {
     mDnsSd.ondata = (device: ChangedStateDiscoveredDeviceInterface) => {
       if (this.discoveredDeviceFilter.filter(device)) {
-        this.logger.log('New update from eWelink device');
+        this.logger.debug('New possible update from eWelink device send to recognize');
         this.changeStateDevicesService.add(device);
       }
     };

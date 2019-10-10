@@ -37,7 +37,7 @@ export class DevicesUpdateWorkerService implements WorkerInterface {
             this.logger.log('New device: ' + dd.id + ' has been added');
           } else {
             this.deviceService.updateDevice(dd.id, dd.data.getSwitches(), dd.data.getConfiguration());
-            this.deviceService.updateDeviceModel(dd.id, dd.data.type === 'single');
+            this.deviceService.updateDeviceServiceData(dd.id, dd.data.type === 'single', dd.host, dd.port);
             this.logger.log('Status of device: ' + dd.id + ' has been updated');
           }
         });

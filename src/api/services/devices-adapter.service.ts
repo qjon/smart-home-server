@@ -14,7 +14,7 @@ export class DevicesAdapterService implements DeviceAdapterInterface {
   private logger = new Logger(this.constructor.name);
 
   public updateSwitches(data: UpdateSwitchStateDataInterface): void {
-    this.makeRequest(data, JSON.stringify({ switches: data.data }));
+    this.makeRequest(data, JSON.stringify(data.data));
   }
 
   private makeRequest(requestData: BaseRequestDataInterface, data: string): void {

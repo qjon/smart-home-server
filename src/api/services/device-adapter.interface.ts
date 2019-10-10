@@ -2,7 +2,7 @@ import { LightSwitch, LightSwitchStatus } from '../../interfaces/light/update-ac
 
 export interface BaseRequestDataInterface {
   host: string;
-  port: string;
+  port: number;
   path: string;
   method: 'POST';
   deviceId: string;
@@ -10,7 +10,7 @@ export interface BaseRequestDataInterface {
 }
 
 export interface UpdateSwitchStateDataInterface extends BaseRequestDataInterface {
-  data: LightSwitch[] | { switch: LightSwitchStatus };
+  data: { switches: LightSwitch[] } | { switch: LightSwitchStatus };
 }
 
 export interface DeviceAdapterInterface {

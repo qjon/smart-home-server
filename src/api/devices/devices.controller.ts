@@ -67,11 +67,11 @@ export class DevicesController {
     this.deviceAdapter.updateSwitches({
       apiKey: device.apikey,
       deviceId,
-      host: '192.168.100.201',
-      port: '8081',
+      host: device.host,
+      port: device.port,
       method: 'POST',
       path: device.model === 'multi' ? '/zeroconf/switches' : '/zeroconf/switch',
-      data: device.model === 'multi' ? body.switches : { switch: body.switches[0].switch },
+      data: device.model === 'multi' ? body : { switch: body.switches[0].switch },
     });
 
     // const deviceConnection = this.storage.getOne(deviceId);

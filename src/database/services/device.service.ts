@@ -70,7 +70,7 @@ export class DeviceService {
     this.entityManager.save(device);
   }
 
-  async updateDeviceModel(deviceId: string, isSingleSwitch: boolean): Promise<any> {
+  async updateDeviceServiceData(deviceId: string, isSingleSwitch: boolean, host: string, port: number): Promise<any> {
     const device = await this.deviceRepository.getByDeviceId(deviceId);
 
     if (!device) {
@@ -78,6 +78,8 @@ export class DeviceService {
     }
 
     device.model = isSingleSwitch ? 'single' : 'multi';
+    device.host = host;
+    device.port = port;
 
     this.entityManager.save(device);
   }

@@ -19,6 +19,12 @@ export class DeviceEntity {
   @Column({ length: 50 })
   model: string;
 
+  @Column({ length: 15 })
+  host: string;
+
+  @Column()
+  port: number;
+
   @Column({ default: false })
   isConnected: boolean;
 

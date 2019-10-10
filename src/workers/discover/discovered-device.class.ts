@@ -2,6 +2,8 @@ import { SonOffEncryptionService } from '../sonoff-encryption.service';
 import {
   AnswerType,
   DeviceSwitchesInterface,
+  DiscoveredDeviceAnswerA,
+  DiscoveredDeviceAnswerSrv,
   DiscoveredDeviceAnswerTxt,
   DiscoveredDeviceInterface,
 } from './interfaces';
@@ -12,6 +14,9 @@ export class DiscoveredDevice {
   readonly isNew: boolean;
   readonly apiKey: string;
   readonly data: DeviceSwitchesInterface;
+
+  readonly host: string;
+  readonly port: number;
 
   get id(): string {
     return this.txtRecord.rdata.id;
@@ -38,15 +43,17 @@ export class DiscoveredDevice {
   private txtRecord: DiscoveredDeviceAnswerTxt;
 
   constructor(data: DiscoveredDeviceInterface, keys: Map<string, string>) {
-    this.txtRecord = data.packet.answers
-      .filter((answer) => answer.type === AnswerType.TXT)
-      .map((answer) => answer as DiscoveredDeviceAnswerTxt)
-      .pop();
+    this.txtRecord = data.packet.answers.find((answer) => answer.type === AnswerType.TXT) as DiscoveredDeviceAnswerTxt;
+    const srvRecord = data.packet.answers.find((answer) => answer.type === AnswerType.SRV) as DiscoveredDeviceAnswerSrv;
+    const aRecord = data.packet.answers.find((answer) => answer.type === AnswerType.A) as DiscoveredDeviceAnswerA;
 
     this.isNew = !keys.has(this.id);
     this.apiKey = this.isNew ? null : keys.get(this.id);
 
     this.data = this.isNew ? null : this.getData();
+
+    this.host = aRecord.rdata;
+    this.port = srvRecord.rdata.port;
   }
 
   private getData(): DeviceSwitchesInterface {
