@@ -16,13 +16,13 @@ export class DeviceEntity {
   @Column({ length: 100 })
   apikey: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, default: '' })
   model: string;
 
-  @Column({ length: 15 })
+  @Column({ length: 15, default: '' })
   host: string;
 
-  @Column()
+  @Column({ default: 0 })
   port: number;
 
   @Column({ default: false })
@@ -51,10 +51,10 @@ export class DeviceEntity {
       mode: this.model,
       isConnected: this.isConnected,
       params: {
-        switches: this.params
+        switches: !this.params ? [] : this.params
           .sort((i, j) => i.outlet > j.outlet ? 1 : -1)
           .map((p) => p.toJSON()),
-        configuration: this.configuration
+        configuration: !this.configuration ? [] : this.configuration
           .sort((i, j) => i.outlet > j.outlet ? 1 : -1)
           .map((c) => c.toJSON()),
       },

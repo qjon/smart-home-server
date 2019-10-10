@@ -32,10 +32,7 @@ export class DevicesUpdateWorkerService implements WorkerInterface {
     this.deviceDiscover.devices$
       .subscribe((discoveredDevices) => {
         discoveredDevices.forEach((dd) => {
-          if (dd.isNew) {
-            this.deviceService.create(dd.id, dd.id, '', '');
-            this.logger.log('New device: ' + dd.id + ' has been added');
-          } else {
+          if (!dd.isNew) {
             this.deviceService.updateDevice(dd.id, dd.data.getSwitches(), dd.data.getConfiguration());
             this.deviceService.updateDeviceServiceData(dd.id, dd.data.type === 'single', dd.host, dd.port);
             this.logger.log('Status of device: ' + dd.id + ' has been updated');

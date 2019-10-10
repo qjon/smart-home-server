@@ -7,6 +7,7 @@ import {
   Inject,
   Logger,
   Param,
+  Post,
   Put,
   Req,
   Request,
@@ -39,6 +40,22 @@ export class DevicesController {
   public constructor(protected storage: DevicesStorageService,
                      protected deviceService: DeviceService) {
 
+  }
+
+  @Post()
+  async create(@Req() req: Request,
+               @Body() body: { deviceId: string, apiKey: string, name: string }): Promise<DeviceInterface> {
+    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
+
+    const device = await this.deviceDbService.create(
+      body.deviceId,
+      body.name,
+      body.apiKey,
+      'single',
+    );
+
+    this.logger.log(`RES | API | ${req.url} | ${JSON.stringify(device.toJSON())}`);
+    return device.toJSON();
   }
 
   @Get()
