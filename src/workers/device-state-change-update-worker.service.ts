@@ -7,9 +7,12 @@ import { catchError, distinctUntilChanged, filter, map, switchMap, take } from '
 import { DeviceRepositoryService } from '../database/repository/device-repository.service';
 import { defer, of } from 'rxjs';
 import { DeviceService } from '../database/services/device.service';
+import { ApplicationsStorageService } from '../storage/applications-storage.service';
 
 @Injectable()
 export class DeviceStateChangeUpdateWorkerService implements WorkerInterface {
+  @Inject(ApplicationsStorageService)
+  protected applications: ApplicationsStorageService;
 
   @Inject(ChangeStateDevicesService)
   private changeStateDevicesService: ChangedStateDevicesServiceInterface;
@@ -58,13 +61,16 @@ export class DeviceStateChangeUpdateWorkerService implements WorkerInterface {
         const changedData = data.changedDevice.getData(data.apiKey);
         this.deviceService.updateDevice(data.changedDevice.id, changedData.getSwitches(), changedData.getConfiguration())
           .then((device) => {
+
+            const message = JSON.stringify({
+              action: 'app:update',
+              deviceId: device.deviceId,
+              params: device.params.map(p => p.toJSON()),
+            });
+            this.applications.sendMessageToAll(message);
+
             this.logger.log('Device: ' + device.id + ' has been updated to: ' + JSON.stringify(device.params));
           });
-
-        // this.deviceRepositoryService.getByDeviceId(changedDevice.id)
-        //   .then((device) => {
-        //     this.logger.log('ApiKey: ' + device.apikey);
-        //   });
       });
   }
 
