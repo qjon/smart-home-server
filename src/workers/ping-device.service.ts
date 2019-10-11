@@ -36,10 +36,10 @@ export class PingDeviceService implements WorkerInterface {
 
   async pingDevices(): Promise<DeviceEntity[]> {
 
-    const devices = await this.deviceRepositoryService.getDevicesToPing(5);
+    const devices = await this.deviceRepositoryService.getDevicesToPing(60 * 1000);
 
     devices.forEach((d) => {
-      const deviceConnection = this.deviceStorage.getOne(d.deviceId);
+      this.logger.verbose('Find unconnected device: ' + d.deviceId + ' from: ' + d.lastStatusChangeTimestamp);
 
       this.deviceService.markDeviceAsDisconnected(d.deviceId);
 
@@ -47,14 +47,7 @@ export class PingDeviceService implements WorkerInterface {
 
       this.applications.sendMessageToAll(message);
 
-      if (deviceConnection) {
-        deviceConnection.conn.sendPing();
-        this.logger.log(`SEND | WS | PING | Device ID: ${d.deviceId}`);
-      } else {
-        this.deviceService.incUnsuccessfulPing(d.deviceId);
-        this.logger.warn(`No device with ID: ${d.deviceId}`);
-      }
-
+      // todo: make ping to device
     });
 
     return devices;

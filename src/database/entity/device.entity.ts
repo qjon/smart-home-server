@@ -31,14 +31,8 @@ export class DeviceEntity {
   @Column({ default: false })
   isConnected: boolean;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  lastPing: Date;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  nextPing: Date;
-
-  @Column({ default: 0 })
-  unsuccessfulPings: number;
+  @Column({ type: 'timestamp', default: null })
+  lastStatusChangeTimestamp: Date;
 
   @OneToMany(type => DeviceConfigurationEntity, configuration => configuration.device)
   configuration: DeviceConfigurationEntity[];

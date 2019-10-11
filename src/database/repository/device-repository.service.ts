@@ -30,8 +30,8 @@ export class DeviceRepositoryService {
   public getDevicesToPing(seconds = 5000): Promise<DeviceEntity[]> {
     return this.deviceRepository
       .createQueryBuilder('d')
-      .andWhere('d.isConnected = false && d.unsuccessfulPings < 100')
-      .orWhere('(d.isConnected = true && d.unsuccessfulPings < 100 && time_to_sec(timediff(NOW(), d.nextPing)) > d.unsuccessfulPings * :seconds)')
+      .andWhere('d.host != "" && d.isConnected = false')
+      .orWhere('d.host !="" && (d.isConnected = true && time_to_sec(timediff(NOW(), d.lastStatusChangeTimestamp)) > :seconds)')
       .setParameter('seconds', seconds)
       .getMany()
       ;

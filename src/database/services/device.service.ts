@@ -26,8 +26,6 @@ export class DeviceService {
 
     if (!!device) {
       device.apikey = apikey;
-      device.lastPing = new Date();
-      device.unsuccessfulPings = 0;
     } else {
       device = this.entityManager.create(DeviceEntity, { deviceId, name, apikey, model });
     }
@@ -42,8 +40,6 @@ export class DeviceService {
     if (!device) {
       throw new DeviceNotExistException(deviceId);
     }
-
-    device.isConnected = true;
 
     if (params && params.length > 0) {
       this.updateDeviceParams(device, params);
@@ -128,7 +124,6 @@ export class DeviceService {
 
     devices.forEach((d) => {
       d.isConnected = false;
-      d.unsuccessfulPings = 0;
 
       this.entityManager.save(d);
     });
@@ -144,9 +139,7 @@ export class DeviceService {
     }
 
     device.isConnected = true;
-    device.lastPing = new Date();
-    device.nextPing = new Date(Date.now() + 1800 * 1000);
-    device.unsuccessfulPings = 0;
+    device.lastStatusChangeTimestamp = new Date();
 
     this.entityManager.save(device);
 
@@ -161,20 +154,6 @@ export class DeviceService {
     }
 
     device.isConnected = false;
-
-    this.entityManager.save(device);
-
-    return device;
-  }
-
-  async incUnsuccessfulPing(deviceId: string): Promise<DeviceEntity> {
-    const device = await this.deviceRepository.getByDeviceId(deviceId);
-
-    if (!device) {
-      throw new DeviceNotExistException(deviceId);
-    }
-
-    device.unsuccessfulPings++;
 
     this.entityManager.save(device);
 
