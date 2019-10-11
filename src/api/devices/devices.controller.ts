@@ -78,8 +78,6 @@ export class DevicesController {
                @Body() body: { switches: LightSwitch[] }): Promise<any> {
     this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
 
-    const sequence = Date.now().toString();
-
     const device = await this.deviceDbService.updateDevice(deviceId, <LightSwitch[]>body.switches, null);
     this.deviceAdapter.updateSwitches({
       apiKey: device.apikey,
@@ -87,32 +85,9 @@ export class DevicesController {
       host: device.host,
       port: device.port,
       method: 'POST',
-      path: device.model === 'multi' ? '/zeroconf/switches' : '/zeroconf/switch',
-      data: device.model === 'multi' ? body : { switch: body.switches[0].switch },
+      path: device.isSingleSwitch ? '/zeroconf/switch' : '/zeroconf/switches',
+      data: device.isSingleSwitch ? { switch: body.switches[0].switch } : body,
     });
-
-    // const deviceConnection = this.storage.getOne(deviceId);
-    //
-    // if (!deviceConnection) {
-    //   throw new DeviceNotConnectedException(deviceId);
-    // }
-    //
-    // const value = {
-    //   apikey: device.apikey,
-    //   action: 'update',
-    //   deviceid: deviceId,
-    //   params: body,
-    //   userAgent: 'app',
-    //   sequence,
-    //   ts: 0,
-    //   from: 'app',
-    // };
-    //
-    // deviceConnection.sendMessages.set(sequence, value);
-    //
-    // deviceConnection.conn.sendText(JSON.stringify(value));
-    //
-    // this.logger.log(`SEND | WS | ${JSON.stringify(value)}`);
   }
 
   @Put(':deviceId/rename')

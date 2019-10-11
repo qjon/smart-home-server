@@ -19,6 +19,9 @@ export class DeviceEntity {
   @Column({ length: 50, default: '' })
   model: string;
 
+  @Column({ default: true })
+  isSingleSwitch: boolean;
+
   @Column({ length: 15, default: '' })
   host: string;
 
@@ -47,9 +50,10 @@ export class DeviceEntity {
     return {
       deviceid: this.deviceId,
       name: this.name,
-      apikey: this.apikey,
-      mode: this.model,
+      apiKey: this.apikey,
+      model: this.model,
       isConnected: this.isConnected,
+      isSingleSwitch: this.isSingleSwitch,
       params: {
         switches: !this.params ? [] : this.params
           .sort((i, j) => i.outlet > j.outlet ? 1 : -1)

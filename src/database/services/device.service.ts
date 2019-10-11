@@ -77,7 +77,7 @@ export class DeviceService {
       throw new DeviceNotExistException(deviceId);
     }
 
-    device.model = isSingleSwitch ? 'single' : 'multi';
+    device.isSingleSwitch = isSingleSwitch;
     device.host = host;
     device.port = port;
 
