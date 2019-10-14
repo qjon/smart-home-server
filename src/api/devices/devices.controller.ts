@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { DevicesStorageService } from '../../storage/devices-storage.service';
 import { DeviceInterface } from '../../interfaces/storage/device-interface';
-import { LightSwitch } from '../../interfaces/light/update-action.interface';
+import { DeviceChangeSettingsDto, LightSwitch } from '../../interfaces/light/update-action.interface';
 import { DeviceService } from '../../database/services/device.service';
 import { DeviceRepositoryService } from '../../database/repository/device-repository.service';
 import { ApiExceptionFilters } from '../filters/api.filters';
@@ -88,6 +88,16 @@ export class DevicesController {
       path: device.isSingleSwitch ? '/zeroconf/switch' : '/zeroconf/switches',
       data: device.isSingleSwitch ? { switch: body.switches[0].switch } : body,
     });
+  }
+
+  @Put(':deviceId/settings')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async settings(@Req() req: Request,
+                 @Param('deviceId') deviceId: string,
+                 @Body() body: DeviceChangeSettingsDto): Promise<any> {
+    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
+
+    await this.deviceDbService.updateDeviceSettings(deviceId, body);
   }
 
   @Put(':deviceId/rename')

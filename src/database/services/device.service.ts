@@ -2,7 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { DeviceEntity } from '../entity/device.entity';
 import { DeviceRepositoryService } from '../repository/device-repository.service';
-import { LightSwitch, LightSwitchConfigure, LightSwitchStatus } from '../../interfaces/light/update-action.interface';
+import {
+  DeviceChangeSettingsDto,
+  LightSwitch,
+  LightSwitchConfigure,
+  LightSwitchStatus,
+} from '../../interfaces/light/update-action.interface';
 import { DeviceParamsEntity } from '../entity/device.params.entity';
 import { DeviceConfigurationEntity } from '../entity/device.configuration.entity';
 import { DeviceNotExistException } from '../../exceptions/device-not-exist.exception';
@@ -100,6 +105,29 @@ export class DeviceService {
     logger.log(switchItem.toJSON());
 
     return this.entityManager.save(switchItem);
+  }
+
+  async updateDeviceSettings(deviceId: string, data: DeviceChangeSettingsDto): Promise<any> {
+    const device = await this.deviceRepository.getByDeviceId(deviceId);
+
+    if (!device) {
+      throw new DeviceNotExistException(deviceId);
+    }
+
+    device.name = data.name;
+    device.apikey = data.apiKey;
+    device.model = data.model;
+
+    device.params.forEach((s: DeviceParamsEntity) => {
+      const outletData = data.switches.find((i) => i.outlet === s.outlet);
+
+      s.name = outletData.name;
+
+      this.entityManager.save(s);
+    });
+
+
+    return this.entityManager.save(device);
   }
 
   async getDevicesInfo(): Promise<{ [id: string]: DeviceInfoInterface }> {

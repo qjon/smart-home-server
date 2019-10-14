@@ -48,6 +48,7 @@ export class DeviceEntity {
       model: this.model,
       isConnected: this.isConnected,
       isSingleSwitch: this.isSingleSwitch,
+      lastStatusChangeTimestamp: this.lastStatusChangeTimestamp,
       params: {
         switches: !this.params ? [] : this.params
           .sort((i, j) => i.outlet > j.outlet ? 1 : -1)
