@@ -16,20 +16,23 @@ export class DeviceEntity {
   @Column({ length: 100 })
   apikey: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, default: '' })
   model: string;
+
+  @Column({ default: true })
+  isSingleSwitch: boolean;
+
+  @Column({ length: 15, default: '' })
+  host: string;
+
+  @Column({ default: 0 })
+  port: number;
 
   @Column({ default: false })
   isConnected: boolean;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  lastPing: Date;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  nextPing: Date;
-
-  @Column({ default: 0 })
-  unsuccessfulPings: number;
+  @Column({ type: 'timestamp', default: null })
+  lastStatusChangeTimestamp: Date;
 
   @OneToMany(type => DeviceConfigurationEntity, configuration => configuration.device)
   configuration: DeviceConfigurationEntity[];
@@ -41,14 +44,16 @@ export class DeviceEntity {
     return {
       deviceid: this.deviceId,
       name: this.name,
-      apikey: this.apikey,
-      mode: this.model,
+      apiKey: this.apikey,
+      model: this.model,
       isConnected: this.isConnected,
+      isSingleSwitch: this.isSingleSwitch,
+      lastStatusChangeTimestamp: this.lastStatusChangeTimestamp,
       params: {
-        switches: this.params
+        switches: !this.params ? [] : this.params
           .sort((i, j) => i.outlet > j.outlet ? 1 : -1)
           .map((p) => p.toJSON()),
-        configuration: this.configuration
+        configuration: !this.configuration ? [] : this.configuration
           .sort((i, j) => i.outlet > j.outlet ? 1 : -1)
           .map((c) => c.toJSON()),
       },

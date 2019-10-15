@@ -2,7 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { DeviceEntity } from '../entity/device.entity';
 import { DeviceRepositoryService } from '../repository/device-repository.service';
-import { LightSwitch, LightSwitchConfigure, LightSwitchStatus } from '../../interfaces/light/update-action.interface';
+import {
+  DeviceChangeSettingsDto,
+  LightSwitch,
+  LightSwitchConfigure,
+  LightSwitchStatus,
+} from '../../interfaces/light/update-action.interface';
 import { DeviceParamsEntity } from '../entity/device.params.entity';
 import { DeviceConfigurationEntity } from '../entity/device.configuration.entity';
 import { DeviceNotExistException } from '../../exceptions/device-not-exist.exception';
@@ -26,8 +31,6 @@ export class DeviceService {
 
     if (!!device) {
       device.apikey = apikey;
-      device.lastPing = new Date();
-      device.unsuccessfulPings = 0;
     } else {
       device = this.entityManager.create(DeviceEntity, { deviceId, name, apikey, model });
     }
@@ -42,8 +45,6 @@ export class DeviceService {
     if (!device) {
       throw new DeviceNotExistException(deviceId);
     }
-
-    device.isConnected = true;
 
     if (params && params.length > 0) {
       this.updateDeviceParams(device, params);
@@ -70,6 +71,20 @@ export class DeviceService {
     this.entityManager.save(device);
   }
 
+  async updateDeviceServiceData(deviceId: string, isSingleSwitch: boolean, host: string, port: number): Promise<any> {
+    const device = await this.deviceRepository.getByDeviceId(deviceId);
+
+    if (!device) {
+      throw new DeviceNotExistException(deviceId);
+    }
+
+    device.isSingleSwitch = isSingleSwitch;
+    device.host = host;
+    device.port = port;
+
+    this.entityManager.save(device);
+  }
+
   async updateDeviceOutletName(deviceId: string, outlet: number, name: string): Promise<any> {
     const device = await this.deviceRepository.getByDeviceId(deviceId);
 
@@ -90,6 +105,29 @@ export class DeviceService {
     logger.log(switchItem.toJSON());
 
     return this.entityManager.save(switchItem);
+  }
+
+  async updateDeviceSettings(deviceId: string, data: DeviceChangeSettingsDto): Promise<any> {
+    const device = await this.deviceRepository.getByDeviceId(deviceId);
+
+    if (!device) {
+      throw new DeviceNotExistException(deviceId);
+    }
+
+    device.name = data.name;
+    device.apikey = data.apiKey;
+    device.model = data.model;
+
+    device.params.forEach((s: DeviceParamsEntity) => {
+      const outletData = data.switches.find((i) => i.outlet === s.outlet);
+
+      s.name = outletData.name;
+
+      this.entityManager.save(s);
+    });
+
+
+    return this.entityManager.save(device);
   }
 
   async getDevicesInfo(): Promise<{ [id: string]: DeviceInfoInterface }> {
@@ -114,7 +152,6 @@ export class DeviceService {
 
     devices.forEach((d) => {
       d.isConnected = false;
-      d.unsuccessfulPings = 0;
 
       this.entityManager.save(d);
     });
@@ -130,9 +167,7 @@ export class DeviceService {
     }
 
     device.isConnected = true;
-    device.lastPing = new Date();
-    device.nextPing = new Date(Date.now() + 1800 * 1000);
-    device.unsuccessfulPings = 0;
+    device.lastStatusChangeTimestamp = new Date();
 
     this.entityManager.save(device);
 
@@ -147,20 +182,6 @@ export class DeviceService {
     }
 
     device.isConnected = false;
-
-    this.entityManager.save(device);
-
-    return device;
-  }
-
-  async incUnsuccessfulPing(deviceId: string): Promise<DeviceEntity> {
-    const device = await this.deviceRepository.getByDeviceId(deviceId);
-
-    if (!device) {
-      throw new DeviceNotExistException(deviceId);
-    }
-
-    device.unsuccessfulPings++;
 
     this.entityManager.save(device);
 

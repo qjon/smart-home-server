@@ -7,6 +7,7 @@ import {
   Inject,
   Logger,
   Param,
+  Post,
   Put,
   Req,
   Request,
@@ -14,11 +15,12 @@ import {
 } from '@nestjs/common';
 import { DevicesStorageService } from '../../storage/devices-storage.service';
 import { DeviceInterface } from '../../interfaces/storage/device-interface';
-import { LightSwitch } from '../../interfaces/light/update-action.interface';
+import { DeviceChangeSettingsDto, LightSwitch } from '../../interfaces/light/update-action.interface';
 import { DeviceService } from '../../database/services/device.service';
 import { DeviceRepositoryService } from '../../database/repository/device-repository.service';
-import { DeviceNotConnectedException } from '../../exceptions/device-not-connected.exception';
 import { ApiExceptionFilters } from '../filters/api.filters';
+import { DeviceAdapterInterface } from '../services/device-adapter.interface';
+import { DevicesAdapterService } from '../services/devices-adapter.service';
 
 @Controller('/api/devices')
 @UseFilters(new ApiExceptionFilters())
@@ -32,9 +34,28 @@ export class DevicesController {
   @Inject(DeviceRepositoryService)
   protected deviceRepositoryService: DeviceRepositoryService;
 
+  @Inject(DevicesAdapterService)
+  private deviceAdapter: DeviceAdapterInterface;
+
   public constructor(protected storage: DevicesStorageService,
                      protected deviceService: DeviceService) {
 
+  }
+
+  @Post()
+  async create(@Req() req: Request,
+               @Body() body: { deviceId: string, apiKey: string, name: string }): Promise<DeviceInterface> {
+    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
+
+    const device = await this.deviceDbService.create(
+      body.deviceId,
+      body.name,
+      body.apiKey,
+      'single',
+    );
+
+    this.logger.log(`RES | API | ${req.url} | ${JSON.stringify(device.toJSON())}`);
+    return device.toJSON();
   }
 
   @Get()
@@ -57,31 +78,26 @@ export class DevicesController {
                @Body() body: { switches: LightSwitch[] }): Promise<any> {
     this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
 
-    const sequence = Date.now().toString();
-
     const device = await this.deviceDbService.updateDevice(deviceId, <LightSwitch[]>body.switches, null);
-    const deviceConnection = this.storage.getOne(deviceId);
+    this.deviceAdapter.updateSwitches({
+      apiKey: device.apikey,
+      deviceId,
+      host: device.host,
+      port: device.port,
+      method: 'POST',
+      path: device.isSingleSwitch ? '/zeroconf/switch' : '/zeroconf/switches',
+      data: device.isSingleSwitch ? { switch: body.switches[0].switch } : body,
+    });
+  }
 
-    if (!deviceConnection) {
-      throw new DeviceNotConnectedException(deviceId);
-    }
+  @Put(':deviceId/settings')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async settings(@Req() req: Request,
+                 @Param('deviceId') deviceId: string,
+                 @Body() body: DeviceChangeSettingsDto): Promise<any> {
+    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
 
-    const value = {
-      apikey: device.apikey,
-      action: 'update',
-      deviceid: deviceId,
-      params: body,
-      userAgent: 'app',
-      sequence,
-      ts: 0,
-      from: 'app',
-    };
-
-    deviceConnection.sendMessages.set(sequence, value);
-
-    deviceConnection.conn.sendText(JSON.stringify(value));
-
-    this.logger.log(`SEND | WS | ${JSON.stringify(value)}`);
+    await this.deviceDbService.updateDeviceSettings(deviceId, body);
   }
 
   @Put(':deviceId/rename')

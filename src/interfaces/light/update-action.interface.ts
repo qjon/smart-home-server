@@ -33,3 +33,13 @@ export interface LightParams {
 export interface LightUpdateActionInterface extends LightDefaultActionInterface {
   params: LightParams;
 }
+
+export interface DeviceChangeSettingsDto {
+  apiKey: string;
+  model: string;
+  name?: string;
+  switches: {
+    outlet: number;
+    name: string;
+  }[];
+};
