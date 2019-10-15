@@ -41,6 +41,8 @@ Simple server to manage SonOff devices.
 
 ## Installation
 
+### For development
+
 * Clone repo or download ZIP
 * Install all deps
     
@@ -74,6 +76,55 @@ Simple server to manage SonOff devices.
 * use _crontab/crontab.template.sh_ to create yours _crontab.sh_ file which will be run. Using crontab prevent before application crash. It will automatically UP the app when it crashed.
 
 * in browser go to http://SERVER_IP:SSL_PORT, the app should start, but to see list of your devices you have to connected them to your local network (see instruction below)
+
+### For production
+
+* Clone repo or download ZIP
+* Install all deps
+    
+    
+    npm i
+    
+* Create _src/environment.ts_ file
+
+    
+    export const environment = {
+      apiPort: API_PORT,
+      sslPort: SSL_PORT,
+      websocketsPort: WEBSOCKET_PORT,
+      ip: 'SERVER_IP',
+      database: {
+        host: 'DB_HOST',
+        user: 'DB_USER',
+        password: 'DB_PASS',
+        name: 'DB_NAME',
+      },
+    };    
+
+* Put self-sign SSL certificate files _server.crt_, _server.key_ in _cert_ directory
+* Create _script/environment-smart-home.ts_ - put yours configuration
+
+    
+    export const environment = {
+      production: true,
+      apiHost: '',
+      ws: {
+        host: 'SERVER_IP',
+        port: 'WEBSOCKET_PORT',
+      },
+    };
+
+* Run
+
+
+    npm run deploy
+    
+* Go to _dist/src_ directory and run
+
+    
+    node main.js
+    
+* In browser go to  _http://SERVER_IP:API_PORT/_
 
 ## Connect light switch device to server
 
