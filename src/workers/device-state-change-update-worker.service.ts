@@ -59,6 +59,7 @@ export class DeviceStateChangeUpdateWorkerService implements WorkerInterface {
       .subscribe((data: { changedDevice: ChangedStateDeviceInterface, apiKey: string }) => {
         this.logger.log('Start updating device: ' + data.changedDevice.id);
         const changedData = data.changedDevice.getData(data.apiKey);
+
         this.deviceService.markDeviceAsConnected(data.changedDevice.id)
           .then(() => this.deviceService.updateDevice(data.changedDevice.id, changedData.getSwitches(), changedData.getConfiguration()))
           .then((device) => {

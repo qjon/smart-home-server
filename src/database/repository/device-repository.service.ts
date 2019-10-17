@@ -14,6 +14,7 @@ export class DeviceRepositoryService {
       .createQueryBuilder('d')
       .leftJoinAndSelect('d.configuration', 'c')
       .leftJoinAndSelect('d.params', 'p')
+      .leftJoinAndSelect('d.room', 'r')
       .orderBy('d.name', 'ASC')
       .getMany();
   }
@@ -23,6 +24,7 @@ export class DeviceRepositoryService {
       .createQueryBuilder('d')
       .leftJoinAndSelect('d.configuration', 'c')
       .leftJoinAndSelect('d.params', 'p')
+      .leftJoinAndSelect('d.room', 'r')
       .andWhere('d.deviceId = :deviceId', { deviceId })
       .getOne();
   }

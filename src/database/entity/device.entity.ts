@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { DeviceConfigurationEntity } from './device.configuration.entity';
 import { DeviceParamsEntity } from './device.params.entity';
+import { RoomEntity } from './room.entity';
 
 @Entity('devices')
 export class DeviceEntity {
@@ -40,6 +41,9 @@ export class DeviceEntity {
   @OneToMany(type => DeviceParamsEntity, params => params.device)
   params: DeviceParamsEntity[];
 
+  @ManyToOne(type => RoomEntity, room => room.devices)
+  room: RoomEntity;
+
   toJSON(): any {
     return {
       deviceid: this.deviceId,
@@ -49,6 +53,7 @@ export class DeviceEntity {
       isConnected: this.isConnected,
       isSingleSwitch: this.isSingleSwitch,
       lastStatusChangeTimestamp: this.lastStatusChangeTimestamp,
+      room: this.prepareRoom(),
       params: {
         switches: !this.params ? [] : this.params
           .sort((i, j) => i.outlet > j.outlet ? 1 : -1)
@@ -58,5 +63,12 @@ export class DeviceEntity {
           .map((c) => c.toJSON()),
       },
     };
+  }
+
+  private prepareRoom(): { id: number, name: string } {
+    return this.room ? {
+      id: this.room.id,
+      name: this.room.name,
+    } : null;
   }
 }

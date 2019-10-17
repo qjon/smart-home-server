@@ -34,9 +34,8 @@ export class DeviceService {
     } else {
       device = this.entityManager.create(DeviceEntity, { deviceId, name, apikey, model });
     }
-    this.entityManager.save(device);
 
-    return device;
+    return this.entityManager.save(device);
   }
 
   async updateDevice(deviceId: string, params: LightSwitch[], configuration: LightSwitchConfigure[]): Promise<DeviceEntity> {
