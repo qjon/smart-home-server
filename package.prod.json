@@ -1,0 +1,40 @@
+{
+  "name": "@rign/smart-home-app",
+  "version": "1.1.0",
+  "description": "Smart Home app is an application and server to manage SonOff device in local network using LanMode mechanism",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/    main.js"
+  },
+  "keywords": [
+    "Smart Home",
+    "SonOff"
+  ],
+  "author": "Rafal Ignaszewski <rafal@ignaszewski.pl> http://ignaszewski.pl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qjon/smart-home-server/issues"
+  },
+  "homepage": "https://github.com/qjon/smart-home-server#readme",
+  "dependencies": {
+    "@nestjs/common": "^6.8.3",
+    "@nestjs/core": "^6.0.5",
+    "@nestjs/platform-express": "^6.0.5",
+    "@nestjs/platform-socket.io": "^6.0.5",
+    "@nestjs/platform-ws": "^6.0.5",
+    "@nestjs/typeorm": "^6.0.0",
+    "@nestjs/websockets": "^6.0.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
+    "js-md5": "^0.7.3",
+    "mysql": "^2.16.0",
+    "node-dns-sd": "^0.4.0",
+    "nodejs-websocket": "^1.7.2",
+    "reflect-metadata": "^0.1.12",
+    "rimraf": "^2.6.2",
+    "rxjs": "^6.3.3",
+    "typeorm": "^0.2.16",
+    "uuid": "^3.3.2",
+    "ws": "^6.2.1"
+  }
+}

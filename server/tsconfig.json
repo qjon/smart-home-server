@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "target": "es6",
+    "outDir": "../dist/server",
+    "baseUrl": "./",
+    "typeRoots": []
+  },
+  "exclude": ["node_modules"]
+}

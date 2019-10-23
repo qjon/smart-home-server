@@ -1,0 +1,6 @@
+<span class="last-update-date mat-caption text-disabled">
+  <span *ngIf="lastUpdate; else neverUpdated;">Last update: {{lastUpdate | date:"yyyy-MM-dd HH:mm:ss"}}</span>
+  <ng-template #neverUpdated>
+    <span>Never updated</span>
+  </ng-template>
+</span>

@@ -1,0 +1,32 @@
+@import "../../../../../variables";
+
+.switch-name {
+  width: 5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  white-space: nowrap;
+}
+
+
+.switch-status {
+  display: inline-block;
+
+  .switch-status-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    .name {
+      text-align: center;
+      margin: 2px;
+    }
+
+  }
+
+  .status {
+    display: inline-block;
+  }
+}
+
+

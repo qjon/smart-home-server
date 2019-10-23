@@ -1,0 +1,37 @@
+<mat-card [ngClass]="{disconnected: !device.isConnected}">
+  <mat-card-header>
+    <mat-card-title title="{{device.name}}">{{device.name}}</mat-card-title>
+    <mat-card-subtitle>
+      {{device.roomName}}
+      <sh-detach-from-room [deviceId]="device.id"
+                           [roomId]="device.roomId"
+                           *ngIf="device.isAssignedToRoom"></sh-detach-from-room>
+      <sh-attach-to-room [deviceId]="device.id" *ngIf="!device.isAssignedToRoom"></sh-attach-to-room>
+    </mat-card-subtitle>
+    <div class="info">
+      <button mat-icon-button [routerLink]="['..', 'device', device.id]">
+        <mat-icon>info_outlined</mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <sh-switch-status *ngFor="let outlet of device.switches.keys()"
+                      [isEnabled]="device.isConnected"
+                      [deviceId]="device.id"
+                      [switchModel]="device.switches.get(outlet)"
+                      (change)="switchesStateConnectorService.toggle(device.id, $event)"></sh-switch-status>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <div class="last-update">
+      <sh-last-update [lastUpdate]="device.lastStatusChangeTimestamp"></sh-last-update>
+    </div>
+    <div class="power-on-info">
+      <mat-icon color="warn" *ngIf="!device.isConnected" title="Disconnected">power_off</mat-icon>
+      <sh-device-on-off *ngIf="device.isConnected"
+                        [isEnabled]="!device.isSingleSwitch"
+                        (toggle)="switchesStateConnectorService.onOff(device.id, $event)"></sh-device-on-off>
+    </div>
+  </mat-card-actions>
+</mat-card>

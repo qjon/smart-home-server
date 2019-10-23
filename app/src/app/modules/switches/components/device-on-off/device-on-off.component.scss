@@ -1,0 +1,7 @@
+@import "../../../../../variables";
+
+mat-icon {
+  &.on {
+    color: $primary;
+  }
+}
