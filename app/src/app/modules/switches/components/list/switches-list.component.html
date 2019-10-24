@@ -1,0 +1,19 @@
+<div class="actions-bar">
+  <div class="filters">
+    <sh-select-room></sh-select-room>
+  </div>
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="deviceListStateConnector.openAddRoomDialog()">
+      <mat-icon>group_work</mat-icon>
+      Add room
+    </button>
+    <button mat-raised-button color="primary" (click)="deviceListStateConnector.openAddDeviceDialog()">
+      <mat-icon>add_circle_outline</mat-icon>
+      Add device
+    </button>
+  </div>
+</div>
+<div class="devices-list">
+  <sh-device-box *ngFor="let item of deviceListStateConnector.devices$ | async; trackBy: trackSwitch"
+                 [device]="item"></sh-device-box>
+</div>

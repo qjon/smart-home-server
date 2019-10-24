@@ -1,0 +1,68 @@
+@import "../../../../../variables";
+
+mat-card {
+  min-width: 16em;
+  max-width: 20em;
+  margin-right: 2em;
+  margin-bottom: 2em;
+
+  mat-card-title {
+    margin: 0;
+    display: block;
+    max-width: 10em;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  mat-card-subtitle {
+    margin: 0;
+  }
+
+  mat-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 3em;
+
+    ::ng-deep .mat-card-header-text {
+      margin: 0;
+    }
+
+    .info {
+      flex: 1;
+      display: flex;
+      align-content: flex-start;
+      justify-content: flex-end;
+      margin-top: -1em;
+    }
+  }
+
+  mat-card-content {
+    display: flex;
+    justify-content: center;
+    margin: 1em 0;
+    height: 6em;
+
+    sh-switch-status {
+      display: inline-block;
+    }
+  }
+
+
+  mat-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.75em;
+    padding: 0.75em;
+
+    .last-update {
+    }
+
+    .power-on-info {
+      text-align: right;
+    }
+  }
+}

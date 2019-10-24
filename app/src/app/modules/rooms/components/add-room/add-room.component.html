@@ -1,0 +1,19 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <h1 mat-dialog-title>Add new room</h1>
+  </mat-toolbar-row>
+</mat-toolbar>
+<form [formGroup]="form" (submit)="onSubmit()">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput [formControl]="form.controls['name']" placeholder="Enter room name">
+      <mat-error *ngIf="form.controls['name'].invalid">Room name is required</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="actions" mat-dialog-actions>
+    <button mat-raised-button type="button" [disabled]="isSaving" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button type="submit" [disabled]="isSaving" color="primary">Save</button>
+  </div>
+</form>

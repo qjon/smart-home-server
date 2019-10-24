@@ -1,0 +1,9 @@
+<button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Link device to the room">
+  <mat-icon>link</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item *ngFor="let room of (roomsStateConnector.rooms$ | async);"
+          (click)="roomsStateConnector.attachDevice(deviceId, room.id)">
+    <span>{{room.name}}</span>
+  </button>
+</mat-menu>

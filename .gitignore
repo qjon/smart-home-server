@@ -1,10 +1,6 @@
 .idea
-/certs/server.crt
-/certs/server.key
-/dist/
-/crontab/crontab-restart.sh
-/node_modules
-/src/environments.ts
-/smart-home/
-
-/scripts/environment-smart-home.ts
+node_modules
+dist
+/.editorconfig
+/app/proxy.config.json
+/server/config.env

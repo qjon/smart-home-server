@@ -1,0 +1,10 @@
+<div class="device-name-wrapper" [ngClass]="{active: isActive, disabled: isSaving}">
+  <span #deviceName class="device-name" contenteditable="true"
+        [textContent]="name"
+        (click)="saveCurrentValue()"
+        (keydown)="onKeyDown($event)"
+        (blur)="onBlur()"
+        (input)="onInsert($event)"></span>
+  <mat-icon class="edit">edit</mat-icon>
+  <mat-icon class="saving">refresh</mat-icon>
+</div>

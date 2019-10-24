@@ -1,0 +1,11 @@
+<div class="switch-status">
+  <div class="switch-status-wrapper">
+    <div class="switch-name" title="{{switchModel.name}}">{{switchModel.name}}</div>
+    <div class="status">
+      <sh-device-on-off [isEnabled]="isEnabled"
+                        (toggle)="toggle($event)"
+                        [value]="switchModel.status"
+                        [size]="'5em'"></sh-device-on-off>
+    </div>
+  </div>
+</div>

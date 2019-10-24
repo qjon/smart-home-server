@@ -1,0 +1,29 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <h1 mat-dialog-title>Add new device</h1>
+  </mat-toolbar-row>
+</mat-toolbar>
+<form [formGroup]="form" (submit)="onSubmit()">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput [formControl]="form.controls['name']" placeholder="Enter your name of the device">
+      <mat-error *ngIf="form.controls['name'].invalid">Device name is required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Device ID</mat-label>
+      <input matInput [formControl]="form.controls['deviceId']" placeholder="Enter device ID">
+      <mat-error *ngIf="form.controls['deviceId'].invalid">Device ID is required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Api Key</mat-label>
+      <input matInput [formControl]="form.controls['apiKey']" placeholder="Enter api key"/>
+      <mat-error *ngIf="form.controls['apiKey'].invalid">Api Key is required</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="actions" mat-dialog-actions>
+    <button mat-raised-button type="button" [disabled]="isSaving" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button type="submit" [disabled]="isSaving" color="primary">Save</button>
+  </div>
+</form>

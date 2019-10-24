@@ -1,0 +1,10 @@
+.idea
+/certs/server.crt
+/certs/server.key
+/dist/
+/crontab/crontab-restart.sh
+/node_modules
+/smart-home/
+
+/templates/environment-smart-home.ts
+./config.env
