@@ -12,6 +12,7 @@ export enum RoomsActionTypes {
   DetachError = '[Rooms] Detach device to room error',
   DetachSuccess = '[Rooms] Detach device to room success',
   Load = '[Rooms] Load rooms list',
+  Move = '[Rooms] Detach from one room and attach to another',
   OpenCreateDialog = '[Rooms] Open create room dialog',
   SelectRoom = '[Rooms] SelectRoom',
 }
@@ -91,6 +92,14 @@ export class RoomsOpenCreateDialogAction implements Action {
   readonly type = RoomsActionTypes.OpenCreateDialog;
 }
 
+
+export class MoveDeviceToRoomAction implements Action {
+  readonly type = RoomsActionTypes.Move;
+
+  constructor(public payload: { deviceId: string, roomId: number, prevRoomId: number }) {
+  }
+}
+
 export class SelectRoomAction implements Action {
   readonly type = RoomsActionTypes.SelectRoom;
 
@@ -110,6 +119,7 @@ export type RoomsAction =
   | DetachDeviceFromRoomErrorAction
   | DetachDeviceFromRoomSuccessAction
   | LoadRoomsAction
+  | MoveDeviceToRoomAction
   | RoomsOpenCreateDialogAction
   | SelectRoomAction
   ;

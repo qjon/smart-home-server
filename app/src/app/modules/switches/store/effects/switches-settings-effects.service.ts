@@ -6,10 +6,14 @@ import {
   SwitchesChangeSettingsErrorAction,
   SwitchesChangeSettingsSuccessAction
 } from '../switches-actions';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 import {SwitchesApiService} from '../../api/switches-api.service';
 import {of} from 'rxjs';
 import {NotificationsService} from '../../../notifications/notifications.service';
+import { MoveDeviceToRoomAction } from '../../../rooms/store/rooms-actions';
+import { select, Store } from '@ngrx/store';
+import { switchesSelectors } from '../switches-selectors';
+import { SwitchDeviceModel } from '../../models/switch-device-model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +25,18 @@ export class SwitchesSettingsEffectsService {
       ofType(SwitchActionTypes.ChangeSettings),
       switchMap((action: SwitchesChangeSettingsAction) => this.switchesApiService.update(action.payload.deviceId, action.payload.data)
         .pipe(
-          map(() => new SwitchesChangeSettingsSuccessAction(action.payload)),
+          switchMap(() => this.store
+            .pipe(
+              select(switchesSelectors.deviceSelector, { deviceId: action.payload.deviceId }),
+              take(1),
+              mergeMap((device: SwitchDeviceModel) => {
+                return [
+                  new SwitchesChangeSettingsSuccessAction(action.payload),
+                  new MoveDeviceToRoomAction({deviceId: action.payload.deviceId, roomId: action.payload.data.room ? action.payload.data.room.id : null, prevRoomId: device.roomId}),
+                ];
+              }),
+            )
+          ),
           catchError((e) => of(new SwitchesChangeSettingsErrorAction(e)))
         )
       )
@@ -42,6 +57,7 @@ export class SwitchesSettingsEffectsService {
     );
 
   constructor(protected actions$: Actions,
+              protected store: Store<any>,
               protected switchesApiService: SwitchesApiService,
               protected notificationService: NotificationsService) {
   }

@@ -13,6 +13,7 @@ import { DeviceConfigurationEntity } from '../entity/device.configuration.entity
 import { DeviceNotExistException } from '../../exceptions/device-not-exist.exception';
 import { DeviceSwitchNotExistException } from '../../exceptions/device-switch-not-exist.exception';
 import { RoomEntity } from '../entity/room.entity';
+import { RoomRepositoryService } from '../repository/room-repository.service';
 
 export interface DeviceInfoInterface {
   deviceId: string;
@@ -23,7 +24,8 @@ export interface DeviceInfoInterface {
 export class DeviceService {
 
   public constructor(private readonly entityManager: EntityManager,
-                     private deviceRepository: DeviceRepositoryService) {
+                     private deviceRepository: DeviceRepositoryService,
+                     private roomsRepository: RoomRepositoryService) {
 
   }
 
@@ -117,6 +119,7 @@ export class DeviceService {
     device.name = data.name;
     device.apikey = data.apiKey;
     device.model = data.model;
+    device.room = data.room ? await this.roomsRepository.getByRoomId(data.room.id) : null;
 
     device.params.forEach((s: DeviceParamsEntity) => {
       const outletData = data.switches.find((i) => i.outlet === s.outlet);

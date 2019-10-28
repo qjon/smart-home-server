@@ -103,6 +103,7 @@ export function switchesReducer(state: SwitchesState = emptySwitchesState, actio
             ...state.devices[action.payload.deviceId],
             name: data.name,
             model: data.model,
+            room: data.room,
             apiKey: data.apiKey,
             params: {
               ...state.devices[action.payload.deviceId].params,

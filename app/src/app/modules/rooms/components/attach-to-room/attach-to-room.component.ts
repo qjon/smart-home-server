@@ -1,11 +1,12 @@
-import {Component, Inject, Input} from '@angular/core';
-import {RoomsStateConnectorService} from '../../store/state-connectors/rooms-state-connector.service';
-import {RoomsStateConnectorInterface} from '../../interfaces/rooms-state-connector.interface';
+import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import { RoomsStateConnectorService } from '../../store/state-connectors/rooms-state-connector.service';
+import { RoomsStateConnectorInterface } from '../../interfaces/rooms-state-connector.interface';
 
 @Component({
   selector: 'sh-attach-to-room',
   templateUrl: './attach-to-room.component.html',
-  styleUrls: ['./attach-to-room.component.scss']
+  styleUrls: ['./attach-to-room.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttachToRoomComponent {
 

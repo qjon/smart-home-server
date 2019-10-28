@@ -1,18 +1,20 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {map, switchMap, take, takeUntil} from 'rxjs/operators';
-import {DeviceDetailsStateConnectorService} from '../../store/state-connectors/device-details-state-connector.service';
-import {SwitchDeviceModel} from '../../models/switch-device-model';
-import {SwitchDeviceChangeSettingsDto} from '../../interfaces/switch-device.interface';
-import {Actions, ofType} from '@ngrx/effects';
-import {SwitchActionTypes} from '../../store/switches-actions';
-import {ReplaySubject} from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { DeviceDetailsStateConnectorService } from '../../store/state-connectors/device-details-state-connector.service';
+import { SwitchDeviceModel } from '../../models/switch-device-model';
+import { SwitchDeviceChangeSettingsDto } from '../../interfaces/switch-device.interface';
+import { Actions, ofType } from '@ngrx/effects';
+import { SwitchActionTypes } from '../../store/switches-actions';
+import { Observable, ReplaySubject } from 'rxjs';
+import { RoomsStateConnectorService } from '../../../rooms/store/state-connectors/rooms-state-connector.service';
+import { RoomDto } from '../../../rooms/interfaces/room-dto.interface';
 
 @Component({
   selector: 'sh-device-details',
   templateUrl: './device-details.component.html',
-  styleUrls: ['./device-details.component.scss']
+  styleUrls: ['./device-details.component.scss'],
 })
 export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
@@ -32,9 +34,12 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
   public destroy$ = new ReplaySubject<void>();
 
+  public rooms$: Observable<RoomDto[]>;
+
   constructor(private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
               private deviceDetailsStateConnectorService: DeviceDetailsStateConnectorService,
+              private roomsStateConnectorService: RoomsStateConnectorService,
               private actions$: Actions) {
   }
 
@@ -46,24 +51,12 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.rooms$ = this.getRooms$();
 
-    this.switches = this.fb.group({
-      0: [null, [Validators.required, Validators.maxLength(50)]],
-      1: [null, [Validators.required, Validators.maxLength(50)]],
-      2: [null, [Validators.required, Validators.maxLength(50)]],
-      3: [null, [Validators.required, Validators.maxLength(50)]],
-    });
-
-    this.form = this.fb.group({
-      deviceId: [null],
-      name: [null, [Validators.required, Validators.maxLength(50)]],
-      apiKey: [null, [Validators.required, Validators.maxLength(100)]],
-      model: [null, [Validators.required, Validators.maxLength(50)]],
-      isSingleSwitch: [{value: null, disabled: true}],
-      switches: this.switches
-    });
-
+    this.createForm();
     this.disableForm();
+
+    this.onDeviceIdChange();
 
     const device$ =
       this.deviceDetailsStateConnectorService.device$
@@ -72,43 +65,20 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
           takeUntil(this.destroy$),
         );
 
-    this.activatedRoute.params
-      .pipe(
-        map((params) => params['id']),
-        takeUntil(this.destroy$),
-      )
-      .subscribe((id) => this.deviceDetailsStateConnectorService.setCurrentDeviceId(id));
+    this.onDeviceIdChangeResetForm(device$);
+    this.onSubmitError();
+    this.onSubmitSuccess(device$);
 
-    device$
-      .subscribe((device: SwitchDeviceModel) => {
-        this.device = device;
+  }
 
-        this.form.reset(this.prepareFormValues(device));
-      });
+  public clearRoom($event: MouseEvent) {
+    $event.stopPropagation();
 
-    this.actions$
-      .pipe(
-        ofType(SwitchActionTypes.ChangeSettingsSuccess),
-        switchMap(() => device$),
-        takeUntil(this.destroy$),
-      )
-      .subscribe((device: SwitchDeviceModel) => {
-        this.device = device;
-        this.form.reset(this.prepareFormValues(device));
+    this.form.controls['room'].setValue(null);
+  }
 
-        this.disableForm();
-        this.isEditMode = false;
-        this.enableActionButtons();
-      });
-
-    this.actions$
-      .pipe(
-        ofType(SwitchActionTypes.ChangeSettingsError),
-        takeUntil(this.destroy$),
-      )
-      .subscribe(() => {
-        this.enableActionButtons();
-      });
+  public compareRoom(optionItem: RoomDto, value: RoomDto): boolean {
+    return value ? optionItem.id === value.id : false;
   }
 
   public onSubmit(): void {
@@ -129,6 +99,79 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     this.isEditMode = true;
     this.enableForm();
   }
+  private onSubmitError() {
+    this.actions$
+      .pipe(
+        ofType(SwitchActionTypes.ChangeSettingsError),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(() => {
+        this.enableActionButtons();
+      });
+  }
+
+  private onSubmitSuccess(device$) {
+    this.actions$
+      .pipe(
+        ofType(SwitchActionTypes.ChangeSettingsSuccess),
+        switchMap(() => device$),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((device: SwitchDeviceModel) => {
+        this.device = device;
+        this.form.reset(this.prepareFormValues(device));
+
+        this.disableForm();
+        this.isEditMode = false;
+        this.enableActionButtons();
+      });
+  }
+
+  private onDeviceIdChangeResetForm(device$) {
+    device$
+      .subscribe((device: SwitchDeviceModel) => {
+        this.device = device;
+
+        this.form.reset(this.prepareFormValues(device));
+      });
+  }
+
+  private onDeviceIdChange() {
+    this.activatedRoute.params
+      .pipe(
+        map((params) => params['id']),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((id) => this.deviceDetailsStateConnectorService.setCurrentDeviceId(id));
+  }
+
+  private createForm() {
+    this.switches = this.fb.group({
+      0: [null, [Validators.required, Validators.maxLength(50)]],
+      1: [null, [Validators.required, Validators.maxLength(50)]],
+      2: [null, [Validators.required, Validators.maxLength(50)]],
+      3: [null, [Validators.required, Validators.maxLength(50)]],
+    });
+
+    this.form = this.fb.group({
+      deviceId: [null],
+      name: [null, [Validators.required, Validators.maxLength(50)]],
+      apiKey: [null, [Validators.required, Validators.maxLength(100)]],
+      model: [null, [Validators.required, Validators.maxLength(50)]],
+      room: [null],
+      isSingleSwitch: [{ value: null, disabled: true }],
+      switches: this.switches,
+    });
+  }
+
+  private getRooms$() {
+    return this.roomsStateConnectorService.rooms$
+      .pipe(
+        map((items) => items.map((item) => {
+          return { id: item.id, name: item.name };
+        })),
+      );
+  }
 
 
   private disableForm(): void {
@@ -145,35 +188,37 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private prepareFormValues(device): { [key: string]: any } {
+  private prepareFormValues(device: SwitchDeviceModel): { [key: string]: any } {
     return {
       name: device.name,
       deviceId: device.id,
       apiKey: device.apiKey,
       model: device.model,
       isSingleSwitch: device.isSingleSwitch,
+      room: device.isAssignedToRoom ? { id: device.roomId, name: device.roomName } : null,
       switches: {
         0: device.switches.get(0).name,
         1: device.switches.has(1) ? device.switches.get(1).name : null,
         2: device.switches.has(2) ? device.switches.get(2).name : null,
         3: device.switches.has(3) ? device.switches.get(3).name : null,
-      }
+      },
     };
   }
 
   private prepareValuesToSend(value: any): SwitchDeviceChangeSettingsDto {
     const switches = [
-      {outlet: 0, name: this.switches.controls[0].value},
-      {outlet: 1, name: this.switches.controls[1].value},
-      {outlet: 2, name: this.switches.controls[2].value},
-      {outlet: 3, name: this.switches.controls[3].value},
+      { outlet: 0, name: this.switches.controls[0].value },
+      { outlet: 1, name: this.switches.controls[1].value },
+      { outlet: 2, name: this.switches.controls[2].value },
+      { outlet: 3, name: this.switches.controls[3].value },
     ];
 
     return {
       name: value.name,
       apiKey: value.apiKey,
       model: value.model,
-      switches
+      room: value.room,
+      switches,
     };
   }
 

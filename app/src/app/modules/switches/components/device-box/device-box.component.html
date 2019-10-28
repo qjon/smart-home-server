@@ -6,7 +6,8 @@
       <sh-detach-from-room [deviceId]="device.id"
                            [roomId]="device.roomId"
                            *ngIf="device.isAssignedToRoom"></sh-detach-from-room>
-      <sh-attach-to-room [deviceId]="device.id" *ngIf="!device.isAssignedToRoom"></sh-attach-to-room>
+      <sh-attach-to-room [deviceId]="device.id"
+                         *ngIf="!device.isAssignedToRoom"></sh-attach-to-room>
     </mat-card-subtitle>
     <div class="info">
       <button mat-icon-button [routerLink]="['..', 'device', device.id]">
@@ -16,7 +17,7 @@
   </mat-card-header>
   <mat-divider></mat-divider>
   <mat-card-content>
-    <sh-switch-status *ngFor="let outlet of device.switches.keys()"
+    <sh-switch-status *ngFor="let outlet of switchesKeys"
                       [isEnabled]="device.isConnected"
                       [deviceId]="device.id"
                       [switchModel]="device.switches.get(outlet)"
