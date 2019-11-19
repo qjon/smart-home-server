@@ -39,9 +39,8 @@ rl.question('Server IP? ', function(ip) {
                   'IP=localhost\n' +
                   '##########################\n' +
                   '# Ports\n' +
-                  'API_PORT=8079\n' +
-                  'SSL_PORT=8080\n' +
-                  'WEBSOCKET_PORT=8443\n' +
+                  'API_PORT=8080\n' +
+                  'WEBSOCKET_PORT=8079\n' +
                   '##########################\n' +
                   '# Database\n' +
                   'DB_HOST=localhost\n' +

@@ -2,7 +2,7 @@
 
 echo `date "+%Y-%m-%d %H:%M:%S"`;
 
-PORT=SSL_PORT
+PORT=API_PORT
 NETSTAT=`netstat -nlp | grep $PORT`;
 
 PATH_TO_DIST="PATH_TO_DIST_FOLDER"

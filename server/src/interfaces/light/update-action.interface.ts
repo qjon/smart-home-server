@@ -38,6 +38,10 @@ export interface DeviceChangeSettingsDto {
   apiKey: string;
   model: string;
   name?: string;
+  room: {
+    id: number;
+    name: string;
+  };
   switches: {
     outlet: number;
     name: string;

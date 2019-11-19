@@ -1,5 +1,5 @@
 .actions-bar {
-  margin: 1em 0 2em;
+  margin: 1em;
   display: flex;
   align-items: center;
 
@@ -21,4 +21,24 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+
+  sh-device-box {
+    display: block;
+    margin: 1em;
+  }
+}
+
+@media all and (max-width: 800px) {
+  .actions-bar {
+    flex-direction: column;
+    flex-flow: column-reverse;
+
+  .filters {
+      margin-top: 5px;
+    }
+  }
+
+  .devices-list {
+    justify-content: center;
+  }
 }

@@ -6,7 +6,6 @@ import * as express from 'express';
 import { NextFunction } from 'express';
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import * as http from 'http';
-import * as https from 'https';
 import { join } from 'path';
 import * as fs from 'fs';
 import { DeviceService } from './database/services/device.service';
@@ -14,19 +13,10 @@ import { Logger } from '@nestjs/common';
 
 const pidFile = __dirname + '/smart-home-server.pid';
 
-
 async function bootstrap() {
   const logger = new Logger('Application');
 
   fs.writeFileSync(pidFile, '');
-  const keyFile = fs.readFileSync(__dirname + '/../certs/server.key');
-  const certFile = fs.readFileSync(__dirname + '/../certs/server.crt');
-
-  const httpsOptions = {
-    key: keyFile,
-    cert: certFile,
-    rejectUnauthorized: false,
-  };
 
   const server = express();
 
@@ -50,9 +40,7 @@ async function bootstrap() {
 
   await app.init();
 
-
   const serverHttp = http.createServer(server).listen(environment.apiPort);
-  const serverHttps = https.createServer(httpsOptions, server).listen(environment.sslPort);
 
   const deviceService: DeviceService = app.get(DeviceService);
   deviceService.disconnectAllDevices();

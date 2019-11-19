@@ -10,9 +10,21 @@ import {SwitchesStateConnectorInterface} from '../../interfaces/switches-state-c
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeviceBoxComponent {
+  private _device: SwitchDeviceModel;
+  public switchesKeys: IterableIterator<number>;
 
   @Input()
-  public device: SwitchDeviceModel;
+  public set device(device: SwitchDeviceModel) {
+    this._device = device;
+
+    this.switchesKeys = this._device.switches.keys();
+  }
+
+  public get device(): SwitchDeviceModel {
+    return this._device;
+  }
+
+
 
   constructor(@Inject(SwitchesStateConnectorService) public switchesStateConnectorService: SwitchesStateConnectorInterface) {
   }

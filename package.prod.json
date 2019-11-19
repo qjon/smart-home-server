@@ -1,10 +1,10 @@
 {
   "name": "@rign/smart-home-app",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Smart Home app is an application and server to manage SonOff device in local network using LanMode mechanism",
   "main": "index.js",
   "scripts": {
-    "start": "node server/    main.js"
+    "start": "node server/main.js"
   },
   "keywords": [
     "Smart Home",

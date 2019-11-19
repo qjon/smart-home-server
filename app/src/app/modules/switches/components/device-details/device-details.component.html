@@ -44,6 +44,24 @@
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
+            <mat-label>Room</mat-label>
+            <mat-select [formControl]="form.controls['room']" [compareWith]="compareRoom">
+              <mat-option *ngFor="let room of (rooms$ | async)" [value]="room">
+                {{room.name}}
+              </mat-option>
+            </mat-select>
+            <button type="button"
+                    mat-button
+                    *ngIf="form.controls['room']"
+                    [disabled]="!isEditMode"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="clearRoom($event)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Model</mat-label>
             <mat-select [formControl]="form.controls['model']">
               <mat-option *ngFor="let model of deviceModels" [value]="model">

@@ -1,5 +1,5 @@
-import {RoomWithDevicesDto} from '../interfaces/room-dto.interface';
-import {RoomsAction, RoomsActionTypes} from './rooms-actions';
+import { RoomWithDevicesDto } from '../interfaces/room-dto.interface';
+import { RoomsAction, RoomsActionTypes } from './rooms-actions';
 
 export interface RoomsState {
   rooms: { [key: string]: RoomWithDevicesDto };
@@ -17,10 +17,10 @@ export const ROOMS_STATE_NAME = 'rooms';
 
 export function roomsReducer(state: RoomsState = emptyRoomsState, action: RoomsAction): RoomsState {
   let roomId: number;
+  let rooms: { [key: string]: RoomWithDevicesDto } = {};
 
   switch (action.type) {
     case RoomsActionTypes.Load:
-      const rooms: { [key: string]: RoomWithDevicesDto } = {};
       const ids: number[] = [];
 
       action.payload.rooms.forEach((room) => {
@@ -59,8 +59,8 @@ export function roomsReducer(state: RoomsState = emptyRoomsState, action: RoomsA
           [roomId]: {
             ...state.rooms[roomId],
             devices: [...state.rooms[roomId].devices, action.payload.deviceId],
-          }
-        }
+          },
+        },
       };
     case RoomsActionTypes.DetachSuccess:
       roomId = action.payload.roomId;
@@ -71,10 +71,35 @@ export function roomsReducer(state: RoomsState = emptyRoomsState, action: RoomsA
           [roomId]: {
             ...state.rooms[roomId],
             devices: state.rooms[roomId].devices.filter((deviceId) => deviceId !== action.payload.deviceId),
-          }
-        }
+          },
+        },
+      };
+    case RoomsActionTypes.Move:
+      roomId = action.payload.roomId;
+      const prevRoomId = action.payload.prevRoomId;
+      const deviceId = action.payload.deviceId;
+
+      rooms = { ...state.rooms };
+
+      if (prevRoomId) {
+        rooms[prevRoomId] = {
+          ...rooms[prevRoomId],
+          devices: rooms[prevRoomId].devices.filter((id) => id !== deviceId),
+        };
+      }
+
+      if (roomId) {
+        rooms[roomId] = {
+          ...rooms[roomId],
+          devices: [...rooms[roomId].devices, deviceId],
+        };
+      }
+
+      return {
+        ...state,
+        rooms
       };
     default:
-      return {...state};
+      return { ...state };
   }
 }

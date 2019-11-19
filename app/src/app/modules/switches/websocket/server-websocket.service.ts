@@ -19,7 +19,7 @@ export interface ServerMessage {
 export class ServerWebsocketService {
   public socket$: Observable<ServerMessage>;
 
-  protected url = `wss://${environment.ws.host}:${environment.ws.port}`;
+  protected url = `ws://${environment.ws.host}:${environment.ws.port}`;
 
   protected retryInterval = 3000; // in milliseconds
 

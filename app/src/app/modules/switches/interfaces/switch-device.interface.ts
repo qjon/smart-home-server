@@ -48,6 +48,7 @@ export interface SwitchDeviceChangeSettingsDto {
   apiKey: string;
   model: string;
   name?: string;
+  room: RoomDto;
   switches: {
     outlet: number;
     name: string;
