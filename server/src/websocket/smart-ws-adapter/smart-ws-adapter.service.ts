@@ -8,13 +8,6 @@ import { filter, mergeMap } from 'rxjs/operators';
 import { Server } from 'tls';
 import { CLOSE_EVENT, CONNECTION_EVENT, ERROR_EVENT } from '@nestjs/websockets/constants';
 
-
-// const ws = require('ws');
-const fs = require('fs');
-const https = require('https');
-const keyFile = fs.readFileSync(__dirname + '/../../../certs/server.key');
-const certFile = fs.readFileSync(__dirname + '/../../../certs/server.crt');
-
 export class SmartWsAdapterService extends WsAdapter {
   protected logger = new Logger(SmartWsAdapterService.name);
 
@@ -30,9 +23,7 @@ export class SmartWsAdapterService extends WsAdapter {
   }): any {
 
     const opt = {
-      cert: certFile,
-      key: keyFile,
-      secure: true,
+      secure: false,
       port: environment.websocketsPort,
     };
 

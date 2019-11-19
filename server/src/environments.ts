@@ -5,7 +5,6 @@ const envConfig = dotenv.parse(fs.readFileSync(__dirname + '/../config.env'));
 
 export const environment = {
   apiPort: envConfig.API_PORT,
-  sslPort: envConfig.SSL_PORT,
   websocketsPort: envConfig.WEBSOCKET_PORT,
   ip: envConfig.IP,
   database: {

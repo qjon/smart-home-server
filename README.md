@@ -14,6 +14,10 @@ It contains two application
 
 ## Change log
 
+### v1.2.0
+- display info about room on device details screen
+- remove SSL communication (no need SSL certificate)
+
 ### v1.1.0
 - connect two applications into one project
 - add "rooms" functionality (create room, attach/detach device to/from room)
@@ -38,7 +42,6 @@ It contains two application
 
 * installed _mysql_ server
 * installed _netstat_ on server
-* creating self-sign SSL certificate 
 
 ## Build app
 
@@ -53,14 +56,12 @@ It contains two application
 
     npm config
         
-* Put self-sign SSL certificate files _server.crt_, _server.key_ in _cert_ directory
-
 * run
 
 
     npm start
    
-* in browser go to http://SERVER_IP:SSL_PORT, the app should start, but to see list of your devices you have to connected them to your local network (see instruction below)
+* in browser go to http://SERVER_IP:API_PORT, the app should start, but to see list of your devices you have to connected them to your local network (see instruction below)
 
 ## Deploy
 

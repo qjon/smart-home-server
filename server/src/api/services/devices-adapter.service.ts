@@ -46,8 +46,8 @@ export class DevicesAdapterService implements DeviceAdapterInterface {
       'iv': iv,
     };
 
-    this.logger.verbose(requestData);
-    this.logger.verbose(value);
+    // this.logger.verbose(requestData);
+    // this.logger.verbose(value);
     request.end(JSON.stringify(value));
 
     setTimeout(() => {
