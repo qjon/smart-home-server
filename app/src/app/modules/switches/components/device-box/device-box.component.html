@@ -5,22 +5,31 @@
       {{device.roomName}}
       <sh-detach-from-room [deviceId]="device.id"
                            [roomId]="device.roomId"
-                           *ngIf="device.isAssignedToRoom"></sh-detach-from-room>
-      <sh-attach-to-room [deviceId]="device.id"
-                         *ngIf="!device.isAssignedToRoom"></sh-attach-to-room>
+                           *ngIf="device.isAssignedToRoom; else attachToRoom"></sh-detach-from-room>
+      <ng-template #attachToRoom>
+        <sh-attach-to-room [deviceId]="device.id"></sh-attach-to-room>
+      </ng-template>
     </mat-card-subtitle>
     <div class="info">
-      <button mat-icon-button [routerLink]="['..', 'device', device.id]">
-        <mat-icon>info_outlined</mat-icon>
+      <button mat-icon-button [matMenuTriggerFor]="options" aria-label="Device options">
+        <mat-icon>more_vert</mat-icon>
       </button>
+      <mat-menu #options="matMenu">
+        <button mat-menu-item  [routerLink]="['..', 'device', device.id]">
+          <mat-icon>info_outlined</mat-icon> Details
+        </button>
+        <button mat-menu-item (click)="addSchedule()">
+          <mat-icon>schedule</mat-icon> Add schedule
+        </button>
+      </mat-menu>
     </div>
   </mat-card-header>
   <mat-divider></mat-divider>
   <mat-card-content>
-    <sh-switch-status *ngFor="let outlet of switchesKeys"
+    <sh-switch-status *ngFor="let outlet of device.getSwitchesOutlet(); trackBy: trackByOutlet"
                       [isEnabled]="device.isConnected"
                       [deviceId]="device.id"
-                      [switchModel]="device.switches.get(outlet)"
+                      [switchModel]="device.getOutlet(outlet)"
                       (change)="switchesStateConnectorService.toggle(device.id, $event)"></sh-switch-status>
   </mat-card-content>
   <mat-divider></mat-divider>

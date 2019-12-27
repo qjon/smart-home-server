@@ -29,6 +29,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {LastUpdateComponent} from './components/last-update/last-update.component';
 import {AddRoomComponent} from '../rooms/components/add-room/add-room.component';
 import {RoomsModule} from '../rooms/rooms.module';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import {RoomsModule} from '../rooms/rooms.module';
     MatDividerModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule,
     MatSelectModule,
     MatToolbarModule,
     NotificationsModule,

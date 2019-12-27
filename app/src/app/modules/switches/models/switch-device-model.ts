@@ -13,11 +13,11 @@ export class SwitchDeviceModel {
   readonly roomId: number;
   readonly roomName: string;
 
-  public get status(): SwitchDto[] {
+  public get status(): SwitchNameDto[] {
     return this.data.params.switches;
   }
 
-  public switches = new Map<number, SwitchModel>();
+  public switches:  Map<number, SwitchModel>;
 
   constructor(protected data: SwitchDeviceDto) {
     this.id = this.data.deviceid;
@@ -30,13 +30,13 @@ export class SwitchDeviceModel {
     this.roomId = this.data.room ? this.data.room.id : null;
     this.roomName = this.data.room ? this.data.room.name : '';
     this.isAssignedToRoom = !!this.data.room;
-
-    this.status.forEach((s: SwitchNameDto) => {
-      this.switches.set(s.outlet, new SwitchModel(s));
-    });
   }
 
   public getSwitchesOutlet(): Iterable<number> {
-    return this.switches.keys();
+    return this.status.map((s: SwitchDto) => s.outlet);
+  }
+
+  public getOutlet(outlet: number): SwitchModel {
+    return new SwitchModel(this.status.find((s: SwitchNameDto) => s.outlet === outlet));
   }
 }
