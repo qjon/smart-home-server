@@ -6,6 +6,7 @@ import {SwitchDeviceDto, SwitchDto, SwitchStatus} from '../../interfaces/switch-
 import {SwitchesChangeStatusAction, SwitchesLoadAction, SwitchesOnOffAction, SwitchesOpenCreateDialogAction} from '../switches-actions';
 import {SwitchesStateConnectorsModule} from './switches-state-connectors.module';
 import {RoomsOpenCreateDialogAction} from '../../../rooms/store/rooms-actions';
+import { ScheduleOpenAddModalAction } from '../../../schedule/store/schedule-actions';
 
 @Injectable({
   providedIn: SwitchesStateConnectorsModule
@@ -42,4 +43,7 @@ export class SwitchesStateConnectorService implements SwitchesStateConnectorInte
     this.store.dispatch(new SwitchesOnOffAction({deviceId, status}));
   }
 
+  public openAddScheduleDialog(deviceId): void {
+    this.store.dispatch(new ScheduleOpenAddModalAction({deviceId}));
+  }
 }

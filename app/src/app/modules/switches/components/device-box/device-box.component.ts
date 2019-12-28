@@ -31,7 +31,7 @@ export class DeviceBoxComponent {
   }
 
   public addSchedule(): void {
-
+    this.switchesStateConnectorService.openAddScheduleDialog(this.device.id);
   }
 
   public trackByOutlet(value: number): string {

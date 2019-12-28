@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <h1 mat-dialog-title>
+    <ng-content select=".title"></ng-content>
+    </h1>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div mat-dialog-content>
+  <ng-content></ng-content>
+</div>
+<mat-divider></mat-divider>
+<div class="actions" mat-dialog-actions>
+  <ng-content select="[type=button]"></ng-content>
+  <ng-content select="[type=submit]"></ng-content>
+</div>

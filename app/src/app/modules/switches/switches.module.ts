@@ -30,6 +30,7 @@ import {LastUpdateComponent} from './components/last-update/last-update.componen
 import {AddRoomComponent} from '../rooms/components/add-room/add-room.component';
 import {RoomsModule} from '../rooms/rooms.module';
 import { MatMenuModule } from '@angular/material/menu';
+import { ScheduleModule } from '../schedule/schedule.module';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { MatMenuModule } from '@angular/material/menu';
     NotificationsModule,
     ReactiveFormsModule,
     RoomsModule,
+    ScheduleModule,
     SmartHomeCoreModule,
     StoreModule.forFeature(SWITCHES_STATE_NAME, switchesReducer),
     SwitchesRoutingModule,
