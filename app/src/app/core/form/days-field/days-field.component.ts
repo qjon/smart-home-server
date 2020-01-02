@@ -120,36 +120,6 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
   @Input()
   public type: 'short' | 'medium' | 'long' = 'short';
 
-  @Input()
-  get placeholder(): string {
-    return this._placeholder;
-  }
-
-  set placeholder(plh: string) {
-    this._placeholder = plh;
-    this.stateChanges.next();
-  }
-
-  @Input()
-  get required() {
-    return this._required;
-  }
-
-  set required(req) {
-    this._required = coerceBooleanProperty(req);
-    this.stateChanges.next();
-  }
-
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-    this.stateChanges.next();
-  }
-
   @HostBinding()
   public id = `days-field-${DaysFieldComponent.nextId++}`;
 
@@ -168,16 +138,14 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
 
   public readonly shortNames = ShortDayName;
 
+  protected _value: boolean[] = [];
+
   public constructor(@Optional() @Self() public ngControl: NgControl,
                      protected fm: FocusMonitor,
                      protected elRef: ElementRef<HTMLElement>) {
     super();
 
-    fm.monitor(elRef.nativeElement, true)
-      .subscribe(origin => {
-        this.focused = !!origin;
-        this.stateChanges.next();
-      });
+    this.monitorFocus();
 
     if (this.ngControl != null) {
       // Setting the value accessor directly (instead of using

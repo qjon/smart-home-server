@@ -1,7 +1,8 @@
 import { Subject } from 'rxjs';
 import { NgControl } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { DoCheck, ElementRef, HostBinding, OnDestroy } from '@angular/core';
+import { DoCheck, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 export class BaseFormComponentClass implements OnDestroy, DoCheck {
   @HostBinding('attr.aria-describedby')
@@ -9,11 +10,43 @@ export class BaseFormComponentClass implements OnDestroy, DoCheck {
 
   public stateChanges = new Subject<void>();
 
+  public destroy$ = new Subject<void>();
+
   public focused = false;
 
   public errorState = false;
 
   public ngControl: NgControl;
+
+  @Input()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+    this.stateChanges.next();
+  }
+
+  @Input()
+  get required() {
+    return this._required;
+  }
+
+  set required(req) {
+    this._required = coerceBooleanProperty(req);
+    this.stateChanges.next();
+  }
+
+  @Input()
+  get placeholder(): string {
+    return this._placeholder;
+  }
+
+  set placeholder(plh: string) {
+    this._placeholder = plh;
+    this.stateChanges.next();
+  }
 
   protected fm: FocusMonitor;
 
@@ -25,13 +58,16 @@ export class BaseFormComponentClass implements OnDestroy, DoCheck {
 
   protected _required = false;
 
-  protected _value: boolean[] = [];
+  protected _value: any;
 
   protected onChange: (value: any) => void;
 
   protected onTouched: (value: any) => void;
 
   public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
     this.stateChanges.complete();
     this.fm.stopMonitoring(this.elRef.nativeElement);
   }
@@ -54,5 +90,13 @@ export class BaseFormComponentClass implements OnDestroy, DoCheck {
 
   public setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
+  }
+
+  protected monitorFocus(): void {
+    this.fm.monitor(this.elRef.nativeElement, true)
+      .subscribe(origin => {
+        this.focused = !!origin;
+        this.stateChanges.next();
+      });
   }
 }
