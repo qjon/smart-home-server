@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'ty
 import { DeviceConfigurationEntity } from './device.configuration.entity';
 import { DeviceParamsEntity } from './device.params.entity';
 import { RoomEntity } from './room.entity';
+import { ScheduleEntity } from './schedule.entity';
 
 @Entity('devices')
 export class DeviceEntity {
@@ -40,6 +41,9 @@ export class DeviceEntity {
 
   @OneToMany(type => DeviceParamsEntity, params => params.device)
   params: DeviceParamsEntity[];
+
+  @OneToMany(type => ScheduleEntity, schedules => schedules.device)
+  schedules: ScheduleEntity[];
 
   @ManyToOne(type => RoomEntity, room => room.devices)
   room: RoomEntity;

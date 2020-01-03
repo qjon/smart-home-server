@@ -1,8 +1,10 @@
-import { Subject } from 'rxjs';
-import { NgControl } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgControl } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { DoCheck, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+
+import { Subject } from 'rxjs';
 
 export class BaseFormComponentClass implements OnDestroy, DoCheck {
   @HostBinding('attr.aria-describedby')
@@ -13,8 +15,6 @@ export class BaseFormComponentClass implements OnDestroy, DoCheck {
   public destroy$ = new Subject<void>();
 
   public focused = false;
-
-  public errorState = false;
 
   public ngControl: NgControl;
 
@@ -48,6 +48,10 @@ export class BaseFormComponentClass implements OnDestroy, DoCheck {
     this.stateChanges.next();
   }
 
+  public get errorState(): boolean {
+    return this.errorStateMatcher.isErrorState(this.ngControl.control as FormControl, this.formGroupDirective);
+  }
+
   protected fm: FocusMonitor;
 
   protected elRef: ElementRef<HTMLElement>;
@@ -64,6 +68,10 @@ export class BaseFormComponentClass implements OnDestroy, DoCheck {
 
   protected onTouched: (value: any) => void;
 
+  protected formGroupDirective: FormGroupDirective;
+
+  protected errorStateMatcher: ErrorStateMatcher;
+
   public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -75,9 +83,11 @@ export class BaseFormComponentClass implements OnDestroy, DoCheck {
   public ngDoCheck(): void {
     if (this.ngControl) {
       // update error state, which is responsible for displaying errors
-      this.errorState = this.ngControl.invalid && this.ngControl.touched;
+      // this.errorState = this.ngControl.invalid && this.ngControl.touched;
       this.stateChanges.next();
     }
+
+
   }
 
   public registerOnChange(fn: any): void {

@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
   <sh-form-dialog>
     <span class="title">Add schedule</span>
     <button mat-raised-button type="button" [disabled]="isSaving" (click)="onCancel()">Cancel</button>
@@ -6,55 +6,22 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Action</mat-label>
-        <select matNativeControl required [formControl]="formGroup.get('action')">
-          <option value="true">Turn On</option>
-          <option value="false">Turn Off</option>
-        </select>
-        <mat-error *ngIf="formGroup.get('action').invalid">Action is required</mat-error>
+        <mat-select matNativeControl required [formControl]="form.get('action')">
+          <mat-option [value]="true">Turn On</mat-option>
+          <mat-option [value]="false">Turn Off</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('action').invalid">Action is required</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Day</mat-label>
-        <input matInput [formControl]="formGroup.get('day')" placeholder="Select days">
-        <mat-error *ngIf="formGroup.get('day').invalid">Day is required</mat-error>
+        <ri-form-days-field [formControl]="form.get('day')" placeholder="Select days" type="medium" required></ri-form-days-field>
+        <mat-error>Day is required</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Time</mat-label>
-        <input matInput [formControl]="formGroup.get('time')" placeholder="Select time">
-        <mat-error *ngIf="formGroup.get('time').invalid">Time is required</mat-error>
+        <ri-form-time-field [formControl]="form.get('time')" placeholder="Select time"></ri-form-time-field>
+        <mat-error *ngIf="form.get('time').invalid">Time is required</mat-error>
       </mat-form-field>
     </div>
   </sh-form-dialog>
 </form>
-
-<!--<mat-toolbar color="primary">-->
-<!--  <mat-toolbar-row>-->
-<!--    <h1 mat-dialog-title>Add schedule</h1>-->
-<!--  </mat-toolbar-row>-->
-<!--</mat-toolbar>-->
-<!--<form [formGroup]="formGroup" (submit)="onSubmit()">-->
-<!--  <div mat-dialog-content>-->
-<!--&lt;!&ndash;    <mat-label>Action</mat-label>&ndash;&gt;-->
-<!--&lt;!&ndash;    <mat-radio-group aria-label="Select action" formControlName="action">&ndash;&gt;-->
-<!--&lt;!&ndash;      <mat-radio-button value="true">Turn On</mat-radio-button>&ndash;&gt;-->
-<!--&lt;!&ndash;      <mat-radio-button value="false">Turn Off</mat-radio-button>&ndash;&gt;-->
-<!--&lt;!&ndash;    </mat-radio-group>&ndash;&gt;-->
-<!--    <mat-form-field appearance="outline">-->
-<!--      <mat-label>Action</mat-label>-->
-<!--      <select matNativeControl required [formControl]="formGroup.get('action')">-->
-<!--        <option value="true">Turn On</option>-->
-<!--        <option value="false">Turn Off</option>-->
-<!--      </select>-->
-<!--      <mat-error *ngIf="formGroup.get('action').invalid">Action is required</mat-error>-->
-<!--    </mat-form-field>-->
-<!--    <mat-form-field appearance="outline">-->
-<!--      <mat-label>Day</mat-label>-->
-<!--      <input matInput [formControl]="formGroup.get('day')" placeholder="Select days">-->
-<!--      <mat-error *ngIf="formGroup.controls['day'].invalid">Day is required</mat-error>-->
-<!--    </mat-form-field>-->
-<!--  </div>-->
-<!--    <mat-divider></mat-divider>-->
-<!--    <div class="actions" mat-dialog-actions>-->
-<!--      <button mat-raised-button type="button" [disabled]="isSaving" (click)="onCancel()">Cancel</button>-->
-<!--      <button mat-raised-button type="submit" [disabled]="isSaving" color="primary">Save</button>-->
-<!--    </div>-->
-<!--</form>-->

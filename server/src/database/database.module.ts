@@ -8,6 +8,8 @@ import { DeviceParamsEntity } from './entity/device.params.entity';
 import { RoomService } from './services/room.service';
 import { RoomEntity } from './entity/room.entity';
 import { RoomRepositoryService } from './repository/room-repository.service';
+import { ScheduleService } from './services/schedule.service';
+import { ScheduleEntity } from './entity/schedule.entity';
 
 @Module({
   imports: [
@@ -16,6 +18,7 @@ import { RoomRepositoryService } from './repository/room-repository.service';
       DeviceConfigurationEntity,
       DeviceParamsEntity,
       RoomEntity,
+      ScheduleEntity,
     ]),
   ],
   providers: [
@@ -23,12 +26,14 @@ import { RoomRepositoryService } from './repository/room-repository.service';
     DeviceService,
     RoomRepositoryService,
     RoomService,
+    ScheduleService,
   ],
   exports: [
     DeviceRepositoryService,
     DeviceService,
     RoomRepositoryService,
     RoomService,
+    ScheduleService,
   ],
 })
 export class DatabaseModule {

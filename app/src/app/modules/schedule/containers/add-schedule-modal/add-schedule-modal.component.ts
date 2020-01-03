@@ -1,33 +1,50 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
+import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
+
+import { AbstractFormDialogComponent } from '@core/classes/abstract-form-dialog.component';
+import { ScheduleActions, ScheduleCreateAction } from '../../store/schedule-actions';
 
 @Component({
   selector: 'sh-add-schedule-modal',
   templateUrl: './add-schedule-modal.component.html',
   styleUrls: ['./add-schedule-modal.component.scss'],
 })
-export class AddScheduleModalComponent implements OnInit {
+export class AddScheduleModalComponent extends AbstractFormDialogComponent<AddScheduleModalComponent> implements OnInit {
+  constructor(protected fb: FormBuilder,
+              protected matDialogRef: MatDialogRef<AddScheduleModalComponent>,
+              protected actions$: Actions,
+              private store: Store<any>,
+              @Inject(MAT_DIALOG_DATA) public data: { deviceId: string }) {
+    super();
+  }
 
-  public formGroup: FormGroup;
-  public isSaving: boolean = false;
-
-  constructor(private fb: FormBuilder,
-              private dialogRef: MatDialogRef<AddScheduleModalComponent>) { }
-
-  public ngOnInit(): void {
-    this.formGroup = this.fb.group({
-      action: [false, Validators.required],
-      day: [1, Validators.required],
+  public createForm(): FormGroup {
+    return this.fb.group({
+      action: [true, Validators.required],
+      day: [null, Validators.required],
       time: [null, Validators.required],
     });
   }
 
   public onSubmit(): void {
+    this.form.updateValueAndValidity();
 
+    if (this.form.valid) {
+      this.isSaving = true;
+      this.store.dispatch(new ScheduleCreateAction({
+        scheduleData: {
+          ...this.form.value,
+          deviceId: this.data.deviceId,
+        },
+      }));
+    }
   }
 
-  public onCancel(): void {
-    this.dialogRef.close();
+  protected listOfActions(): string[] {
+    return [ScheduleActions.CreateSuccess, ScheduleActions.CreateError];
   }
 }

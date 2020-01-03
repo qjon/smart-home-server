@@ -5,6 +5,7 @@ import { DatabaseModule } from '../database/database.module';
 import { DevicesAdapterService } from './services/devices-adapter.service';
 import { RoomsController } from './rooms/rooms.controller';
 import { RoomController } from './rooms/room.controller';
+import { ScheduleController } from './schedules/schedule.controller';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { RoomController } from './rooms/room.controller';
     DevicesController,
     RoomsController,
     RoomController,
+    ScheduleController,
   ],
   providers: [DevicesAdapterService],
 })

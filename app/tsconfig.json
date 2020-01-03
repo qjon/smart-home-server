@@ -2,6 +2,11 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "../",
-    "outDir": "../dist/out-tsc"
+    "outDir": "../dist/out-tsc",
+    "paths": {
+      "@core/*": [
+        "app/src/app/core/*"
+      ]
+    }
   }
 }

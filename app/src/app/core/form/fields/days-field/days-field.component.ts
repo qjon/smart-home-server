@@ -1,19 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DoCheck,
-  ElementRef,
-  HostBinding,
+  ElementRef, Host,
+  HostBinding, Inject,
   Input,
-  OnDestroy,
   Optional,
-  Self,
+  Self, SkipSelf,
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ErrorStateMatcher } from '@angular/material/core';
+
 import { BaseFormComponentClass } from '../base-form-component-class';
 
 export enum Days {
@@ -129,7 +127,7 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
   }
 
   get empty() {
-    return this._value.some(val => val);
+    return !this._value.some(val => val);
   }
 
   public controlType = 'days-field';
@@ -141,6 +139,8 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
   protected _value: boolean[] = [];
 
   public constructor(@Optional() @Self() public ngControl: NgControl,
+                     @Optional() @Host() @SkipSelf() protected formGroupDirective: FormGroupDirective,
+                     @Inject(ErrorStateMatcher) protected errorStateMatcher: ErrorStateMatcher,
                      protected fm: FocusMonitor,
                      protected elRef: ElementRef<HTMLElement>) {
     super();
@@ -152,10 +152,11 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
       // the providers) to avoid running into a circular import.
       this.ngControl.valueAccessor = this;
     }
+
   }
 
   public writeValue(value: number): void {
-    this._value = value.toString(2).split('').reverse().map((val) => val === '1');
+    this._value = value ? value.toString(2).split('').reverse().map((val) => val === '1') : [];
 
     while (this._value.length < 7) {
       this._value.push(false);
@@ -183,6 +184,8 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
     this.onChange(value);
     this.onTouched(value);
     this.stateChanges.next();
+
+    console.log(this.ngControl)
   }
 
   public buttonName(day: string): string {

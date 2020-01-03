@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
-import {NotificationsModule} from './notifications.module';
+
 import {NotificationsService as SimpleNotificationService} from 'angular2-notifications';
+
+import {NotificationsModule} from './notifications.module';
 
 @Injectable({
   providedIn: NotificationsModule

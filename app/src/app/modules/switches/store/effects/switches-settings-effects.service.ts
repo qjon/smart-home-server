@@ -1,23 +1,24 @@
 import {Injectable} from '@angular/core';
+
 import {Actions, Effect, ofType} from '@ngrx/effects';
+import { select, Store } from '@ngrx/store';
+import {of} from 'rxjs';
+import { catchError, mergeMap, switchMap, take, tap } from 'rxjs/operators';
+
+import {NotificationsService} from '@core/notifications/notifications.service';
+
 import {
   SwitchActionTypes,
   SwitchesChangeSettingsAction,
   SwitchesChangeSettingsErrorAction,
   SwitchesChangeSettingsSuccessAction
 } from '../switches-actions';
-import { catchError, map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 import {SwitchesApiService} from '../../api/switches-api.service';
-import {of} from 'rxjs';
-import {NotificationsService} from '../../../notifications/notifications.service';
 import { MoveDeviceToRoomAction } from '../../../rooms/store/rooms-actions';
-import { select, Store } from '@ngrx/store';
 import { switchesSelectors } from '../switches-selectors';
 import { SwitchDeviceModel } from '../../models/switch-device-model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SwitchesSettingsEffectsService {
   @Effect({dispatch: true})
   public changeSettingsEffect$ = this.actions$

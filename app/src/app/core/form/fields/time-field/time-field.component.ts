@@ -1,19 +1,27 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  HostBinding,
+  ElementRef, Host,
+  HostBinding, Inject,
   Input,
   OnInit,
   Optional,
-  Self,
+  Self, SkipSelf,
 } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ControlValueAccessor, FormBuilder, FormGroup, NgControl, Validators } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  NgControl,
+} from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { BaseFormComponentClass } from '../base-form-component-class';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+
 import { takeUntil } from 'rxjs/operators';
+
+import { BaseFormComponentClass } from '../base-form-component-class';
 
 export interface TimeValue {
   hours: number;
@@ -32,7 +40,7 @@ export interface TimeValue {
     },
   ],
 })
-export class TimeFieldComponent extends BaseFormComponentClass implements ControlValueAccessor {
+export class TimeFieldComponent extends BaseFormComponentClass implements ControlValueAccessor, OnInit {
   static nextId = 0;
 
   @Input()
@@ -65,6 +73,8 @@ export class TimeFieldComponent extends BaseFormComponentClass implements Contro
   protected _value: TimeValue = null;
 
   public constructor(@Optional() @Self() public ngControl: NgControl,
+                     @Optional() @Host() @SkipSelf() protected formGroupDirective: FormGroupDirective,
+                     @Inject(ErrorStateMatcher) protected errorStateMatcher: ErrorStateMatcher,
                      protected fm: FocusMonitor,
                      protected elRef: ElementRef<HTMLElement>,
                      protected fb: FormBuilder) {
@@ -78,11 +88,10 @@ export class TimeFieldComponent extends BaseFormComponentClass implements Contro
       this.ngControl.valueAccessor = this;
     }
 
-    const now: Date = new Date();
 
     this.formGroup = this.fb.group({
-      hours: [this.currentTime ? now.getHours() : 0],
-      minutes: [this.currentTime ? now.getMinutes() : 0],
+      hours: [0],
+      minutes: [0],
     });
 
     this.formGroup.valueChanges
@@ -99,6 +108,17 @@ export class TimeFieldComponent extends BaseFormComponentClass implements Contro
         this.onTouched(newValue);
         this.stateChanges.next();
       });
+  }
+
+  public ngOnInit(): void {
+    if (this.currentTime) {
+      const now: Date = new Date();
+
+      this.formGroup.setValue({
+        hours: now.getHours(),
+        minutes: now.getMinutes(),
+      });
+    }
   }
 
   public writeValue(value: TimeValue): void {

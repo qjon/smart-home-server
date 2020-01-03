@@ -1,5 +1,12 @@
 import {Injectable} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+
 import {Actions, Effect, ofType} from '@ngrx/effects';
+import {of} from 'rxjs';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
+
+import {NotificationsService} from '@core/notifications/notifications.service';
+
 import {
   SwitchActionTypes,
   SwitchesChangeStatusAction,
@@ -11,16 +18,10 @@ import {
   SwitchesOnOffAction,
   SwitchesOnOffSuccessAction
 } from '../switches-actions';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {SwitchesApiService} from '../../api/switches-api.service';
-import {of} from 'rxjs';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AddDeviceComponent} from '../../components/add-device/add-device.component';
-import {NotificationsService} from '../../../notifications/notifications.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SwitchesEffectsService {
 
   @Effect({dispatch: true})
