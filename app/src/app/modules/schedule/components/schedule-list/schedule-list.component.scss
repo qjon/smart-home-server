@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+
+  span {
+    flex: 1 1 100%;
+  }
+
+  .header-actions {
+    width: 100px;
+    text-align: right;
+  }
+}

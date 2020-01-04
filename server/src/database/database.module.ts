@@ -10,6 +10,7 @@ import { RoomEntity } from './entity/room.entity';
 import { RoomRepositoryService } from './repository/room-repository.service';
 import { ScheduleService } from './services/schedule.service';
 import { ScheduleEntity } from './entity/schedule.entity';
+import { ScheduleRepositoryService } from './repository/schedule-repository.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ScheduleEntity } from './entity/schedule.entity';
     DeviceService,
     RoomRepositoryService,
     RoomService,
+    ScheduleRepositoryService,
     ScheduleService,
   ],
   exports: [
@@ -33,6 +35,7 @@ import { ScheduleEntity } from './entity/schedule.entity';
     DeviceService,
     RoomRepositoryService,
     RoomService,
+    ScheduleRepositoryService,
     ScheduleService,
   ],
 })

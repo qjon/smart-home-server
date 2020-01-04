@@ -36,6 +36,8 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
   public rooms$: Observable<RoomDto[]>;
 
+  public isScheduleOpen = true;
+
   constructor(private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
               private deviceDetailsStateConnectorService: DeviceDetailsStateConnectorService,
@@ -99,6 +101,15 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     this.isEditMode = true;
     this.enableForm();
   }
+
+  public openSchedule(): void {
+    this.isScheduleOpen = true;
+  }
+
+  public hideSchedule(): void {
+    this.isScheduleOpen = false;
+  }
+
   private onSubmitError() {
     this.actions$
       .pipe(
@@ -145,6 +156,7 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       .subscribe((id) => this.deviceDetailsStateConnectorService.setCurrentDeviceId(id));
   }
 
+
   private createForm() {
     this.switches = this.fb.group({
       0: [null, [Validators.required, Validators.maxLength(50)]],
@@ -173,7 +185,6 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       );
   }
 
-
   private disableForm(): void {
     this.form.disable();
   }
@@ -183,12 +194,13 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     this.form.controls['isSingleSwitch'].disable();
     this.form.controls['deviceId'].disable();
 
-    for (let i = this.device.switches.size; i < 4; i++) {
+    for (let i = this.device.switches.length; i < 4; i++) {
       this.switches.controls[i].disable();
     }
   }
 
   private prepareFormValues(device: SwitchDeviceModel): { [key: string]: any } {
+    console.log(device);
     return {
       name: device.name,
       deviceId: device.id,
@@ -197,10 +209,10 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       isSingleSwitch: device.isSingleSwitch,
       room: device.isAssignedToRoom ? { id: device.roomId, name: device.roomName } : null,
       switches: {
-        0: device.switches.get(0).name,
-        1: device.switches.has(1) ? device.switches.get(1).name : null,
-        2: device.switches.has(2) ? device.switches.get(2).name : null,
-        3: device.switches.has(3) ? device.switches.get(3).name : null,
+        0: device.getOutlet(0).name,
+        1: device.getOutlet(1) ? device.getOutlet(1).name : null,
+        2: device.getOutlet(2) ? device.getOutlet(2).name : null,
+        3: device.getOutlet(3) ? device.getOutlet(3).name : null,
       },
     };
   }

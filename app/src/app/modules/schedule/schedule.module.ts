@@ -9,20 +9,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { ErrorStateMatcher, MatOptionModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 import { EffectsModule } from '@ngrx/effects';
 
 import { FormModule as CoreFormModule } from '@core/form/form.module';
+import { OnSubmitErrorStateMatcher } from '@core/form/error/on-submit-error-state-matcher';
 import { DialogModule } from '@core/dialog/dialog.module';
 
 import { AddScheduleModalComponent } from './containers/add-schedule-modal/add-schedule-modal.component';
 import { ScheduleApiModule } from './api/schedule-api.module';
 import { ScheduleEffectService } from './store/effects/schedule-effect.service';
-import { OnSubmitErrorStateMatcher } from '@core/form/error/on-submit-error-state-matcher';
+import { ScheduleListComponent } from './components/schedule-list/schedule-list.component';
+import { ScheduleDetailsComponent } from './components/schedule-details/schedule-details.component';
 
 @NgModule({
   declarations: [
     AddScheduleModalComponent,
+    ScheduleListComponent,
+    ScheduleDetailsComponent,
   ],
   entryComponents: [
     AddScheduleModalComponent,
@@ -42,9 +48,14 @@ import { OnSubmitErrorStateMatcher } from '@core/form/error/on-submit-error-stat
     ScheduleApiModule,
     MatOptionModule,
     MatSelectModule,
+    MatCardModule,
+    MatIconModule,
   ],
   providers: [
-    {provide: ErrorStateMatcher, useClass: OnSubmitErrorStateMatcher}
+    { provide: ErrorStateMatcher, useClass: OnSubmitErrorStateMatcher },
+  ],
+  exports: [
+    ScheduleListComponent,
   ],
 })
 export class ScheduleModule {

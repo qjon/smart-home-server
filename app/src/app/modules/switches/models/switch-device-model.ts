@@ -13,11 +13,16 @@ export class SwitchDeviceModel {
   readonly roomId: number;
   readonly roomName: string;
 
+  /**
+   * @deprecated Use switches instead of status
+   */
   public get status(): SwitchNameDto[] {
     return this.data.params.switches;
   }
 
-  public switches:  Map<number, SwitchModel>;
+  public get switches(): SwitchNameDto[] {
+    return this.data.params.switches;
+  }
 
   constructor(protected data: SwitchDeviceDto) {
     this.id = this.data.deviceid;
@@ -37,6 +42,11 @@ export class SwitchDeviceModel {
   }
 
   public getOutlet(outlet: number): SwitchModel {
-    return new SwitchModel(this.status.find((s: SwitchNameDto) => s.outlet === outlet));
+    const switchOutlet = this.status.find((s: SwitchNameDto) => s.outlet === outlet);
+    if (switchOutlet) {
+      return new SwitchModel(switchOutlet);
+    } else {
+      return null;
+    }
   }
 }

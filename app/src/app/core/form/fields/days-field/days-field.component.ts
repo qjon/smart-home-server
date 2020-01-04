@@ -1,11 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef, Host,
-  HostBinding, Inject,
+  ElementRef,
+  Host,
+  HostBinding,
+  Inject,
   Input,
   Optional,
-  Self, SkipSelf,
+  Self,
+  SkipSelf,
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -13,92 +16,8 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 import { BaseFormComponentClass } from '../base-form-component-class';
-
-export enum Days {
-  Monday = 'Monday',
-  Tuesday = 'Tuesday',
-  Wednesday = 'Wednesday',
-  Thursday = 'Thursday',
-  Friday = 'Friday',
-  Saturday = 'Saturday',
-  Sunday = 'Sunday',
-}
-
-export enum ShortDayName {
-  Monday = 'M',
-  Tuesday = 'T',
-  Wednesday = 'W',
-  Thursday = 'T',
-  Friday = 'F',
-  Saturday = 'S',
-  Sunday = 'S',
-}
-
-export enum MediumDayName {
-  Monday = 'Mon',
-  Tuesday = 'Tue',
-  Wednesday = 'Wed',
-  Thursday = 'Thu',
-  Friday = 'Fri',
-  Saturday = 'Sat',
-  Sunday = 'Sun',
-}
-
-export enum LongDayName {
-  Monday = 'Monday',
-  Tuesday = 'Tuesday',
-  Wednesday = 'Wednesday',
-  Thursday = 'Thursday',
-  Friday = 'Friday',
-  Saturday = 'Saturday',
-  Sunday = 'Sunday',
-}
-
-export enum DayValue {
-  Monday = 1,
-  Tuesday = 2,
-  Wednesday = 4,
-  Thursday = 8,
-  Friday = 16,
-  Saturday = 32,
-  Sunday = 64,
-}
-
-export interface Day {
-  symbol: Days;
-  value: DayValue;
-}
-
-const days: Day[] = [
-  {
-    symbol: Days.Monday,
-    value: DayValue.Monday,
-  },
-  {
-    symbol: Days.Tuesday,
-    value: DayValue.Tuesday,
-  },
-  {
-    symbol: Days.Wednesday,
-    value: DayValue.Wednesday,
-  },
-  {
-    symbol: Days.Thursday,
-    value: DayValue.Thursday,
-  },
-  {
-    symbol: Days.Friday,
-    value: DayValue.Friday,
-  },
-  {
-    symbol: Days.Saturday,
-    value: DayValue.Saturday,
-  },
-  {
-    symbol: Days.Sunday,
-    value: DayValue.Sunday,
-  },
-];
+import { IntToDayService } from '@core/form/services/int-to-day.service';
+import { Day, days, DayType, LongDayName, MediumDayName, ShortDayName } from '@core/form/consts/days-consts';
 
 @Component({
   selector: 'ri-form-days-field',
@@ -116,7 +35,7 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
   static nextId = 0;
 
   @Input()
-  public type: 'short' | 'medium' | 'long' = 'short';
+  public type: DayType = 'short';
 
   @HostBinding()
   public id = `days-field-${DaysFieldComponent.nextId++}`;
@@ -132,7 +51,7 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
 
   public controlType = 'days-field';
 
-  public readonly days: Day[] = days;
+  public readonly days: Day[] = [...days];
 
   public readonly shortNames = ShortDayName;
 
@@ -142,7 +61,8 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
                      @Optional() @Host() @SkipSelf() protected formGroupDirective: FormGroupDirective,
                      @Inject(ErrorStateMatcher) protected errorStateMatcher: ErrorStateMatcher,
                      protected fm: FocusMonitor,
-                     protected elRef: ElementRef<HTMLElement>) {
+                     protected elRef: ElementRef<HTMLElement>,
+                     protected intToDaysService: IntToDayService) {
     super();
 
     this.monitorFocus();
@@ -156,11 +76,7 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
   }
 
   public writeValue(value: number): void {
-    this._value = value ? value.toString(2).split('').reverse().map((val) => val === '1') : [];
-
-    while (this._value.length < 7) {
-      this._value.push(false);
-    }
+    this._value = this.intToDaysService.convertInt2Days(value);
   }
 
   public onContainerClick(event: MouseEvent) {
@@ -175,7 +91,7 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
   public toggle(index: number): void {
     this._value[index] = !this._value[index];
 
-    let value: number = this.countValue(this._value);
+    let value: number = this.intToDaysService.convertDays2Int(this._value);
 
     if (value === 0) {
       value = null;
@@ -189,18 +105,6 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
   }
 
   public buttonName(day: string): string {
-    if (this.type === 'long') {
-      return LongDayName[day];
-    } else if (this.type === 'medium') {
-      return MediumDayName[day];
-    } else {
-      return ShortDayName[day];
-    }
-  }
-
-  private countValue(value: boolean[]): number {
-    return value.reduce((prevValue: number, currentValue: boolean, index: number): number => {
-      return prevValue + (+currentValue) * Math.pow(2, index);
-    }, 0);
+    return this.intToDaysService.getDayName(day, this.type);
   }
 }

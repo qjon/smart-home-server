@@ -1,0 +1,18 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <span class="title">Schedule</span>
+      <div class="header-actions">
+        <button type="button" mat-icon-button (click)="close.emit()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div class="overflow-box">
+      <sh-schedule-details *ngFor="let schedule of list" [schedule]="schedule"></sh-schedule-details>
+    </div>
+  </mat-card-content>
+</mat-card>

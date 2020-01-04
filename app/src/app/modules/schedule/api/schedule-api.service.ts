@@ -13,6 +13,10 @@ export class ScheduleApiService {
   }
 
   public create(data: Partial<ScheduleDto>): Observable<ScheduleDto> {
-    return this.httpClient.post<ScheduleDto>('/api/schedule/' + data.deviceId, data);
+    return this.httpClient.post<ScheduleDto>(`/api/schedule/${data.deviceId}`, data);
+  }
+
+  public get(deviceId: string): Observable<ScheduleDto[]> {
+    return this.httpClient.get<ScheduleDto[]>(`/api/schedule/${deviceId}`);
   }
 }

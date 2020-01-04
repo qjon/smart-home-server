@@ -1,10 +1,12 @@
 import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
+import { LeadingZeroService } from '@core/form/services/leading-zero.service';
 
 @Directive({
   selector: '[riLeadingZeroValue]',
 })
 export class LeadingZeroValueDirective implements AfterViewInit {
-  constructor(private el: ElementRef<HTMLInputElement>) {
+  constructor(private el: ElementRef<HTMLInputElement>,
+              protected leadingZeroService: LeadingZeroService) {
   }
 
   public ngAfterViewInit(): void {
@@ -13,16 +15,6 @@ export class LeadingZeroValueDirective implements AfterViewInit {
 
   @HostListener('blur', ['$event.target.value'])
   public format(value: string): void {
-    if (value.length >= 2) {
-      return;
-    }
-
-    const newValue: number = parseInt(value, 10);
-
-    if (newValue < 10) {
-      this.el.nativeElement.value = '0' + value;
-    } else {
-      this.el.nativeElement.value = value;
-    }
+    this.el.nativeElement.value = this.leadingZeroService.addZeros(value);
   }
 }

@@ -8,19 +8,34 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NumberFieldDirective } from './directives/number-field.directive';
 import { LeadingZeroValueDirective } from './directives/leading-zero-value.directive';
 import { RangeNumberValueDirective } from './directives/range-number-value.directive';
+import { DaysPipe } from './pipes/days.pipe';
+import { FormServicesModule } from '@core/form/services/form-services.module';
+import { TimePipe } from './pipes/time.pipe';
 
 @NgModule({
-  declarations: [DaysFieldComponent, TimeFieldComponent, NumberFieldDirective, LeadingZeroValueDirective, RangeNumberValueDirective],
+  declarations: [
+    DaysFieldComponent,
+    DaysPipe,
+    LeadingZeroValueDirective,
+    NumberFieldDirective,
+    RangeNumberValueDirective,
+    TimeFieldComponent,
+    TimePipe,
+  ],
   exports: [
     DaysFieldComponent,
+    DaysPipe,
     TimeFieldComponent,
+    TimePipe,
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    FormServicesModule,
     MatButtonModule,
     MatFormFieldModule,
-    FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
 })
-export class FormModule { }
+export class FormModule {
+}

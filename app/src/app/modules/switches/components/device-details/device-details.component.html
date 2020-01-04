@@ -1,150 +1,159 @@
-<form [formGroup]="form" *ngIf="device" (submit)="onSubmit()">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        <button type="button" mat-icon-button [routerLink]="['..', '..', 'list']">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-        <span class="title">{{device.name}}</span>
-      </mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-      <div class="device-info">
-        <div class="device-image">
-          <img src="assets/{{device.model}}.png">
-        </div>
-        <div class="device-details">
-          <mat-form-field appearance="outline">
-            <mat-label>Device ID</mat-label>
-            <input matInput
-                   [formControl]="form.controls['deviceId']"
-                   placeholder="Enter device ID">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Name {{form.controls['name'].hasError('length')}}</mat-label>
-            <input matInput
-                   [formControl]="form.controls['name']"
-                   placeholder="Enter your name of the device">
-            <mat-error *ngIf="form.controls['name'].invalid ">
-              <span *ngIf="form.controls['name'].hasError('required')">Device name is required</span>
-              <span *ngIf="form.controls['name'].hasError('maxlength')">Device name
-              should be shorter or equal 50 chars</span>
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Api Key</mat-label>
-            <input matInput
-                   [formControl]="form.controls['apiKey']"
-                   placeholder="Enter api key"/>
-            <mat-error *ngIf="form.controls['apiKey'].invalid ">
-              <span *ngIf="form.controls['apiKey'].hasError('required')">Api Key is required</span>
-              <span *ngIf="form.controls['apiKey'].hasError('maxlength')">Device name
-              should be shorter or equal 100 chars</span>
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Room</mat-label>
-            <mat-select [formControl]="form.controls['room']" [compareWith]="compareRoom">
-              <mat-option *ngFor="let room of (rooms$ | async)" [value]="room">
-                {{room.name}}
-              </mat-option>
-            </mat-select>
-            <button type="button"
-                    mat-button
-                    *ngIf="form.controls['room']"
-                    [disabled]="!isEditMode"
-                    matSuffix
-                    mat-icon-button
-                    aria-label="Clear"
-                    (click)="clearRoom($event)">
-              <mat-icon>close</mat-icon>
+<div class="layout">
+  <form [formGroup]="form" *ngIf="device" (submit)="onSubmit()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <button type="button" mat-icon-button [routerLink]="['..', '..', 'list']">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <span class="title">{{device.name}}</span>
+          <div class="header-actions">
+            <button type="button" mat-icon-button (click)="openSchedule()">
+              <mat-icon>schedule</mat-icon>
             </button>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Model</mat-label>
-            <mat-select [formControl]="form.controls['model']">
-              <mat-option *ngFor="let model of deviceModels" [value]="model">
-                {{model}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="form.controls['name'].invalid ">
-              <span *ngIf="form.controls['name'].hasError('required')">Device model name is required</span>
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Is single switch</mat-label>
-            <input matInput [formControl]="form.controls['isSingleSwitch']">
-          </mat-form-field>
-          <div class="switches">
+          </div>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="device-info">
+          <div class="device-image">
+            <img src="assets/{{device.model}}.png">
+          </div>
+          <div class="device-details">
             <mat-form-field appearance="outline">
-              <mat-label>Switch 1 name</mat-label>
+              <mat-label>Device ID</mat-label>
               <input matInput
-                     [formControl]="form.controls['switches'].controls['0']"
-                     placeholder="Enter switch name">
-              <mat-error *ngIf="form.controls['switches'].controls['0'].invalid ">
-                <span *ngIf="form.controls['switches'].controls['0'].hasError('required')">Api Key is required</span>
-                <span *ngIf="form.controls['switches'].controls['0'].hasError('maxlength')">Device name
-              should be shorter or equal 50 chars</span>
+                     [formControl]="form.controls['deviceId']"
+                     placeholder="Enter device ID">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Name {{form.controls['name'].hasError('length')}}</mat-label>
+              <input matInput
+                     [formControl]="form.controls['name']"
+                     placeholder="Enter your name of the device">
+              <mat-error *ngIf="form.controls['name'].invalid ">
+                <span *ngIf="form.controls['name'].hasError('required')">Device name is required</span>
+                <span *ngIf="form.controls['name'].hasError('maxlength')">Device name
+                should be shorter or equal 50 chars</span>
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
-              <mat-label>Switch 2 name</mat-label>
+              <mat-label>Api Key</mat-label>
               <input matInput
-                     [formControl]="form.controls['switches'].controls['1']"
-                     placeholder="Enter switch name">
-              <mat-error *ngIf="form.controls['switches'].controls['1'].invalid ">
-                <span *ngIf="form.controls['switches'].controls['1'].hasError('required')">Api Key is required</span>
-                <span *ngIf="form.controls['switches'].controls['1'].hasError('maxlength')">Device name
-              should be shorter or equal 50 chars</span>
+                     [formControl]="form.controls['apiKey']"
+                     placeholder="Enter api key"/>
+              <mat-error *ngIf="form.controls['apiKey'].invalid ">
+                <span *ngIf="form.controls['apiKey'].hasError('required')">Api Key is required</span>
+                <span *ngIf="form.controls['apiKey'].hasError('maxlength')">Device name
+                should be shorter or equal 100 chars</span>
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
-              <mat-label>Switch 3 name</mat-label>
-              <input matInput
-                     [formControl]="form.controls['switches'].controls['2']"
-                     placeholder="Enter switch name">
+              <mat-label>Room</mat-label>
+              <mat-select [formControl]="form.controls['room']" [compareWith]="compareRoom">
+                <mat-option *ngFor="let room of (rooms$ | async)" [value]="room">
+                  {{room.name}}
+                </mat-option>
+              </mat-select>
+              <button type="button"
+                      mat-button
+                      *ngIf="form.controls['room']"
+                      [disabled]="!isEditMode"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="Clear"
+                      (click)="clearRoom($event)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Model</mat-label>
+              <mat-select [formControl]="form.controls['model']">
+                <mat-option *ngFor="let model of deviceModels" [value]="model">
+                  {{model}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.controls['name'].invalid ">
+                <span *ngIf="form.controls['name'].hasError('required')">Device model name is required</span>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Is single switch</mat-label>
+              <input matInput [formControl]="form.controls['isSingleSwitch']">
+            </mat-form-field>
+            <div class="switches">
+              <mat-form-field appearance="outline">
+                <mat-label>Switch 1 name</mat-label>
+                <input matInput
+                       [formControl]="form.controls['switches'].controls['0']"
+                       placeholder="Enter switch name">
+                <mat-error *ngIf="form.controls['switches'].controls['0'].invalid ">
+                  <span *ngIf="form.controls['switches'].controls['0'].hasError('required')">Api Key is required</span>
+                  <span *ngIf="form.controls['switches'].controls['0'].hasError('maxlength')">Device name
+                should be shorter or equal 50 chars</span>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Switch 2 name</mat-label>
+                <input matInput
+                       [formControl]="form.controls['switches'].controls['1']"
+                       placeholder="Enter switch name">
+                <mat-error *ngIf="form.controls['switches'].controls['1'].invalid ">
+                  <span *ngIf="form.controls['switches'].controls['1'].hasError('required')">Api Key is required</span>
+                  <span *ngIf="form.controls['switches'].controls['1'].hasError('maxlength')">Device name
+                should be shorter or equal 50 chars</span>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Switch 3 name</mat-label>
+                <input matInput
+                       [formControl]="form.controls['switches'].controls['2']"
+                       placeholder="Enter switch name">
 
-              <mat-error *ngIf="form.controls['switches'].controls['2'].invalid ">
-                <span *ngIf="form.controls['switches'].controls['2'].hasError('required')">Api Key is required</span>
-                <span *ngIf="form.controls['switches'].controls['2'].hasError('maxlength')">Device name
-              should be shorter or equal 50 chars</span>
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Switch 4 name</mat-label>
-              <input matInput
-                     [formControl]="form.controls['switches'].controls['3']"
-                     placeholder="Enter switch name">
+                <mat-error *ngIf="form.controls['switches'].controls['2'].invalid ">
+                  <span *ngIf="form.controls['switches'].controls['2'].hasError('required')">Api Key is required</span>
+                  <span *ngIf="form.controls['switches'].controls['2'].hasError('maxlength')">Device name
+                should be shorter or equal 50 chars</span>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Switch 4 name</mat-label>
+                <input matInput
+                       [formControl]="form.controls['switches'].controls['3']"
+                       placeholder="Enter switch name">
 
-              <mat-error *ngIf="form.controls['switches'].controls['3'].invalid ">
-                <span *ngIf="form.controls['switches'].controls['3'].hasError('required')">Api Key is required</span>
-                <span *ngIf="form.controls['switches'].controls['3'].hasError('maxlength')">Device name
-              should be shorter or equal 50 chars</span>
-              </mat-error>
-            </mat-form-field>
+                <mat-error *ngIf="form.controls['switches'].controls['3'].invalid ">
+                  <span *ngIf="form.controls['switches'].controls['3'].hasError('required')">Api Key is required</span>
+                  <span *ngIf="form.controls['switches'].controls['3'].hasError('maxlength')">Device name
+                should be shorter or equal 50 chars</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
           </div>
         </div>
-      </div>
-    </mat-card-content>
-    <mat-divider></mat-divider>
-    <mat-card-actions>
-      <div class="last-update">
-        <sh-last-update [lastUpdate]="device.lastStatusChangeTimestamp"></sh-last-update>
-      </div>
-      <div class="actions">
-        <button mat-raised-button type="button" *ngIf="isEditMode" (click)="cancelEditMode()"
-                [disabled]="actionButtonsDisabled">Cancel
-        </button>
-        <button mat-raised-button type="submit" *ngIf="isEditMode" color="primary" [disabled]="actionButtonsDisabled">
-          Save
-        </button>
-        <button mat-raised-button type="button" *ngIf="!isEditMode" (click)="openEditMode()" color="primary">
-          <mat-icon>edit</mat-icon>
-          Edit
-        </button>
-      </div>
-    </mat-card-actions>
-  </mat-card>
-
-</form>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <mat-card-actions>
+        <div class="last-update">
+          <sh-last-update [lastUpdate]="device.lastStatusChangeTimestamp"></sh-last-update>
+        </div>
+        <div class="actions">
+          <button mat-raised-button type="button" *ngIf="isEditMode" (click)="cancelEditMode()"
+                  [disabled]="actionButtonsDisabled">Cancel
+          </button>
+          <button mat-raised-button type="submit" *ngIf="isEditMode" color="primary" [disabled]="actionButtonsDisabled">
+            Save
+          </button>
+          <button mat-raised-button type="button" *ngIf="!isEditMode" (click)="openEditMode()" color="primary">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+  <div class="schedule" *ngIf="isScheduleOpen">
+    <sh-schedule-list (close)="hideSchedule()" [deviceId]="device.id"></sh-schedule-list>
+  </div>
+</div>
