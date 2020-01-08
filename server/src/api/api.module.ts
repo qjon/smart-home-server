@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { DevicesController } from './devices/devices.controller';
 import { StorageModule } from '../storage/storage.module';
 import { DatabaseModule } from '../database/database.module';
-import { DevicesAdapterService } from './services/devices-adapter.service';
 import { RoomsController } from './rooms/rooms.controller';
 import { RoomController } from './rooms/room.controller';
 import { ScheduleController } from './schedules/schedule.controller';
+import { AdapterModule } from '../adapters/adapters.module';
 
 @Module({
   imports: [
+    AdapterModule,
     DatabaseModule,
     StorageModule,
   ],
@@ -18,7 +19,7 @@ import { ScheduleController } from './schedules/schedule.controller';
     RoomController,
     ScheduleController,
   ],
-  providers: [DevicesAdapterService],
+  providers: [],
 })
 export class ApiModule {
 }

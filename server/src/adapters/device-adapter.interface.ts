@@ -1,4 +1,4 @@
-import { LightSwitch, LightSwitchStatus } from '../../interfaces/light/update-action.interface';
+import { LightSwitch, LightSwitchStatus } from '../interfaces/light/update-action.interface';
 
 export interface BaseRequestDataInterface {
   host: string;

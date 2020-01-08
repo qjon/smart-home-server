@@ -5,7 +5,7 @@ import {
   UpdateSwitchStateDataInterface,
 } from './device-adapter.interface';
 import * as http from 'http';
-import { SonOffEncryptionService } from '../../workers/sonoff-encryption.service';
+import { SonOffEncryptionService } from '../workers/sonoff-encryption.service';
 
 @Injectable()
 export class DevicesAdapterService implements DeviceAdapterInterface {

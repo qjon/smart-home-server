@@ -19,8 +19,8 @@ import { DeviceChangeSettingsDto, LightSwitch } from '../../interfaces/light/upd
 import { DeviceService } from '../../database/services/device.service';
 import { DeviceRepositoryService } from '../../database/repository/device-repository.service';
 import { ApiExceptionFilters } from '../filters/api.filters';
-import { DeviceAdapterInterface } from '../services/device-adapter.interface';
-import { DevicesAdapterService } from '../services/devices-adapter.service';
+import { DeviceAdapterInterface } from '../../adapters/device-adapter.interface';
+import { DevicesAdapterService } from '../../adapters/devices-adapter.service';
 
 @Controller('/api/devices')
 @UseFilters(new ApiExceptionFilters())
