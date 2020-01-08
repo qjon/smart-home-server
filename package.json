@@ -4,15 +4,16 @@
   "description": "Smart Home app is an application and server to manage SonOff device in local network using LanMode mechanism",
   "main": "index.js",
   "scripts": {
-    "build:app": "cd app && ng build --prod --output-hashing=none",
+    "build:app": "npm run timestamp && cd app && ng build --prod --output-hashing=none",
     "build:server": "rm -rf dist && cd server && tsc -p tsconfig.build.json",
     "config": "node scripts/init-configuration.js",
     "format:server": "prettier --write \"server/src/**/*.ts\"",
     "deploy": "npm run build:server && npm run build:app && node scripts/post-deploy.js",
     "lint:server": "tslint -p tsconfig.json -c tslint.json",
-    "start:app": "cd app && ng serve --proxy-config proxy.config.json",
+    "start:app": "npm run timestamp && cd app && ng serve --proxy-config proxy.config.json",
     "start:server": "cd server && nodemon",
-    "start": "concurrently \"npm run start:app\" \"npm run start:server\" "
+    "start": "concurrently \"npm run start:app\" \"npm run start:server\" ",
+    "timestamp": "node scripts/timestamp.js"
   },
   "repository": {
     "type": "git",
@@ -95,10 +96,12 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "moment": "^2.24.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.15.3",
     "prompt": "^1.0.0",
     "protractor": "~5.4.0",
+    "replace-in-file": "^5.0.2",
     "supertest": "^3.4.1",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
