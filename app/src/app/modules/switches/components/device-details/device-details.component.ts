@@ -201,7 +201,6 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   }
 
   private prepareFormValues(device: SwitchDeviceModel): { [key: string]: any } {
-    console.log(device);
     return {
       name: device.name,
       deviceId: device.id,

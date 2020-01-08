@@ -5,12 +5,17 @@ import { DeviceEntity } from '../entity/device.entity';
 import { DeviceNotExistException } from '../../exceptions/device-not-exist.exception';
 import { ScheduleInterface } from '../../interfaces/schedule/schedule.interface';
 import { ScheduleEntity } from '../entity/schedule.entity';
+import { ScheduleRepositoryService } from '../repository/schedule-repository.service';
+import { ScheduleNotExistException } from '../../exceptions/schedule-not-exist.exception';
 
 @Injectable()
 export class ScheduleService {
 
   @Inject(DeviceRepositoryService)
   private deviceRepositoryService: DeviceRepositoryService;
+
+  @Inject(ScheduleRepositoryService)
+  private scheduleRepositoryService: ScheduleRepositoryService;
 
   constructor(private readonly entityManager: EntityManager) {
 
@@ -29,6 +34,22 @@ export class ScheduleService {
       day: scheduleData.day,
       time: scheduleData.time.hours + ':' + scheduleData.time.minutes + ':00',
     });
+
+    return this.entityManager.save(schedule);
+  }
+
+  async updateActiveStatus(deviceId: string, scheduleId: number, isActive: boolean): Promise<ScheduleEntity> {
+    const schedule: ScheduleEntity = await this.scheduleRepositoryService.fetchByScheduleIdWithDevice(scheduleId);
+
+    if (!schedule) {
+      throw new ScheduleNotExistException(scheduleId.toString());
+    }
+
+    if (deviceId !== schedule.device.deviceId) {
+      throw new ScheduleNotExistException(scheduleId.toString());
+    }
+
+    schedule.isActive = isActive;
 
     return this.entityManager.save(schedule);
   }

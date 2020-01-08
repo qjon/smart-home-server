@@ -12,7 +12,9 @@
   <mat-divider></mat-divider>
   <mat-card-content>
     <div class="overflow-box">
-      <sh-schedule-details *ngFor="let schedule of list" [schedule]="schedule"></sh-schedule-details>
+      <sh-schedule-details *ngFor="let schedule of list; trackBy: trackByIdAndActiveStatus" [schedule]="schedule"
+                           (onActiveChange)="changeActive($event)"
+      ></sh-schedule-details>
     </div>
   </mat-card-content>
 </mat-card>

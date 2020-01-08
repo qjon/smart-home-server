@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ScheduleApiService } from '../../api/schedule-api.service';
 import { ScheduleDto } from '../../interfaces/schedule-dto.interface';
+import { ScheduleActiveStatusDtoInterface } from '../../interfaces/schedule-active-status-dto-interface';
 
 @Component({
   selector: 'sh-schedule-list',
@@ -36,4 +37,17 @@ export class ScheduleListComponent implements OnInit {
       });
   }
 
+  public changeActive($event: ScheduleActiveStatusDtoInterface) {
+    this.scheduleApiService.toggleActivate(this.deviceId, $event.scheduleId, $event.isActive)
+      .subscribe((schedule: ScheduleDto) => {
+        const foundSchedule = this.list.find((s: ScheduleDto, i: number) => s.id === schedule.id);
+        foundSchedule.isActive = schedule.isActive;
+        this.list = [...this.list];
+        this.cdr.markForCheck();
+      });
+  }
+
+  public trackByIdAndActiveStatus(index, schedule: ScheduleDto): string {
+    return `${schedule.id.toString()}_${schedule.isActive}`;
+  }
 }

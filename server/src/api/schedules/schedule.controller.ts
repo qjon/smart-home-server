@@ -55,4 +55,17 @@ export class ScheduleController {
     this.logger.log(`RES | API | ${req.url} | ${JSON.stringify(schedule.toJSON())}`);
     return schedule.toJSON();
   }
+
+  @Put(':scheduleId')
+  public async activate(@Req() req: Request,
+                        @Param('deviceId') deviceId: string,
+                        @Param('scheduleId') scheduleId: string,
+                        @Body() body: { isActive: boolean }): Promise<ScheduleInterface> {
+    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
+
+    const schedule = await this.scheduleDbService.updateActiveStatus(deviceId, parseInt(scheduleId, 10), body.isActive);
+
+    this.logger.log(`RES | API | ${req.url} | ${JSON.stringify(schedule.toJSON())}`);
+    return schedule.toJSON();
+  }
 }

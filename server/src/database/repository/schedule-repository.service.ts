@@ -21,6 +21,14 @@ export class ScheduleRepositoryService {
       .getMany();
   }
 
+  public fetchByScheduleIdWithDevice(s: number): Promise<ScheduleEntity> {
+    return this.repository
+      .createQueryBuilder('s')
+      .leftJoinAndSelect('s.device', 'd')
+      .andWhere('s.id = :scheduleId', { scheduleId: s })
+      .getOne();
+  }
+
   public fetchScheduleByTimeAndDay(day: number, time: string, onlyActive: boolean = true): Promise<ScheduleEntity[]> {
     const queryBuilder = this.repository
       .createQueryBuilder('s')

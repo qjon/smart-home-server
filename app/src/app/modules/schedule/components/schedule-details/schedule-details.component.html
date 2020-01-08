@@ -6,16 +6,16 @@
   </mat-card-header>
   <mat-divider></mat-divider>
   <mat-card-actions>
-    <button mat-raised-button  color="warn">
+    <button mat-raised-button  color="warn" (click)="clickRemove()">
       <mat-icon>remove</mat-icon>
       <span>Remove</span>
     </button>
-    <button mat-raised-button *ngIf="schedule.isActive; else activate">
+    <button mat-raised-button *ngIf="schedule.isActive; else activate" (click)="clickActiveChange(false)">
       <mat-icon>alarm_off</mat-icon>
       <span>Deactivate</span>
     </button>
     <ng-template #activate>
-      <button mat-raised-button color="primary">
+      <button mat-raised-button color="primary" (click)="clickActiveChange(true)">
         <mat-icon>alarm_on</mat-icon>
         <span>Activate</span>
       </button>

@@ -19,4 +19,8 @@ export class ScheduleApiService {
   public get(deviceId: string): Observable<ScheduleDto[]> {
     return this.httpClient.get<ScheduleDto[]>(`/api/schedule/${deviceId}`);
   }
+
+  public toggleActivate(deviceId: string, scheduleId: number, isActive: boolean): Observable<ScheduleDto> {
+    return this.httpClient.put<ScheduleDto>(`/api/schedule/${deviceId}/${scheduleId}`, {isActive: isActive});
+  }
 }

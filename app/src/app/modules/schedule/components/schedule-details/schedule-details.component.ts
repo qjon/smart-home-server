@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ScheduleDto } from '../../interfaces/schedule-dto.interface';
+import { ScheduleActiveStatusDtoInterface } from '../../interfaces/schedule-active-status-dto-interface';
 
 @Component({
   selector: 'sh-schedule-details',
@@ -7,13 +8,22 @@ import { ScheduleDto } from '../../interfaces/schedule-dto.interface';
   styleUrls: ['./schedule-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleDetailsComponent implements OnInit {
+export class ScheduleDetailsComponent {
   @Input()
   public schedule: ScheduleDto;
 
-  constructor() { }
+  @Output()
+  public onRemove: EventEmitter<number> = new EventEmitter<number>();
 
-  ngOnInit() {
+  @Output()
+  public onActiveChange: EventEmitter<ScheduleActiveStatusDtoInterface> = new EventEmitter<ScheduleActiveStatusDtoInterface>();
+
+  public clickRemove(): void {
+    this.onRemove.emit(this.schedule.id);
+  }
+
+  public clickActiveChange(isActive: boolean): void {
+    this.onActiveChange.emit({scheduleId: this.schedule.id, isActive});
   }
 
 }
