@@ -53,4 +53,19 @@ export class ScheduleService {
 
     return this.entityManager.save(schedule);
   }
+
+  async remove(deviceId: string, scheduleId: number): Promise<boolean> {
+    const schedule: ScheduleEntity = await this.scheduleRepositoryService.fetchByScheduleIdWithDevice(scheduleId);
+
+    if (!schedule) {
+      throw new ScheduleNotExistException(scheduleId.toString());
+    }
+
+    if (deviceId !== schedule.device.deviceId) {
+      throw new ScheduleNotExistException(scheduleId.toString());
+    }
+
+    return this.entityManager.remove(schedule)
+      .then(() => true, () => false);
+  }
 }

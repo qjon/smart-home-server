@@ -1,5 +1,14 @@
+@import "../../../../../variables";
+
 :host {
   display: block;
+}
+
+.info {
+  margin: 2em 1em 1em;
+  color: $black-87-opacity;
+  text-align: center;
+  font-style: italic;
 }
 
 mat-card-title {

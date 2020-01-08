@@ -1,4 +1,17 @@
-import { Body, Controller, Get, Inject, Logger, Param, Post, Put, Req, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get, HttpCode,
+  HttpStatus,
+  Inject,
+  Logger,
+  Param,
+  Post,
+  Put,
+  Req,
+  Request,
+} from '@nestjs/common';
 import { ScheduleInterface } from '../../interfaces/schedule/schedule.interface';
 import { ScheduleService } from '../../database/services/schedule.service';
 import { ScheduleRepositoryService } from '../../database/repository/schedule-repository.service';
@@ -67,5 +80,18 @@ export class ScheduleController {
 
     this.logger.log(`RES | API | ${req.url} | ${JSON.stringify(schedule.toJSON())}`);
     return schedule.toJSON();
+  }
+
+  @Delete(':scheduleId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async remove(@Req() req: Request,
+                        @Param('deviceId') deviceId: string,
+                        @Param('scheduleId') scheduleId: string) {
+    this.logger.log(`REQ | API | ${req.url} `);
+
+    const schedule = await this.scheduleDbService.remove(deviceId, parseInt(scheduleId, 10));
+
+    this.logger.log(`RES | API | ${req.url}`);
+    return;
   }
 }

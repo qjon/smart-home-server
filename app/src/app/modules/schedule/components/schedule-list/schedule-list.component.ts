@@ -10,6 +10,7 @@ import {
 import { ScheduleApiService } from '../../api/schedule-api.service';
 import { ScheduleDto } from '../../interfaces/schedule-dto.interface';
 import { ScheduleActiveStatusDtoInterface } from '../../interfaces/schedule-active-status-dto-interface';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'sh-schedule-list',
@@ -24,7 +25,7 @@ export class ScheduleListComponent implements OnInit {
   @Output()
   public close: EventEmitter<void> = new EventEmitter<void>();
 
-  public list: ScheduleDto[];
+  public list: ScheduleDto[] = [];
 
   constructor(private scheduleApiService: ScheduleApiService, private cdr: ChangeDetectorRef) {
   }
@@ -43,6 +44,18 @@ export class ScheduleListComponent implements OnInit {
         const foundSchedule = this.list.find((s: ScheduleDto, i: number) => s.id === schedule.id);
         foundSchedule.isActive = schedule.isActive;
         this.list = [...this.list];
+        this.cdr.markForCheck();
+      });
+  }
+
+  public remove(scheduleId: number) {
+    this.scheduleApiService.remove(this.deviceId, scheduleId)
+      .pipe(
+        tap((x) => console.log(x)),
+        filter(Boolean)
+      )
+      .subscribe((response: boolean) => {
+        this.list = this.list.filter((s: ScheduleDto, i: number) => s.id !== scheduleId);
         this.cdr.markForCheck();
       });
   }
