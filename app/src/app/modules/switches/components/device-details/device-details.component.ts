@@ -29,6 +29,7 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     'CW-001',
     'S26E',
     'T1EU',
+    'T1EU1C',
   ];
   public actionButtonsDisabled = false;
 
