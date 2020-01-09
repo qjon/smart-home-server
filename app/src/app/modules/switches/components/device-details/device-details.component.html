@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="layout" [ngClass]="{'schedule-open': isScheduleOpen}">
   <form [formGroup]="form" *ngIf="device" (submit)="onSubmit()">
     <mat-card>
       <mat-card-header>
@@ -52,7 +52,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Room</mat-label>
               <mat-select [formControl]="form.controls['room']" [compareWith]="compareRoom">
-                <mat-option *ngFor="let room of (rooms$ | async)" [value]="room">
+                <mat-option *ngFor="let room of (rooms$ | async); trackBy: trackByRoom" [value]="room">
                   {{room.name}}
                 </mat-option>
               </mat-select>

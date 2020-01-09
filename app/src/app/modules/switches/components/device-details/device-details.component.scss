@@ -42,6 +42,18 @@
   .device-info {
     flex-flow: column;
   }
+
+  .schedule-open {
+    form {
+      display: none;
+    }
+
+    .schedule {
+      margin: 0;
+      min-width: auto;
+      width: 100%;
+    }
+  }
 }
 
 .switches {

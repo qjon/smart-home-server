@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -15,6 +15,7 @@ import { RoomDto } from '../../../rooms/interfaces/room-dto.interface';
   selector: 'sh-device-details',
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
@@ -37,7 +38,7 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
   public rooms$: Observable<RoomDto[]>;
 
-  public isScheduleOpen = true;
+  public isScheduleOpen = false;
 
   constructor(private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
@@ -137,6 +138,10 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
         this.isEditMode = false;
         this.enableActionButtons();
       });
+  }
+
+  public trackByRoom(index, room: RoomDto): number {
+    return room.id;
   }
 
   private onDeviceIdChangeResetForm(device$) {
