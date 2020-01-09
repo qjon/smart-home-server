@@ -9,8 +9,13 @@ import { NotificationsService } from '@core/notifications/notifications.service'
 
 import {
   ScheduleActions,
-  ScheduleCreateAction, ScheduleCreateErrorAction,
-  ScheduleCreateSuccessAction, ScheduleOpenAddModalAction,
+  ScheduleChangeActiveStatusAction,
+  ScheduleChangeActiveStatusErrorAction,
+  ScheduleChangeActiveStatusSuccessAction,
+  ScheduleCreateAction,
+  ScheduleCreateErrorAction,
+  ScheduleCreateSuccessAction, ScheduleLoadAction, ScheduleLoadErrorAction, ScheduleLoadSuccessAction,
+  ScheduleOpenAddModalAction, ScheduleRemoveAction, ScheduleRemoveErrorAction, ScheduleRemoveSuccessAction,
 } from '../schedule-actions';
 import { ScheduleApiService } from '../../api/schedule-api.service';
 import { ScheduleDto } from '../../interfaces/schedule-dto.interface';
@@ -59,7 +64,7 @@ export class ScheduleEffectService {
       tap(() => {
         this.addDialogRef.close();
         this.notificationService.success('Create schedule', 'Schedule has been created');
-      })
+      }),
     );
 
   @Effect({ dispatch: false })
@@ -69,7 +74,64 @@ export class ScheduleEffectService {
       tap(() => {
         this.addDialogRef.close();
         this.notificationService.error('Create schedule', 'Schedule has not been created');
-      })
+      }),
+    );
+
+  @Effect({ dispatch: true })
+  public changeActiveStatusEffect$ = this.actions$
+    .pipe(
+      ofType(ScheduleActions.ChangeActiveStatus),
+      switchMap((action: ScheduleChangeActiveStatusAction) => this.scheduleApiService.toggleActivate(action.payload.deviceId, action.payload.scheduleId, action.payload.isActive)
+        .pipe(
+          map((response: ScheduleDto) => new ScheduleChangeActiveStatusSuccessAction({
+            deviceId: action.payload.deviceId,
+            scheduleId: action.payload.scheduleId,
+            isActive: action.payload.isActive,
+          })),
+          catchError((error: any) => of(new ScheduleChangeActiveStatusErrorAction({
+            deviceId: action.payload.deviceId,
+            scheduleId: action.payload.scheduleId,
+            error,
+          }))),
+        ),
+      ),
+    );
+
+  @Effect({ dispatch: true })
+  public removeEffect$ = this.actions$
+    .pipe(
+      ofType(ScheduleActions.Remove),
+      switchMap((action: ScheduleRemoveAction) => this.scheduleApiService.remove(action.payload.deviceId, action.payload.scheduleId)
+        .pipe(
+          map((response: boolean) => new ScheduleRemoveSuccessAction({
+            deviceId: action.payload.deviceId,
+            scheduleId: action.payload.scheduleId,
+          })),
+          catchError((error: any) => of(new ScheduleRemoveErrorAction({
+            deviceId: action.payload.deviceId,
+            scheduleId: action.payload.scheduleId,
+            error,
+          }))),
+        ),
+      ),
+    );
+
+  @Effect({ dispatch: true })
+  public loadEffect$ = this.actions$
+    .pipe(
+      ofType(ScheduleActions.Load),
+      switchMap((action: ScheduleLoadAction) => this.scheduleApiService.get(action.payload.deviceId)
+        .pipe(
+          map((scheduleList: ScheduleDto[]) => new ScheduleLoadSuccessAction({
+            deviceId: action.payload.deviceId,
+            scheduleList,
+          })),
+          catchError((error: any) => of(new ScheduleLoadErrorAction({
+            deviceId: action.payload.deviceId,
+            error,
+          }))),
+        ),
+      ),
     );
 
   private addDialogRef: MatDialogRef<AddScheduleModalComponent>;

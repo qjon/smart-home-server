@@ -10,7 +10,19 @@ import {
 import { ScheduleApiService } from '../../api/schedule-api.service';
 import { ScheduleDto } from '../../interfaces/schedule-dto.interface';
 import { ScheduleActiveStatusDtoInterface } from '../../interfaces/schedule-active-status-dto-interface';
-import { filter, tap } from 'rxjs/operators';
+import { filter, takeUntil, tap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import {
+  ScheduleActions,
+  ScheduleChangeActiveStatusAction,
+  ScheduleChangeActiveStatusSuccessAction,
+  ScheduleLoadAction,
+  ScheduleLoadSuccessAction,
+  ScheduleRemoveAction,
+  ScheduleRemoveSuccessAction,
+} from '../../store/schedule-actions';
+import { Actions, ofType } from '@ngrx/effects';
+import { Destroyable } from '@core/classes/destroyable.component';
 
 @Component({
   selector: 'sh-schedule-list',
@@ -18,7 +30,7 @@ import { filter, tap } from 'rxjs/operators';
   styleUrls: ['./schedule-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleListComponent implements OnInit {
+export class ScheduleListComponent extends Destroyable implements OnInit {
   @Input()
   public deviceId: string;
 
@@ -27,40 +39,73 @@ export class ScheduleListComponent implements OnInit {
 
   public list: ScheduleDto[] = [];
 
-  constructor(private scheduleApiService: ScheduleApiService, private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef, private store: Store<any>, private actions$: Actions) {
+    super();
   }
 
   public ngOnInit(): void {
-    this.scheduleApiService.get(this.deviceId)
-      .subscribe((scheduleList: ScheduleDto[]) => {
-        this.list = scheduleList;
+    this.listenOnLoadListSuccess();
+    this.listenOnScheduleChangeActiveStatusSuccess();
+    this.listenOnScheduleSuccessRemove();
+
+    this.loadScheduleList();
+  }
+
+  public changeActive($event: ScheduleActiveStatusDtoInterface) {
+    this.store.dispatch(new ScheduleChangeActiveStatusAction({
+      deviceId: this.deviceId,
+      scheduleId: $event.scheduleId,
+      isActive: $event.isActive,
+    }));
+  }
+
+  public remove(scheduleId: number) {
+    this.store.dispatch(new ScheduleRemoveAction({ deviceId: this.deviceId, scheduleId: scheduleId }));
+  }
+
+  public trackByIdAndActiveStatus(index, schedule: ScheduleDto): string {
+    return `${schedule.id.toString()}_${schedule.isActive}`;
+  }
+
+  private listenOnLoadListSuccess() {
+    this.actions$
+      .pipe(
+        ofType(ScheduleActions.LoadSuccess),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((action: ScheduleLoadSuccessAction) => {
+        this.list = action.payload.scheduleList;
         this.cdr.detectChanges();
       });
   }
 
-  public changeActive($event: ScheduleActiveStatusDtoInterface) {
-    this.scheduleApiService.toggleActivate(this.deviceId, $event.scheduleId, $event.isActive)
-      .subscribe((schedule: ScheduleDto) => {
-        const foundSchedule = this.list.find((s: ScheduleDto, i: number) => s.id === schedule.id);
-        foundSchedule.isActive = schedule.isActive;
+  private listenOnScheduleChangeActiveStatusSuccess(): void {
+    this.actions$
+      .pipe(
+        ofType(ScheduleActions.ChangeActiveStatusSuccess),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((action: ScheduleChangeActiveStatusSuccessAction) => {
+        const foundSchedule = this.list.find((s: ScheduleDto, i: number) => s.id === action.payload.scheduleId);
+        foundSchedule.isActive = action.payload.isActive;
         this.list = [...this.list];
         this.cdr.markForCheck();
       });
   }
 
-  public remove(scheduleId: number) {
-    this.scheduleApiService.remove(this.deviceId, scheduleId)
+  private listenOnScheduleSuccessRemove(): void {
+    this.actions$
       .pipe(
-        tap((x) => console.log(x)),
-        filter(Boolean)
+        ofType(ScheduleActions.RemoveSuccess),
+        takeUntil(this.destroy$),
       )
-      .subscribe((response: boolean) => {
-        this.list = this.list.filter((s: ScheduleDto, i: number) => s.id !== scheduleId);
+      .subscribe((action: ScheduleRemoveSuccessAction) => {
+        this.list = this.list.filter((s: ScheduleDto, i: number) => s.id !== action.payload.scheduleId);
         this.cdr.markForCheck();
       });
   }
 
-  public trackByIdAndActiveStatus(index, schedule: ScheduleDto): string {
-    return `${schedule.id.toString()}_${schedule.isActive}`;
+  private loadScheduleList(): void {
+    this.store.dispatch(new ScheduleLoadAction({deviceId: this.deviceId}));
   }
 }
