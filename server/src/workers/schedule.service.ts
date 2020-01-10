@@ -8,6 +8,7 @@ import { LightSwitch, LightSwitchStatus } from '../interfaces/light/update-actio
 import { DeviceParamsEntity } from '../database/entity/device.params.entity';
 import { interval } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { ScheduleService } from '../database/services/schedule.service';
 
 @Injectable()
 export class ScheduleWorkerService implements WorkerInterface {
@@ -17,6 +18,9 @@ export class ScheduleWorkerService implements WorkerInterface {
 
   @Inject(DevicesAdapterService)
   protected devicesAdapterService: DevicesAdapterService;
+
+  @Inject(ScheduleService)
+  protected scheduleService: ScheduleService;
 
   protected logger = new Logger(ScheduleWorkerService.name);
 
@@ -61,6 +65,8 @@ export class ScheduleWorkerService implements WorkerInterface {
           path: device.isSingleSwitch ? '/zeroconf/switch' : '/zeroconf/switches',
           data: this.prepareSwitches(device, schedule.action),
         });
+
+        this.scheduleService.updateLastRun(schedule);
 
         this.logger.log(`[Schedule] - device "${device.name}" (${device.deviceId}) - action: ${schedule.action}`);
       });

@@ -54,6 +54,12 @@ export class ScheduleService {
     return this.entityManager.save(schedule);
   }
 
+  async updateLastRun(schedule: ScheduleEntity): Promise<ScheduleEntity> {
+    schedule.lastRunAt = new Date();
+
+    return this.entityManager.save(schedule);
+  }
+
   async remove(deviceId: string, scheduleId: number): Promise<boolean> {
     const schedule: ScheduleEntity = await this.scheduleRepositoryService.fetchByScheduleIdWithDevice(scheduleId);
 
