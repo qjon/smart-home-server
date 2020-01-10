@@ -12,14 +12,16 @@
   <mat-divider></mat-divider>
   <mat-card-content>
     <div class="overflow-box">
-      <div class="info" *ngIf="list.length === 0; else listView">No schedule for device</div>
-      <ng-template #listView>
-        <sh-schedule-details *ngFor="let schedule of list; trackBy: trackByIdAndActiveStatus"
-                             [schedule]="schedule"
-                             (onActiveChange)="changeActive($event)"
-                             (onRemove)="remove($event)"
-        ></sh-schedule-details>
-      </ng-template>
+      <ng-container *ngIf="(list$ | async) as list">
+        <div class="info" *ngIf="list.length === 0; else listView">No schedule for device</div>
+        <ng-template #listView>
+          <sh-schedule-details *ngFor="let schedule of list; trackBy: trackByIdAndActiveStatus"
+                               [schedule]="schedule"
+                               (onActiveChange)="changeActive($event)"
+                               (onRemove)="remove($event)"
+          ></sh-schedule-details>
+        </ng-template>
+      </ng-container>
     </div>
   </mat-card-content>
   <mat-divider></mat-divider>

@@ -8,9 +8,7 @@
           </button>
           <span class="title">{{device.name}}</span>
           <div class="header-actions">
-            <button type="button" mat-icon-button (click)="openSchedule()">
-              <mat-icon>schedule</mat-icon>
-            </button>
+            <sh-schedule-button [deviceId]="device.id" (onClickButton)="openSchedule()"></sh-schedule-button>
           </div>
         </mat-card-title>
       </mat-card-header>

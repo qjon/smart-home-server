@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
+  EventEmitter, Inject,
   Input,
   OnInit,
   Output,
@@ -23,6 +23,9 @@ import {
 } from '../../store/schedule-actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { Destroyable } from '@core/classes/destroyable.component';
+import { ScheduleStateConnectorInterface } from '../../interfaces/schedule-state-connector.interface';
+import { ScheduleStateConnectorService } from '../../store/state-connectors/schedule-state-connector.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'sh-schedule-list',
@@ -37,18 +40,15 @@ export class ScheduleListComponent extends Destroyable implements OnInit {
   @Output()
   public close: EventEmitter<void> = new EventEmitter<void>();
 
-  public list: ScheduleDto[] = [];
+  public list$: Observable<ScheduleDto[]>;
 
-  constructor(private cdr: ChangeDetectorRef, private store: Store<any>, private actions$: Actions) {
+  constructor(private store: Store<any>,
+              @Inject(ScheduleStateConnectorService) private scheduleStateConnector: ScheduleStateConnectorInterface) {
     super();
   }
 
   public ngOnInit(): void {
-    this.listenOnLoadListSuccess();
-    this.listenOnScheduleChangeActiveStatusSuccess();
-    this.listenOnScheduleSuccessRemove();
-
-    this.loadScheduleList();
+    this.list$ = this.scheduleStateConnector.getList(this.deviceId);
   }
 
   public addSchedule(): void {
@@ -68,48 +68,6 @@ export class ScheduleListComponent extends Destroyable implements OnInit {
   }
 
   public trackByIdAndActiveStatus(index, schedule: ScheduleDto): string {
-    return `${schedule.id.toString()}_${schedule.isActive}`;
-  }
-
-  private listenOnLoadListSuccess() {
-    this.actions$
-      .pipe(
-        ofType(ScheduleActions.LoadSuccess),
-        takeUntil(this.destroy$),
-      )
-      .subscribe((action: ScheduleLoadSuccessAction) => {
-        this.list = action.payload.scheduleList;
-        this.cdr.detectChanges();
-      });
-  }
-
-  private listenOnScheduleChangeActiveStatusSuccess(): void {
-    this.actions$
-      .pipe(
-        ofType(ScheduleActions.ChangeActiveStatusSuccess),
-        takeUntil(this.destroy$),
-      )
-      .subscribe((action: ScheduleChangeActiveStatusSuccessAction) => {
-        const foundSchedule = this.list.find((s: ScheduleDto, i: number) => s.id === action.payload.scheduleId);
-        foundSchedule.isActive = action.payload.isActive;
-        this.list = [...this.list];
-        this.cdr.markForCheck();
-      });
-  }
-
-  private listenOnScheduleSuccessRemove(): void {
-    this.actions$
-      .pipe(
-        ofType(ScheduleActions.RemoveSuccess),
-        takeUntil(this.destroy$),
-      )
-      .subscribe((action: ScheduleRemoveSuccessAction) => {
-        this.list = this.list.filter((s: ScheduleDto, i: number) => s.id !== action.payload.scheduleId);
-        this.cdr.markForCheck();
-      });
-  }
-
-  private loadScheduleList(): void {
-    this.store.dispatch(new ScheduleLoadAction({deviceId: this.deviceId}));
+    return schedule.id.toString();
   }
 }

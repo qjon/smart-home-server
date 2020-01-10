@@ -50,7 +50,7 @@ export class ScheduleEffectService {
       ofType(ScheduleActions.Create),
       switchMap((action: ScheduleCreateAction) => this.scheduleApiService.create(action.payload.scheduleData)
         .pipe(
-          map((schedule: ScheduleDto) => new ScheduleCreateSuccessAction({ schedule })),
+          map((schedule: ScheduleDto) => new ScheduleCreateSuccessAction({ deviceId: action.payload.scheduleData.deviceId, schedule })),
           catchError((error: any) => of(new ScheduleCreateErrorAction({ error }))),
         ),
       ),

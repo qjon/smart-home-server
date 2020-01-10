@@ -23,12 +23,19 @@ import { ScheduleApiModule } from './api/schedule-api.module';
 import { ScheduleEffectService } from './store/effects/schedule-effect.service';
 import { ScheduleListComponent } from './components/schedule-list/schedule-list.component';
 import { ScheduleDetailsComponent } from './components/schedule-details/schedule-details.component';
+import { StoreModule } from '@ngrx/store';
+import { SWITCHES_STATE_NAME, switchesReducer } from '../switches/store/switches-reducer';
+import { scheduleReducer, SCHEDULES_STATE } from './store/schedule-reducer';
+import { ScheduleStateConnectorsModule } from './store/state-connectors/schedule-state-connectors.module';
+import { ScheduleButtonComponent } from './containers/schedule-button/schedule-button.component';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
     AddScheduleModalComponent,
     ScheduleListComponent,
     ScheduleDetailsComponent,
+    ScheduleButtonComponent,
   ],
   entryComponents: [
     AddScheduleModalComponent,
@@ -38,24 +45,28 @@ import { ScheduleDetailsComponent } from './components/schedule-details/schedule
     CommonModule,
     DialogModule,
     EffectsModule.forFeature([ScheduleEffectService]),
+    MatBadgeModule,
     MatButtonModule,
     MatDividerModule,
+    MatCardModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatRadioModule,
+    MatOptionModule,
+    MatSelectModule,
     MatToolbarModule,
     ReactiveFormsModule,
     ScheduleApiModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatCardModule,
-    MatIconModule,
+    ScheduleStateConnectorsModule,
+    StoreModule.forFeature(SCHEDULES_STATE, scheduleReducer),
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: OnSubmitErrorStateMatcher },
   ],
   exports: [
     ScheduleListComponent,
+    ScheduleButtonComponent,
   ],
 })
 export class ScheduleModule {

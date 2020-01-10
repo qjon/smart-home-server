@@ -28,83 +28,99 @@ export class ScheduleOpenAddModalAction implements Action {
 export class ScheduleCreateAction implements Action {
   readonly type = ScheduleActions.Create;
 
-  constructor(public payload: {scheduleData: Partial<ScheduleDto>}) {
+  constructor(public payload: { scheduleData: Partial<ScheduleDto> }) {
   }
 }
 
 export class ScheduleCreateErrorAction implements Action {
   readonly type = ScheduleActions.CreateError;
 
-  constructor(public payload: {error: any}) {
+  constructor(public payload: { error: any }) {
   }
 }
 
 export class ScheduleCreateSuccessAction implements Action {
   readonly type = ScheduleActions.CreateSuccess;
 
-  constructor(public payload: {schedule: ScheduleDto}) {
+  constructor(public payload: { deviceId: string, schedule: ScheduleDto }) {
   }
 }
 
 export class ScheduleLoadAction implements Action {
   readonly type = ScheduleActions.Load;
 
-  constructor(public payload: {deviceId: string}) {
+  constructor(public payload: { deviceId: string }) {
   }
 }
 
 export class ScheduleLoadErrorAction implements Action {
   readonly type = ScheduleActions.LoadError;
 
-  constructor(public payload: {deviceId: string, error: any}) {
+  constructor(public payload: { deviceId: string, error: any }) {
   }
 }
 
 export class ScheduleLoadSuccessAction implements Action {
   readonly type = ScheduleActions.LoadSuccess;
 
-  constructor(public payload: {deviceId: string, scheduleList: ScheduleDto[]}) {
+  constructor(public payload: { deviceId: string, scheduleList: ScheduleDto[] }) {
   }
 }
 
 export class ScheduleChangeActiveStatusAction implements Action {
   readonly type = ScheduleActions.ChangeActiveStatus;
 
-  constructor(public payload: {deviceId: string, scheduleId: number, isActive: boolean}) {
+  constructor(public payload: { deviceId: string, scheduleId: number, isActive: boolean }) {
   }
 }
 
 export class ScheduleChangeActiveStatusErrorAction implements Action {
   readonly type = ScheduleActions.ChangeActiveStatusError;
 
-  constructor(public payload: {deviceId: string, scheduleId: number, error: any}) {
+  constructor(public payload: { deviceId: string, scheduleId: number, error: any }) {
   }
 }
 
 export class ScheduleChangeActiveStatusSuccessAction implements Action {
   readonly type = ScheduleActions.ChangeActiveStatusSuccess;
 
-  constructor(public payload: {deviceId: string, scheduleId: number, isActive: boolean}) {
+  constructor(public payload: { deviceId: string, scheduleId: number, isActive: boolean }) {
   }
 }
 
 export class ScheduleRemoveAction implements Action {
   readonly type = ScheduleActions.Remove;
 
-  constructor(public payload: {deviceId: string, scheduleId: number}) {
+  constructor(public payload: { deviceId: string, scheduleId: number }) {
   }
 }
 
 export class ScheduleRemoveErrorAction implements Action {
   readonly type = ScheduleActions.RemoveError;
 
-  constructor(public payload: {deviceId: string, scheduleId: number, error: any}) {
+  constructor(public payload: { deviceId: string, scheduleId: number, error: any }) {
   }
 }
 
 export class ScheduleRemoveSuccessAction implements Action {
   readonly type = ScheduleActions.RemoveSuccess;
 
-  constructor(public payload: {deviceId: string, scheduleId: number}) {
+  constructor(public payload: { deviceId: string, scheduleId: number }) {
   }
 }
+
+export type ScheduleAction =
+  ScheduleOpenAddModalAction
+  | ScheduleCreateAction
+  | ScheduleCreateErrorAction
+  | ScheduleCreateSuccessAction
+  | ScheduleLoadAction
+  | ScheduleLoadErrorAction
+  | ScheduleLoadSuccessAction
+  | ScheduleChangeActiveStatusAction
+  | ScheduleChangeActiveStatusErrorAction
+  | ScheduleChangeActiveStatusSuccessAction
+  | ScheduleRemoveAction
+  | ScheduleRemoveErrorAction
+  | ScheduleRemoveSuccessAction
+  ;

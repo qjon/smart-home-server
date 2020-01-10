@@ -17,7 +17,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 
 import { BaseFormComponentClass } from '../base-form-component-class';
 import { IntToDayService } from '@core/form/services/int-to-day.service';
-import { Day, days, DayType, LongDayName, MediumDayName, ShortDayName } from '@core/form/consts/days-consts';
+import { Day, days, DayType, ShortDayName } from '@core/form/consts/days-consts';
 
 @Component({
   selector: 'ri-form-days-field',
@@ -100,8 +100,6 @@ export class DaysFieldComponent extends BaseFormComponentClass implements Contro
     this.onChange(value);
     this.onTouched(value);
     this.stateChanges.next();
-
-    console.log(this.ngControl)
   }
 
   public buttonName(day: string): string {
