@@ -17,7 +17,7 @@ import {
   ScheduleChangeActiveStatusAction,
   ScheduleChangeActiveStatusSuccessAction,
   ScheduleLoadAction,
-  ScheduleLoadSuccessAction,
+  ScheduleLoadSuccessAction, ScheduleOpenAddModalAction,
   ScheduleRemoveAction,
   ScheduleRemoveSuccessAction,
 } from '../../store/schedule-actions';
@@ -49,6 +49,10 @@ export class ScheduleListComponent extends Destroyable implements OnInit {
     this.listenOnScheduleSuccessRemove();
 
     this.loadScheduleList();
+  }
+
+  public addSchedule(): void {
+    this.store.dispatch(new ScheduleOpenAddModalAction({deviceId: this.deviceId}));
   }
 
   public changeActive($event: ScheduleActiveStatusDtoInterface) {
