@@ -1,0 +1,30 @@
+@import "../../../../../variables";
+
+:host {
+  display: block;
+}
+
+.info {
+  margin: 2em 1em 1em;
+  color: $black-87-opacity;
+  text-align: center;
+  font-style: italic;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+
+  span {
+    flex: 1 1 100%;
+  }
+
+  .header-actions {
+    width: 100px;
+    text-align: right;
+  }
+}
+
+mat-card-actions {
+  text-align: right;
+}

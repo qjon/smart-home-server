@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+}
+
+button {
+  flex: 1;
+  margin: 0 0.25em;
+  padding: 0 0.5em;
+  min-width: auto;
+
+  &:last-child {
+    color: red;
+  }
+}

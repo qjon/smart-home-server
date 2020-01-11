@@ -10,9 +10,13 @@ It contains two application
 ## ToDo
 
 * limit number of switches for device (now each device has 4)
-* scheduler
 
 ## Change log
+
+### v1.3.0
+- schedule module (add, remove, activate)
+- fix layout issues
+- add new device module - T1EU1C
 
 ### v1.2.0
 - display info about room on device details screen

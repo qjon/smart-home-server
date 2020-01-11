@@ -8,9 +8,12 @@ import { DeviceDiscoverService } from './device-discover.service';
 import { DeviceStateChangeListenerWorkerService } from './device-state-change-listener-worker.service';
 import { MdnsModule } from '../mdns/mdns.module';
 import { DeviceStateChangeUpdateWorkerService } from './device-state-change-update-worker.service';
+import { ScheduleWorkerService } from './schedule.service';
+import { AdapterModule } from '../adapters/adapters.module';
 
 @Module({
   imports: [
+    AdapterModule,
     DatabaseModule,
     StorageModule,
     MdnsModule,
@@ -22,6 +25,7 @@ import { DeviceStateChangeUpdateWorkerService } from './device-state-change-upda
     DeviceDiscoverService,
     DeviceStateChangeListenerWorkerService,
     DeviceStateChangeUpdateWorkerService,
+    ScheduleWorkerService,
   ],
 })
 export class WorkersModule {
@@ -29,11 +33,13 @@ export class WorkersModule {
   public constructor(protected pingDeviceService: PingDeviceService,
                      private deviceDiscoverService: DevicesUpdateWorkerService,
                      private deviceStateChangeListenerWorkerService: DeviceStateChangeListenerWorkerService,
-                     private deviceStateChangeUpdateWorkerService: DeviceStateChangeUpdateWorkerService) {
+                     private deviceStateChangeUpdateWorkerService: DeviceStateChangeUpdateWorkerService,
+                     private scheduleWorkerService: ScheduleWorkerService) {
     // this.pingDeviceService.execute();
     this.deviceDiscoverService.execute();
 
     this.deviceStateChangeListenerWorkerService.execute();
     this.deviceStateChangeUpdateWorkerService.execute();
+    this.scheduleWorkerService.execute();
   }
 }

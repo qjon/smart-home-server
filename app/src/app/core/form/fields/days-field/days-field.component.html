@@ -1,0 +1,3 @@
+<button mat-raised-button *ngFor="let day of days; let i = index"
+        (click)="toggle(i)"
+        [color]="isPressed(i) ? 'primary' : ''">{{buttonName(day.symbol)}}</button>

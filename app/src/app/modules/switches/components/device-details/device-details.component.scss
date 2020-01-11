@@ -1,3 +1,23 @@
+::ng-deep {
+  .mat-card-header-text {
+    width: 100%;
+  }
+}
+
+
+.layout {
+  display: flex;
+
+  form {
+    width: 100%;
+  }
+
+  .schedule {
+    margin-left: 1em;
+    min-width: 400px;
+  }
+}
+
 .device-info {
   display: flex;
   align-items: flex-start;
@@ -22,6 +42,18 @@
   .device-info {
     flex-flow: column;
   }
+
+  .schedule-open {
+    form {
+      display: none;
+    }
+
+    .schedule {
+      margin: 0;
+      min-width: auto;
+      width: 100%;
+    }
+  }
 }
 
 .switches {
@@ -34,6 +66,15 @@ mat-card-title {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
+  span {
+    flex: 1 1 100%;
+  }
+
+  .header-actions {
+    width: 100px;
+    text-align: right;
+  }
 }
 
 mat-card-actions {

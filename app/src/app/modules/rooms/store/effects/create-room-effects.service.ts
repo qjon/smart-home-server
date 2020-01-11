@@ -1,13 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {CreateRoomAction, CreateRoomErrorAction, CreateRoomSuccessAction, RoomsActionTypes} from '../rooms-actions';
+
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
+
+import {NotificationsService} from '@core/notifications/notifications.service';
+
+import {CreateRoomAction, CreateRoomErrorAction, CreateRoomSuccessAction, RoomsActionTypes} from '../rooms-actions';
 import {AddRoomComponent} from '../../components/add-room/add-room.component';
 import {RoomsApiService} from '../../api/rooms-api.service';
-import {of} from 'rxjs';
 import {RoomWithDevicesDto} from '../../interfaces/room-dto.interface';
-import {NotificationsService} from '../../../notifications/notifications.service';
 
 @Injectable()
 export class CreateRoomEffectsService {

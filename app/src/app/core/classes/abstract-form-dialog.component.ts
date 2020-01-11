@@ -1,11 +1,11 @@
-import {OnDestroy, OnInit} from '@angular/core';
+import {OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Actions, ofType} from '@ngrx/effects';
-import {ReplaySubject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import { Destroyable } from '@core/classes/destroyable.component';
 
-export abstract class AbstractFormDialogComponent<T> implements OnInit, OnDestroy {
+export abstract class AbstractFormDialogComponent<T> extends Destroyable implements OnInit {
   public form: FormGroup;
 
   public isSaving = false;
@@ -15,13 +15,6 @@ export abstract class AbstractFormDialogComponent<T> implements OnInit, OnDestro
   protected abstract matDialogRef: MatDialogRef<T>;
 
   protected abstract actions$: Actions;
-
-  protected destroy$ = new ReplaySubject<void>(1);
-
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 
   public ngOnInit(): void {
     this.form = this.createForm();

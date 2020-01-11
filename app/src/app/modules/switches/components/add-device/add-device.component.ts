@@ -1,10 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
+
 import {Store} from '@ngrx/store';
-import {SwitchActionTypes, SwitchesCreateAction} from '../../store/switches-actions';
-import {AbstractFormDialogComponent} from '../../../../core/classes/abstract-form-dialog.component';
 import {Actions} from '@ngrx/effects';
+
+import {AbstractFormDialogComponent} from '@core/classes/abstract-form-dialog.component';
+
+import {SwitchActionTypes, SwitchesCreateAction} from '../../store/switches-actions';
 
 @Component({
   selector: 'sh-add-device',

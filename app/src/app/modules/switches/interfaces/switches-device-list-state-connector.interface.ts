@@ -1,6 +1,6 @@
-import {Observable} from 'rxjs';
-import {SwitchDeviceModel} from '../models/switch-device-model';
-import {SwitchDeviceDto, SwitchDto} from './switch-device.interface';
+import { Observable } from 'rxjs';
+import { SwitchDeviceModel } from '../models/switch-device-model';
+import { SwitchDeviceDto, SwitchDto } from './switch-device.interface';
 
 export interface SwitchesDeviceListStateConnectorInterface {
   devices$: Observable<SwitchDeviceModel[]>;
@@ -10,6 +10,8 @@ export interface SwitchesDeviceListStateConnectorInterface {
   openAddDeviceDialog(): void;
 
   openAddRoomDialog(): void;
+
+  openAddScheduleDialog(deviceId): void;
 
   toggle(deviceId: string, switchStatus: SwitchDto): void;
 

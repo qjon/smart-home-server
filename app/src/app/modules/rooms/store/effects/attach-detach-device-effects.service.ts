@@ -1,25 +1,26 @@
 import { Injectable } from '@angular/core';
+
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { NotificationsService } from '../../../notifications/notifications.service';
+import { select, Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import { catchError, mergeMap, switchMap, take, tap } from 'rxjs/operators';
+
+import { NotificationsService } from '@core/notifications/notifications.service';
+
 import {
   AttachDeviceToRoomAction,
   AttachDeviceToRoomErrorAction,
   AttachDeviceToRoomSuccessAction,
   DetachDeviceFromRoomAction,
   DetachDeviceFromRoomErrorAction,
-  DetachDeviceFromRoomSuccessAction, MoveDeviceToRoomAction,
+  DetachDeviceFromRoomSuccessAction,
   RoomsAction,
   RoomsActionTypes,
 } from '../rooms-actions';
-import { catchError, filter, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 import { RoomsApiService } from '../../api/rooms-api.service';
-import { of } from 'rxjs';
-import { select, Store } from '@ngrx/store';
 import { RoomsSelectors } from '../rooms-selectors';
 import { RoomWithDevicesDto } from '../../interfaces/room-dto.interface';
 import { SwitchesAction, SwitchesSetRoomAction } from '../../../switches/store/switches-actions';
-import { switchesSelectors } from '../../../switches/store/switches-selectors';
-import { SwitchDeviceModel } from '../../../switches/models/switch-device-model';
 
 @Injectable()
 export class AttachDetachDeviceEffectsService {

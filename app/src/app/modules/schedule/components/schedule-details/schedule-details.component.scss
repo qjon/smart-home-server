@@ -1,0 +1,45 @@
+@import '../../../../../variables.scss';
+
+mat-card {
+  margin: 2em 0;
+
+  mat-icon[mat-card-avatar] {
+    font-size: 4em;
+    width: 1em;
+    height: 1.5em;
+
+    &:after {
+      font-size: 0.25em;
+      display: block;
+      text-transform: uppercase;
+      text-align: center;
+      content: "Off";
+      font-family: $fontFamily;
+    }
+
+    &.mat-primary {
+      &:after {
+        content: "On";
+      }
+    }
+  }
+
+  mat-card-header {
+    &.disabled {
+      mat-icon, .mat-card-title, .mat-card-subtitle {
+        color: $fontGray !important;
+      }
+    }
+
+    ::ng-deep {
+      .mat-card-header-text {
+        margin: 6px 16px;
+      }
+    }
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+}

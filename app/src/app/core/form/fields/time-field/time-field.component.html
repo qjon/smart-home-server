@@ -1,0 +1,14 @@
+<input type="text" [formControl]="formGroup.get('hours')"
+       riNumberField
+       riLeadingZeroValue
+       riRangeNumberValue min="0" max="23"
+       class="mat-input-element">
+<span>:</span>
+<input type="text"
+       [formControl]="formGroup.get('minutes')"
+       riNumberField
+       riLeadingZeroValue
+       riRangeNumberValue min="0" max="59"
+       class="mat-input-element">
+
+

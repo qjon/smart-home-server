@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-header [ngClass]="{disabled: !schedule.isActive}" >
+    <mat-icon mat-card-avatar [ngClass]="{'mat-primary': schedule.action}">power_settings_new</mat-icon>
+    <mat-card-title>{{schedule.time | time}}</mat-card-title>
+    <mat-card-subtitle>{{schedule.day | days:'long'}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <button mat-raised-button  color="warn" (click)="clickRemove()">
+      <mat-icon>remove</mat-icon>
+      <span>Remove</span>
+    </button>
+    <button mat-raised-button *ngIf="schedule.isActive; else activate" (click)="clickActiveChange(false)">
+      <mat-icon>alarm_off</mat-icon>
+      <span>Deactivate</span>
+    </button>
+    <ng-template #activate>
+      <button mat-raised-button color="primary" (click)="clickActiveChange(true)">
+        <mat-icon>alarm_on</mat-icon>
+        <span>Activate</span>
+      </button>
+    </ng-template>
+  </mat-card-actions>
+</mat-card>

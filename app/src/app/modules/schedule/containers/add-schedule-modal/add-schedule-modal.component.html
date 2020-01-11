@@ -1,0 +1,27 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <sh-form-dialog>
+    <span class="title">Add schedule</span>
+    <button mat-raised-button type="button" [disabled]="isSaving" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button type="submit" [disabled]="isSaving" color="primary">Save</button>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Action</mat-label>
+        <mat-select matNativeControl required [formControl]="form.get('action')">
+          <mat-option [value]="true">Turn On</mat-option>
+          <mat-option [value]="false">Turn Off</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('action').invalid">Action is required</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Day</mat-label>
+        <ri-form-days-field [formControl]="form.get('day')" placeholder="Select days" type="medium" required></ri-form-days-field>
+        <mat-error>Day is required</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Time</mat-label>
+        <ri-form-time-field [formControl]="form.get('time')" placeholder="Select time"></ri-form-time-field>
+        <mat-error *ngIf="form.get('time').invalid">Time is required</mat-error>
+      </mat-form-field>
+    </div>
+  </sh-form-dialog>
+</form>

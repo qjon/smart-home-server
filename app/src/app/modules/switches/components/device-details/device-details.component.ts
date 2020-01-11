@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -15,6 +15,7 @@ import { RoomDto } from '../../../rooms/interfaces/room-dto.interface';
   selector: 'sh-device-details',
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
@@ -29,12 +30,15 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     'CW-001',
     'S26E',
     'T1EU',
+    'T1EU1C',
   ];
   public actionButtonsDisabled = false;
 
   public destroy$ = new ReplaySubject<void>();
 
   public rooms$: Observable<RoomDto[]>;
+
+  public isScheduleOpen = false;
 
   constructor(private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
@@ -99,6 +103,15 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     this.isEditMode = true;
     this.enableForm();
   }
+
+  public openSchedule(): void {
+    this.isScheduleOpen = true;
+  }
+
+  public hideSchedule(): void {
+    this.isScheduleOpen = false;
+  }
+
   private onSubmitError() {
     this.actions$
       .pipe(
@@ -127,6 +140,10 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  public trackByRoom(index, room: RoomDto): number {
+    return room.id;
+  }
+
   private onDeviceIdChangeResetForm(device$) {
     device$
       .subscribe((device: SwitchDeviceModel) => {
@@ -144,6 +161,7 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       )
       .subscribe((id) => this.deviceDetailsStateConnectorService.setCurrentDeviceId(id));
   }
+
 
   private createForm() {
     this.switches = this.fb.group({
@@ -173,7 +191,6 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       );
   }
 
-
   private disableForm(): void {
     this.form.disable();
   }
@@ -183,7 +200,7 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     this.form.controls['isSingleSwitch'].disable();
     this.form.controls['deviceId'].disable();
 
-    for (let i = this.device.switches.size; i < 4; i++) {
+    for (let i = this.device.switches.length; i < 4; i++) {
       this.switches.controls[i].disable();
     }
   }
@@ -197,10 +214,10 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       isSingleSwitch: device.isSingleSwitch,
       room: device.isAssignedToRoom ? { id: device.roomId, name: device.roomName } : null,
       switches: {
-        0: device.switches.get(0).name,
-        1: device.switches.has(1) ? device.switches.get(1).name : null,
-        2: device.switches.has(2) ? device.switches.get(2).name : null,
-        3: device.switches.has(3) ? device.switches.get(3).name : null,
+        0: device.getOutlet(0).name,
+        1: device.getOutlet(1) ? device.getOutlet(1).name : null,
+        2: device.getOutlet(2) ? device.getOutlet(2).name : null,
+        3: device.getOutlet(3) ? device.getOutlet(3).name : null,
       },
     };
   }

@@ -1,7 +1,11 @@
 @import "../../../../../variables";
 
+:host {
+  min-width: 320px;
+}
+
 mat-card {
-  min-width: 16em;
+  min-width: 18em;
   max-width: 20em;
 
   mat-card-title {
@@ -34,6 +38,7 @@ mat-card {
       align-content: flex-start;
       justify-content: flex-end;
       margin-top: -1em;
+      margin-right: -1em;
     }
   }
 

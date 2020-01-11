@@ -1,0 +1,21 @@
+:host ::ng-deep {
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+mat-toolbar {
+  width: 400px;
+  margin: -24px -24px 20px -24px;
+}
+
+mat-divider {
+  width: 400px;
+  margin: 0 -1.5em;
+}
+
+.actions {
+  display: flex;
+  margin: 1em -0.5em -0.5em;
+  justify-content: flex-end;
+}

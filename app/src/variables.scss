@@ -23,3 +23,7 @@ $warn: mat-color($app-warn);
 $fontInverseColor: mat-color($app-primary, 50);
 
 $grayBg: mat-color($app-primary, 100);
+
+$fontGray: $black-12-opacity;
+
+$fontFamily: mat-font-family(mat-typography-config());

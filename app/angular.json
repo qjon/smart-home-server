@@ -10,7 +10,12 @@
       "prefix": "sh",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "styleext": "scss",
+          "changeDetection": "OnPush",
+          "spec": false
+        },
+        "@schematics/angular:service": {
+          "spec": false
         }
       },
       "architect": {
