@@ -14,6 +14,8 @@ rl.question('Server IP? ', function(ip) {
             rl.question('DB pass? ', function(sbPass) {
               rl.question('DB schema? ', function(dbSchema) {
                 const envDevString = 'export const environment = {\n' +
+                  '  buildDate: \'\',\n' +
+                  '  version: require(\'../../../package.json\').version,\n' +
                   '  production: false,\n' +
                   '  apiHost: \'http://' + ip + ':' + apiPort + '\',\n' +
                   '  ws: {\n' +
@@ -25,6 +27,8 @@ rl.question('Server IP? ', function(ip) {
                 fs.writeFileSync(__dirname + '/../app/src/environments/environment.ts', envDevString, { encoding: 'utf8' });
 
                 const envProdString = 'export const environment = {\n' +
+                  '  buildDate: \'\',\n' +
+                  '  version: require(\'../../../package.json\').version,\n' +
                   '  production: true,\n' +
                   '  apiHost: \'http://' + ip + ':' + apiPort + '\',\n' +
                   '  ws: {\n' +

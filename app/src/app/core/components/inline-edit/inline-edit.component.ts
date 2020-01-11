@@ -32,7 +32,7 @@ export class InlineEditComponent implements OnInit, OnDestroy {
   @Input()
   public renameSuccess$: Observable<any>;
 
-  @ViewChild('deviceName')
+  @ViewChild('deviceName', {static: false})
   public inputElement: ElementRef<HTMLElement>;
 
   @Output()

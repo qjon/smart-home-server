@@ -13,6 +13,11 @@ It contains two application
 
 ## Change log
 
+### v1.3.1
+
+- upgrade to Angular 8
+- fix configuration script
+
 ### v1.3.0
 - schedule module (add, remove, activate)
 - fix layout issues
@@ -58,7 +63,7 @@ It contains two application
 * init configuration scrip and answer on all questions (below script should create environment files for _app_ and _config.env_ for _server_) 
 
 
-    npm config
+    npm run config
         
 * run
 
