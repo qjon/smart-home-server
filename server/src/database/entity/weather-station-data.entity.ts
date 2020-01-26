@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { WeatherStationEntity } from './weather-station.entity';
+import { WeatherStationDataDto } from '../../interfaces/weather-station/weather-station-data-dto';
 
 @Entity('weather_station_data')
 @Unique('timestamp_station', ['timestamp', 'weatherStation'])
@@ -22,8 +23,9 @@ export class WeatherStationDataEntity {
   @ManyToOne(type => WeatherStationEntity, ws => ws.data)
   weatherStation: WeatherStationEntity;
 
-  toJSON(): any {
+  toJSON(): WeatherStationDataDto {
     return {
+      id: this.id,
       timestamp: this.timestamp,
       humidity: this.humidity,
       temperature: this.temperature,

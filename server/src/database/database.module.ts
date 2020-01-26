@@ -15,6 +15,7 @@ import { WeatherStationEntity } from './entity/weather-station.entity';
 import { WeatherStationDataEntity } from './entity/weather-station-data.entity';
 import { WeatherStationService } from './services/weather-station.service';
 import { WeatherStationRepositoryService } from './repository/weather-station-repository.service';
+import { WeatherStationDataRepositoryService } from './repository/weather-station-data-repository.service';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { WeatherStationRepositoryService } from './repository/weather-station-re
     RoomService,
     ScheduleRepositoryService,
     ScheduleService,
+    WeatherStationDataRepositoryService,
     WeatherStationRepositoryService,
     WeatherStationService,
   ],
@@ -45,6 +47,7 @@ import { WeatherStationRepositoryService } from './repository/weather-station-re
     RoomService,
     ScheduleRepositoryService,
     ScheduleService,
+    WeatherStationDataRepositoryService,
     WeatherStationRepositoryService,
     WeatherStationService,
   ],

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { RoomEntity } from '../entity/room.entity';
 import { ScheduleEntity } from '../entity/schedule.entity';
 import { WeatherStationEntity } from '../entity/weather-station.entity';
+import { DeviceEntity } from '../entity/device.entity';
 
 @Injectable()
 export class WeatherStationRepositoryService {
@@ -11,6 +12,14 @@ export class WeatherStationRepositoryService {
 
   public constructor(@InjectRepository(WeatherStationEntity) protected repository: Repository<WeatherStationEntity>) {
 
+  }
+
+  public fetchWeatherStationById(weatherStationId: number): Promise<WeatherStationEntity> {
+    return this.repository
+      .createQueryBuilder('ws')
+      .leftJoinAndSelect('ws.lastData', 'wsd')
+      .andWhere('ws.id = :weatherStationId', { weatherStationId })
+      .getOne();
   }
 
   public fetchAllWithLastData(): Promise<WeatherStationEntity[]> {
