@@ -5,12 +5,19 @@ mat-toolbar {
   justify-content: space-between;
 
   h1 {
+    width: 200px;
+  }
+
+  .menu {
     flex: 1 1  100%;
+    text-align: center;
   }
 
   .info {
     font-style: italic;
     color: $fontGray;
+
+    width: 200px;
 
     span{
       display: block;

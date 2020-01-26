@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: './modules/switches/switches.module#SwitchesModule'
   },
   {
+    path: 'weather-stations',
+    loadChildren: './modules/weather-stations/weather-stations.module#WeatherStationsModule'
+  },
+  {
     path: '**',
     redirectTo: 'switches',
   }
