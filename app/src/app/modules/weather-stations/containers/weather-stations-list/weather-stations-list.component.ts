@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -18,7 +18,8 @@ export class WeatherStationsListComponent {
   constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService) {
     this.list$ = this.weatherStationsStateConnectorService.list$;
 
-    this.weatherStationsStateConnectorService.loadList();
+
+    this.weatherStationsStateConnectorService.setWeatherStationId(null);
   }
 
   public trackBy(item: WeatherStationDto): number {

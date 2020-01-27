@@ -1,0 +1,14 @@
+<mat-card *ngIf="(weatherStation$ | async) as weatherStation ">
+  <mat-card-header>
+    <mat-card-title>
+      <button mat-icon-button  [routerLink]="['..']">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span title="{{weatherStation.name}}">{{weatherStation.name}}</span>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div class="chart-box" [chart]="chart"></div>
+  </mat-card-content>
+</mat-card>

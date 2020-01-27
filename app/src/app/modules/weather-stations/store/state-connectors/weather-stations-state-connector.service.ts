@@ -1,28 +1,71 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { WeatherStationDto } from '@weather-stations/interfaces/weather-station-dto';
+import { first, map, switchMap } from 'rxjs/operators';
 
+import { WeatherStationDto } from '@weather-stations/interfaces/weather-station-dto';
 import { WeatherStationStateConnectorInterface } from '@weather-stations/interfaces/weather-station-state-connector.interface';
-import { WeatherStationSelectors } from '@weather-stations/store/weather-station-selectors';
+import { WeatherStationsSelectors } from '@weather-stations/store/weather-stations-selectors';
 import { WeatherStationsStoreModule } from '@weather-stations/store/weather-stations-store.module';
-import { WeatherStationsLoadAction } from '@weather-stations/store/weather-stations-actions';
+import {
+  WeatherStationLoadDataAction,
+  WeatherStationsLoadAction,
+} from '@weather-stations/store/weather-stations-actions';
+import { WeatherStationDataDto } from '@weather-stations/interfaces/weather-station-data-dto';
 
 @Injectable({
   providedIn: WeatherStationsStoreModule,
 })
 export class WeatherStationsStateConnectorService implements WeatherStationStateConnectorInterface {
+  public current$: Observable<WeatherStationDto>;
+
   public list$: Observable<WeatherStationDto[]>;
 
+  public data$: Observable<WeatherStationDataDto[]>;
+
+  private weatherStation: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+
   constructor(private store: Store<any>) {
+
     this.list$ = this.store
       .pipe(
-        select(WeatherStationSelectors.list),
+        select(WeatherStationsSelectors.list),
+      );
+
+    this.data$ = this.store
+      .pipe(
+        select(WeatherStationsSelectors.data),
+      );
+
+    this.current$ = combineLatest(
+      this.weatherStation.asObservable(),
+      this.list$,
+    )
+      .pipe(
+        map(([weatherStationId, items]) => weatherStationId),
+        switchMap((weatherStationId: number) => this.store
+          .pipe(
+            select(WeatherStationsSelectors.current, { weatherStationId }),
+            first(),
+          ),
+        ),
       );
   }
 
   public loadList(): void {
     this.store.dispatch(new WeatherStationsLoadAction());
+  }
+
+  public loadData(from: number, to: number): void {
+    this.store.dispatch(new WeatherStationLoadDataAction({
+      weatherStationId: this.weatherStation.getValue(),
+      from,
+      to,
+    }));
+  }
+
+  public setWeatherStationId(weatherStationId: number): void {
+    this.weatherStation.next(weatherStationId);
   }
 }

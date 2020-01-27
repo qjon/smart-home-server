@@ -59,12 +59,15 @@ export class WeatherStationsController {
              @Query('to') to: number = null): Promise<WeatherStationDataDto[]> {
     this.logger.log(`REQ | API | ${req.url}`);
 
+    from = Math.ceil(from / 1000);
+    to = Math.floor(to / 1000);
+
     const response = await this.weatherStationDataRepositoryService.fetchDataFromPeriodOfType(weatherStationId, from, to)
       .then((data: WeatherStationDataEntity[]) => {
         return data.map((wsd) => wsd.toJSON());
       });
 
-    this.logger.log(`RES | API | ${req.url} | ${JSON.stringify(response)}`);
+    this.logger.log(`RES | API | ${req.url} | number of items: ${JSON.stringify(response.length)}`);
     return response;
   }
 }

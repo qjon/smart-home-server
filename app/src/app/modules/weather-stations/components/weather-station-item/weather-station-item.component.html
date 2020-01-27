@@ -1,6 +1,11 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title title="{{weatherStation.name}}">{{weatherStation.name}}</mat-card-title>
+    <div class="info">
+      <button mat-icon-button  [routerLink]="[weatherStation.id]">
+        <mat-icon>info_outlined</mat-icon>
+      </button>
+    </div>
   </mat-card-header>
   <mat-divider></mat-divider>
   <mat-card-content>

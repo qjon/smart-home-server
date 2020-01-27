@@ -26,7 +26,7 @@ export class WeatherStationDataRepositoryService {
     }
 
     return queryBuilder
-      .orderBy('wsd.timestamp', 'DESC')
+      .orderBy('wsd.timestamp', 'ASC')
       .getMany();
   }
 }

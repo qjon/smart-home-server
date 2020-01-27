@@ -32,7 +32,14 @@ export function weatherStationReducer(state: WeatherStationsState = emptyWeather
         ...state,
         stations,
         ids,
+        data: [],
       };
+    case WeatherStationsActionTypes.LoadStationsDataSuccess:
+      return {
+        ...state,
+        data: action.payload.items,
+      };
+      break;
     default:
       return state;
   }
