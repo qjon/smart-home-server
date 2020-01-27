@@ -6,6 +6,9 @@
     "paths": {
       "@core/*": [
         "app/src/app/core/*"
+      ],
+      "@weather-stations/*": [
+        "app/src/app/modules/weather-stations/*"
       ]
     },
     "types": ["node"]
