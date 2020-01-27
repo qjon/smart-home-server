@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { WeatherStationDto } from '@weather-stations/interfaces/weather-station-dto';
 
 @Component({
   selector: 'sh-weather-station-item',
@@ -7,6 +8,9 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WeatherStationItemComponent implements OnInit {
+
+  @Input()
+  public weatherStation: WeatherStationDto;
 
   constructor() { }
 

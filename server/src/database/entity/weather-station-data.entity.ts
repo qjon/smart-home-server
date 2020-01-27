@@ -26,7 +26,7 @@ export class WeatherStationDataEntity {
   toJSON(): WeatherStationDataDto {
     return {
       id: this.id,
-      timestamp: this.timestamp,
+      timestamp: this.timestamp * 1000,
       humidity: this.humidity,
       temperature: this.temperature,
     };

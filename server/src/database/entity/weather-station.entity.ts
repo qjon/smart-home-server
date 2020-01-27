@@ -29,7 +29,7 @@ export class WeatherStationEntity {
       name: this.name,
       humidity: this.lastData ? this.lastData.humidity : null,
       temperature: this.lastData ? this.lastData.temperature : null,
-      timestamp: this.lastData ? this.lastData.timestamp : null,
+      timestamp: this.lastData ? this.lastData.timestamp * 1000 : null,
     };
   }
 }

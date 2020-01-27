@@ -28,4 +28,10 @@ mat-toolbar {
       }
     }
   }
+
+  @media all and (max-width: 500px) {
+    .info {
+      display: none;
+    }
+  }
 }

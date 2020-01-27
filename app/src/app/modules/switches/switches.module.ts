@@ -32,7 +32,6 @@ import { NotificationsModule } from '@core/notifications/notifications.module';
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { SwitchesStateConnectorsModule } from './store/state-connectors/switches-state-connectors.module';
 import { MatSelectModule } from '@angular/material/select';
-import { LastUpdateComponent } from './components/last-update/last-update.component';
 import { AddRoomComponent } from '../rooms/components/add-room/add-room.component';
 import { RoomsModule } from '../rooms/rooms.module';
 import { MatMenuModule } from '@angular/material/menu';
@@ -47,7 +46,6 @@ import { ScheduleModule } from '../schedule/schedule.module';
     SwitchStatusComponent,
     TrueFalseComponent,
     DeviceDetailsComponent,
-    LastUpdateComponent,
     AddRoomComponent,
   ],
   entryComponents: [

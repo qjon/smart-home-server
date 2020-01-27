@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'sh-last-update',
+  selector: 'sh-core-last-update',
   templateUrl: './last-update.component.html',
   styleUrls: ['./last-update.component.scss']
 })
