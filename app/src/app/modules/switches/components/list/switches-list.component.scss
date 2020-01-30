@@ -1,3 +1,5 @@
+@import '../../../../../variables';
+
 .actions-bar {
   margin: 1em;
   display: flex;
@@ -28,7 +30,7 @@
   }
 }
 
-@media all and (max-width: 800px) {
+@media all and (max-width: $smallWindowWidth) {
   .actions-bar {
     flex-direction: column;
     flex-flow: column-reverse;

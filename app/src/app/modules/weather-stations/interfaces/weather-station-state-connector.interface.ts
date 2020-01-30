@@ -14,5 +14,11 @@ export interface WeatherStationStateConnectorInterface {
 
   loadList(): void;
 
-  loadData(from: number, to: number): void;
+  loadAggregateDataForDay(year: number, month: number, day: number): void;
+
+  loadAggregateDataForWeek(year: number, month: number, day: number): void;
+
+  loadDataForMonth(year: number, month: number): void;
+
+  loadDataForYear(year: number): void;
 }

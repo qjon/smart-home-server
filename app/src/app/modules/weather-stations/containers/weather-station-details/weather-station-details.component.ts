@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
@@ -11,6 +11,8 @@ import { WeatherStationsStateConnectorService } from '@weather-stations/store/st
 import { WeatherStationChartDataParserService } from '@weather-stations/services/weather-station-chart-data-parser.service';
 import { WeatherStationDataDto } from '@weather-stations/interfaces/weather-station-data-dto';
 import { WeatherStationDto } from '@weather-stations/interfaces/weather-station-dto';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { ChartType } from '@weather-stations/interfaces/weather-station-chart-type';
 
 @Component({
   selector: 'sh-weather-station-details',
@@ -24,6 +26,10 @@ import { WeatherStationDto } from '@weather-stations/interfaces/weather-station-
 })
 export class WeatherStationDetailsComponent extends Destroyable implements OnInit {
   public chart: Chart;
+
+  public chartTypes: typeof ChartType = ChartType;
+
+  public currentChartType: ChartType = ChartType.Day;
 
   public weatherStation$: Observable<WeatherStationDto>;
 
@@ -44,9 +50,19 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
       .pipe(
         map((paramsMap) => paramsMap.get('weatherStationId')),
         distinctUntilChanged(),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
-      .subscribe((val => this.loadWeatherData(parseInt(val, 10))));
+      .subscribe((val => {
+        this.weatherStationsStateConnectorService.setWeatherStationId(parseInt(val, 10));
+
+        this.loadDataByChartType(this.currentChartType);
+      }));
+  }
+
+  public onChangeChartType(value: ChartType): void {
+    this.currentChartType = value;
+
+    this.loadDataByChartType(this.currentChartType);
   }
 
   private listenOnDataChange(): void {
@@ -55,7 +71,7 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
         takeUntil(this.destroy$),
       )
       .subscribe((items: WeatherStationDataDto[]) => {
-        this.weatherStationChartDataParserService.setData(items);
+        this.weatherStationChartDataParserService.setData(this.currentChartType, items);
       });
   }
 
@@ -66,9 +82,6 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
       this.weatherStationChartDataParserService.seriesHumidity$,
     )
       .pipe(
-        filter(([xAxis, seriesTemperature, seriesHumidity]) => {
-          return xAxis.length > 0 && seriesTemperature.length > 0 && seriesHumidity.length > 0;
-        }),
         takeUntil(this.destroy$),
       )
       .subscribe(([xAxis, seriesTemperature, seriesHumidity]) => {
@@ -85,7 +98,7 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
       },
       colors: ['#f39c12', '#3498db'],
       title: {
-        text: `Last 7 days`,
+        text: this.getChartTitle(),
       },
       subtitle: {
         text: '',
@@ -118,13 +131,36 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
       ],
     });
   }
+  private getChartTitle(): string {
+    switch (this.currentChartType) {
+      case ChartType.Year:
+        return 'Last Year';
+      case ChartType.Month:
+        return 'Last Month';
+      case ChartType.Day:
+        return 'Day';
+      default:
+        return 'Last 7 days';
+    }
+  }
 
-  private loadWeatherData(weatherStationId: number): void {
-    const to = Date.now();
-    const from = to - 7 * 24 * 60 * 60 * 1000;
+  private loadDataByChartType(chartType: ChartType): void {
+    const now: Date = new Date();
 
-    this.weatherStationsStateConnectorService.setWeatherStationId(weatherStationId);
-    this.weatherStationsStateConnectorService.loadData(from, to);
+    switch (chartType) {
+      case ChartType.Year:
+        this.weatherStationsStateConnectorService.loadDataForYear(now.getFullYear());
+        break;
+      case ChartType.Month:
+        this.weatherStationsStateConnectorService.loadDataForMonth(now.getFullYear(), now.getMonth());
+        break;
+      case ChartType.Day:
+        this.weatherStationsStateConnectorService.loadAggregateDataForDay(now.getFullYear(), now.getMonth(), now.getDate());
+        break;
+      default:
+        const from = new Date(now.getTime() - now.getDay() * 24 * 60 * 60 * 1000)
+        this.weatherStationsStateConnectorService.loadAggregateDataForWeek(from.getFullYear(), from.getMonth(), from.getDate());
+    }
 
     this.cdr.markForCheck();
   }

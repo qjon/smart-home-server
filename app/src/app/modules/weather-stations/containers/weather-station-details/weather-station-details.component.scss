@@ -1,3 +1,29 @@
+@import '../../../../../variables';
+
+::ng-deep {
+  .mat-card-header-text {
+    width: 100%;
+  }
+}
+
+#small-device-menu {
+  display: none;
+}
+
+mat-button-toggle-group {
+  display: inline-flex;
+}
+
+@media all and (max-width: $smallWindowWidth) {
+  #small-device-menu {
+    display: inline-block;
+  }
+
+  mat-button-toggle-group {
+    display: none;
+  }
+}
+
 mat-card-content {
   padding: 10px 0;
 }
@@ -6,8 +32,24 @@ mat-card-title {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
+  span {
+    flex: 1 1 100%;
+  }
+
+  .header-actions {
+    width: 250px;
+    text-align: right;
+    font-size: 0.8em;
+  }
 }
 
 .chart-box {
   height: 600px;
+}
+
+button {
+  &.selected {
+    background: $grayBg;
+  }
 }

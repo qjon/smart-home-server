@@ -5,6 +5,13 @@ import { Observable, Subject } from 'rxjs';
 
 import { Destroyable } from '@core/classes/destroyable.component';
 import { WeatherStationDataDto } from '@weather-stations/interfaces/weather-station-data-dto';
+import { ChartType } from '@weather-stations/interfaces/weather-station-chart-type';
+
+interface ChartData {
+  xAxis: string[];
+  seriesTemperature: number[];
+  seriesHumidity: number[];
+}
 
 @Injectable()
 export class WeatherStationChartDataParserService extends Destroyable {
@@ -25,19 +32,81 @@ export class WeatherStationChartDataParserService extends Destroyable {
     this.seriesHumidity$ = this.seriesHumidity.asObservable();
   }
 
-  public setData(data: WeatherStationDataDto[]): void {
+  public setData(type: ChartType, data: WeatherStationDataDto[]): void {
+    let chartData: ChartData;
+
+    switch (type) {
+      case ChartType.Year:
+        chartData = this.parseYearData(data);
+        break;
+      case ChartType.Month:
+        chartData = this.parseMonthData(data);
+        break;
+      case ChartType.Day:
+        chartData = this.parseDayData(data);
+        break;
+      default:
+        chartData = this.parseWeekData(data);
+    }
+
+    this.xAxis.next(chartData.xAxis);
+    this.seriesTemperature.next(chartData.seriesTemperature);
+    this.seriesHumidity.next(chartData.seriesHumidity);
+  }
+
+  private parseDayData(data: WeatherStationDataDto[]): ChartData {
     const xAxis: string[] = [];
     const seriesTemperature: number[] = [];
     const seriesHumidity: number[] = [];
 
     data.forEach((item: WeatherStationDataDto, index) => {
-      xAxis.push(this.datePipe.transform(item.timestamp, 'dd MMM HH:mm'));
+      xAxis.push(this.datePipe.transform(item.timestamp, 'HH'));
       seriesTemperature.push(item.temperature);
       seriesHumidity.push(item.humidity);
     });
 
-    this.xAxis.next(xAxis);
-    this.seriesTemperature.next(seriesTemperature);
-    this.seriesHumidity.next(seriesHumidity);
+    return { xAxis, seriesHumidity, seriesTemperature };
+  }
+
+  private parseWeekData(data: WeatherStationDataDto[]): ChartData {
+    const xAxis: string[] = [];
+    const seriesTemperature: number[] = [];
+    const seriesHumidity: number[] = [];
+
+    data.forEach((item: WeatherStationDataDto, index) => {
+      xAxis.push(this.datePipe.transform(item.timestamp, 'dd'));
+      seriesTemperature.push(item.temperature);
+      seriesHumidity.push(item.humidity);
+    });
+
+    return { xAxis, seriesHumidity, seriesTemperature };
+  }
+
+  private parseMonthData(data: WeatherStationDataDto[]): ChartData {
+    const xAxis: string[] = [];
+    const seriesTemperature: number[] = [];
+    const seriesHumidity: number[] = [];
+
+    data.forEach((item: WeatherStationDataDto, index) => {
+      xAxis.push(this.datePipe.transform(item.timestamp, 'dd MMM'));
+      seriesTemperature.push(item.temperature);
+      seriesHumidity.push(item.humidity);
+    });
+
+    return { xAxis, seriesHumidity, seriesTemperature };
+  }
+
+  private parseYearData(data: WeatherStationDataDto[]): ChartData {
+    const xAxis: string[] = [];
+    const seriesTemperature: number[] = [];
+    const seriesHumidity: number[] = [];
+
+    data.forEach((item: WeatherStationDataDto, index) => {
+      xAxis.push(this.datePipe.transform(item.timestamp, 'MMM'));
+      seriesTemperature.push(item.temperature);
+      seriesHumidity.push(item.humidity);
+    });
+
+    return { xAxis, seriesHumidity, seriesTemperature };
   }
 }

@@ -9,7 +9,9 @@ import { WeatherStationStateConnectorInterface } from '@weather-stations/interfa
 import { WeatherStationsSelectors } from '@weather-stations/store/weather-stations-selectors';
 import { WeatherStationsStoreModule } from '@weather-stations/store/weather-stations-store.module';
 import {
-  WeatherStationLoadDataAction,
+  WeatherStationLoadAggregateDataForDayAction, WeatherStationLoadAggregateDataForWeekAction,
+  WeatherStationLoadDataForMonthAction,
+  WeatherStationLoadDataForYearAction,
   WeatherStationsLoadAction,
 } from '@weather-stations/store/weather-stations-actions';
 import { WeatherStationDataDto } from '@weather-stations/interfaces/weather-station-data-dto';
@@ -57,11 +59,38 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     this.store.dispatch(new WeatherStationsLoadAction());
   }
 
-  public loadData(from: number, to: number): void {
-    this.store.dispatch(new WeatherStationLoadDataAction({
+
+  public loadAggregateDataForDay(year: number, month: number, day: number): void {
+    this.store.dispatch(new WeatherStationLoadAggregateDataForDayAction({
       weatherStationId: this.weatherStation.getValue(),
-      from,
-      to,
+      year,
+      month,
+      day
+    }));
+  }
+
+
+  public loadAggregateDataForWeek(year: number, month: number, day: number): void {
+    this.store.dispatch(new WeatherStationLoadAggregateDataForWeekAction({
+      weatherStationId: this.weatherStation.getValue(),
+      year,
+      month,
+      day
+    }));
+  }
+
+  public loadDataForMonth(year: number, month: number): void {
+    this.store.dispatch(new WeatherStationLoadDataForMonthAction({
+      weatherStationId: this.weatherStation.getValue(),
+      year,
+      month,
+    }));
+  }
+
+  public loadDataForYear(year: number): void {
+    this.store.dispatch(new WeatherStationLoadDataForYearAction({
+      weatherStationId: this.weatherStation.getValue(),
+      year,
     }));
   }
 

@@ -34,12 +34,22 @@ export function weatherStationReducer(state: WeatherStationsState = emptyWeather
         ids,
         data: [],
       };
-    case WeatherStationsActionTypes.LoadStationsDataSuccess:
+    case WeatherStationsActionTypes.LoadStationsAggregateDataForDay:
+    case WeatherStationsActionTypes.LoadStationsAggregateDataForWeek:
+    case WeatherStationsActionTypes.LoadStationsDataForMonth:
+    case WeatherStationsActionTypes.LoadStationsDataForYear:
+      return {
+        ...state,
+        data: [],
+      };
+    case WeatherStationsActionTypes.LoadStationsAggregateDataForDaySuccess:
+    case WeatherStationsActionTypes.LoadStationsAggregateDataForWeekSuccess:
+    case WeatherStationsActionTypes.LoadStationsDataForMonthSuccess:
+    case WeatherStationsActionTypes.LoadStationsDataForYearSuccess:
       return {
         ...state,
         data: action.payload.items,
       };
-      break;
     default:
       return state;
   }

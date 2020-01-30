@@ -5,8 +5,19 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import {
-  WeatherStationLoadDataAction, WeatherStationLoadDataSuccessAction,
-  WeatherStationsActionTypes, WeatherStationsLoadErrorAction,
+  WeatherStationLoadAggregateDataForDayAction,
+  WeatherStationLoadAggregateDataForDayErrorAction,
+  WeatherStationLoadAggregateDataForDaySuccessAction,
+  WeatherStationLoadAggregateDataForWeekAction, WeatherStationLoadAggregateDataForWeekErrorAction,
+  WeatherStationLoadAggregateDataForWeekSuccessAction,
+  WeatherStationLoadDataForMonthAction,
+  WeatherStationLoadDataForMonthErrorAction,
+  WeatherStationLoadDataForMonthSuccessAction,
+  WeatherStationLoadDataForYearAction,
+  WeatherStationLoadDataForYearErrorAction,
+  WeatherStationLoadDataForYearSuccessAction,
+  WeatherStationsActionTypes,
+  WeatherStationsLoadErrorAction,
   WeatherStationsLoadSuccessAction,
 } from '@weather-stations/store/weather-stations-actions';
 import { WeatherStationsApiService } from '@weather-stations/api/weather-stations-api.service';
@@ -30,18 +41,86 @@ export class WeatherStationsEffectsService {
   @Effect({
     dispatch: true,
   })
-  public loadWeatherStationsData$ = this.actions$
+  public loadWeatherStationsMonthData$ = this.actions$
     .pipe(
-      ofType(WeatherStationsActionTypes.LoadStationsData),
-      switchMap((action: WeatherStationLoadDataAction) => this.weatherStationsApiService.getData(action.payload.weatherStationId, action.payload.from, action.payload.to)
+      ofType(WeatherStationsActionTypes.LoadStationsDataForMonth),
+      switchMap((action: WeatherStationLoadDataForMonthAction) => this.weatherStationsApiService.getAggregateDataForMonth(action.payload.weatherStationId, action.payload.year, action.payload.month)
         .pipe(
-          map((items: WeatherStationDataDto[]) => new WeatherStationLoadDataSuccessAction({
+          map((items: WeatherStationDataDto[]) => new WeatherStationLoadDataForMonthSuccessAction({
             weatherStationId: action.payload.weatherStationId,
-            from: action.payload.from,
-            to: action.payload.to,
+            year: action.payload.year,
+            month: action.payload.month,
             items,
           })),
-          catchError((error: any) => of(new WeatherStationsLoadErrorAction({ error }))),
+          catchError((error: any) => of(new WeatherStationLoadDataForMonthErrorAction({ error }))),
+        ),
+      ),
+    );
+
+  @Effect({
+    dispatch: true,
+  })
+  public loadWeatherStationsAggregatedDayData$ = this.actions$
+    .pipe(
+      ofType(WeatherStationsActionTypes.LoadStationsAggregateDataForDay),
+      switchMap((action: WeatherStationLoadAggregateDataForDayAction) => this.weatherStationsApiService.getAggregateDataForDay(
+        action.payload.weatherStationId,
+        action.payload.year,
+        action.payload.month,
+        action.payload.day
+        )
+          .pipe(
+            map((items: WeatherStationDataDto[]) => new WeatherStationLoadAggregateDataForDaySuccessAction({
+              weatherStationId: action.payload.weatherStationId,
+              year: action.payload.year,
+              month: action.payload.month,
+              day: action.payload.day,
+              items,
+            })),
+            catchError((error: any) => of(new WeatherStationLoadAggregateDataForDayErrorAction({ error }))),
+          ),
+      ),
+    );
+
+  @Effect({
+    dispatch: true,
+  })
+  public loadWeatherStationsAggregatedWeekData$ = this.actions$
+    .pipe(
+      ofType(WeatherStationsActionTypes.LoadStationsAggregateDataForWeek),
+      switchMap((action: WeatherStationLoadAggregateDataForWeekAction) => this.weatherStationsApiService.getAggregateDataForWeek(
+        action.payload.weatherStationId,
+        action.payload.year,
+        action.payload.month,
+        action.payload.day
+        )
+          .pipe(
+            map((items: WeatherStationDataDto[]) => new WeatherStationLoadAggregateDataForWeekSuccessAction({
+              weatherStationId: action.payload.weatherStationId,
+              year: action.payload.year,
+              month: action.payload.month,
+              day: action.payload.day,
+              items,
+            })),
+            catchError((error: any) => of(new WeatherStationLoadAggregateDataForWeekErrorAction({ error }))),
+          ),
+      ),
+    );
+
+  @Effect({
+    dispatch: true,
+  })
+  public loadWeatherStationsYearData$ = this.actions$
+    .pipe(
+      ofType(WeatherStationsActionTypes.LoadStationsDataForYear),
+      switchMap((action: WeatherStationLoadDataForYearAction) => this.weatherStationsApiService.getAggregateDataForYear(action.payload.weatherStationId, action.payload.year)
+        .pipe(
+          map((items: WeatherStationDataDto[]) => new WeatherStationLoadDataForYearSuccessAction({
+            weatherStationId: action.payload.weatherStationId,
+            year: action.payload.year,
+            items,
+          })),
+          catchError((error: any) => of(new WeatherStationLoadDataForYearErrorAction({ error }))),
         ),
       ),
     );

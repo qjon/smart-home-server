@@ -26,4 +26,37 @@ export class WeatherStationsApiService {
 
     return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data`, { params });
   }
+
+  public getAggregateDataForWeek(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]> {
+    const params = new HttpParams()
+      .set('year', year.toString())
+      .set('month', month.toString())
+      .set('day', day.toString());
+
+    return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/week`, { params });
+  }
+
+  public getAggregateDataForDay(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]> {
+    const params = new HttpParams()
+      .set('year', year.toString())
+      .set('month', month.toString())
+      .set('day', day.toString());
+
+    return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/day`, { params });
+  }
+
+  public getAggregateDataForMonth(id: number, year: number, month: number): Observable<WeatherStationDataDto[]> {
+    const params = new HttpParams()
+      .set('year', year.toString())
+      .set('month', month.toString());
+
+    return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/month`, { params });
+  }
+
+  public getAggregateDataForYear(id: number, year: number): Observable<WeatherStationDataDto[]> {
+    const params = new HttpParams()
+      .set('year', year.toString());
+
+    return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/year`, { params });
+  }
 }

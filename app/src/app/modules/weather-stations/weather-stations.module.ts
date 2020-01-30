@@ -14,6 +14,8 @@ import { WeatherStationsApiModule } from '@weather-stations/api/weather-stations
 import { WeatherStationsStoreModule } from '@weather-stations/store/weather-stations-store.module';
 import { WeatherStationDetailsComponent } from '@weather-stations/containers/weather-station-details/weather-station-details.component';
 import { WeatherStationsServicesModule } from '@weather-stations/services/weather-stations-services.module';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @NgModule({
@@ -34,6 +36,8 @@ import { WeatherStationsServicesModule } from '@weather-stations/services/weathe
     WeatherStationsRoutingModule,
     WeatherStationsServicesModule,
     WeatherStationsStoreModule,
+    MatButtonToggleModule,
+    MatMenuModule,
   ],
 })
 export class WeatherStationsModule {
