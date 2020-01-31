@@ -33,8 +33,13 @@ export class WeatherStationDataRepositoryService {
   }
 
   public fetchDataFromMonth(weatherStationId: number, year: number, month: number): Promise<WeatherStationMonthAvgDataDto[]> {
-    const from = new Date(year, month, 1, 0, 0, 0).getTime() / 1000;
-    const to = new Date((month === 11) ? year + 1 : year, (month === 11) ? 0 : month + 1, 1, 0, 0, 0).getTime() / 1000;
+    const fromDate = new Date(year, month, 1, 0, 0, 0);
+    const toDate = new Date(year, month, 1, 0, 0, 0);
+
+    toDate.setMonth(toDate.getMonth() + 1);
+
+    const from = fromDate.getTime() / 1000;
+    const to = toDate.getTime() / 1000;
 
     const queryBuilder = this.repository
       .createQueryBuilder('wsd')
@@ -45,8 +50,14 @@ export class WeatherStationDataRepositoryService {
   }
 
   public fetchDataFromDay(weatherStationId: number, year: number, month: number, day: number): Promise<WeatherStationDayAvgDataDto[]> {
-    const from: number = (new Date(year, month, day, 0, 0, 0)).getTime() / 1000;
-    const to: number = (new Date(year, month, day, 23, 59, 59)).getTime() / 1000;
+    const fromDate = new Date(year, month, day, 0, 0, 0);
+    const toDate = new Date(year, month, day, 0, 0, 0);
+
+    toDate.setDate(toDate.getDate() + 1);
+
+    const from = fromDate.getTime() / 1000;
+    const to = toDate.getTime() / 1000;
+
     const queryBuilder = this.repository
       .createQueryBuilder('wsd')
       .select('HOUR(FROM_UNIXTIME(wsd.timestamp))', 'hour');
@@ -65,8 +76,14 @@ export class WeatherStationDataRepositoryService {
   }
 
   public fetchDataFromYear(weatherStationId: number, year: number): Promise<WeatherStationYearAvgDataDto[]> {
-    const from = new Date(year, 0, 1, 0, 0, 0).getTime() / 1000;
-    const to = new Date(year + 1, 0, 1, 0, 0, 0).getTime() / 1000;
+    const fromDate = new Date(year, 0, 1, 0, 0, 0);
+    const toDate = new Date(year, 0, 1, 0, 0, 0);
+
+    toDate.setFullYear(toDate.getFullYear() + 1);
+
+    const from = fromDate.getTime() / 1000;
+    const to = toDate.getTime() / 1000;
+
     const queryBuilder = this.repository
       .createQueryBuilder('wsd')
       .select('MONTH(FROM_UNIXTIME(wsd.timestamp))', 'month');

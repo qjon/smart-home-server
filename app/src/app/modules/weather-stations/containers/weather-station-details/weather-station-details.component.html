@@ -45,4 +45,14 @@
   <mat-card-content>
     <div class="chart-box" [chart]="chart"></div>
   </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button class="arrow-left" (click)="goPrev()">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      Prev
+    </button>
+    <button mat-raised-button class="arrow-right" (click)="goNext()">
+      Next
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </mat-card-actions>
 </mat-card>

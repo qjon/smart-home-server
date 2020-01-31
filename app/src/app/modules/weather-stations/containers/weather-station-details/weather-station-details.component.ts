@@ -33,9 +33,12 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
 
   public weatherStation$: Observable<WeatherStationDto>;
 
+  public date: Date = new Date();
+
   constructor(private weatherStationChartDataParserService: WeatherStationChartDataParserService,
               private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
               private activatedRoute: ActivatedRoute,
+              private datePipe: DatePipe,
               private cdr: ChangeDetectorRef) {
     super();
 
@@ -131,37 +134,69 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
       ],
     });
   }
+
   private getChartTitle(): string {
     switch (this.currentChartType) {
       case ChartType.Year:
-        return 'Last Year';
+        return 'Year: ' + this.date.getFullYear();
       case ChartType.Month:
-        return 'Last Month';
+        return this.datePipe.transform(this.date, 'MMM yyyy');
       case ChartType.Day:
-        return 'Day';
+        return this.datePipe.transform(this.date, 'dd MMM yyyy');
       default:
-        return 'Last 7 days';
+        const startOfWeek = new Date(this.date.toString());
+        startOfWeek.setDate(startOfWeek.getDate() - 7);
+
+        return this.datePipe.transform(startOfWeek, 'dd-MMM yyyy') + ' - ' + this.datePipe.transform(this.date, 'dd-MMM yyyy');
     }
   }
 
   private loadDataByChartType(chartType: ChartType): void {
-    const now: Date = new Date();
-
     switch (chartType) {
       case ChartType.Year:
-        this.weatherStationsStateConnectorService.loadDataForYear(now.getFullYear());
+        this.weatherStationsStateConnectorService.loadDataForYear(this.date.getFullYear());
         break;
       case ChartType.Month:
-        this.weatherStationsStateConnectorService.loadDataForMonth(now.getFullYear(), now.getMonth());
+        this.weatherStationsStateConnectorService.loadDataForMonth(this.date.getFullYear(), this.date.getMonth());
         break;
       case ChartType.Day:
-        this.weatherStationsStateConnectorService.loadAggregateDataForDay(now.getFullYear(), now.getMonth(), now.getDate());
+        this.weatherStationsStateConnectorService.loadAggregateDataForDay(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
         break;
       default:
-        const from = new Date(now.getTime() - now.getDay() * 24 * 60 * 60 * 1000)
+        const from = new Date(this.date.toString());
+        from.setDate(from.getDate() - 7);
+
         this.weatherStationsStateConnectorService.loadAggregateDataForWeek(from.getFullYear(), from.getMonth(), from.getDate());
     }
 
     this.cdr.markForCheck();
   }
+
+  public goNext(): void {
+    this.changePeriodOfType(1);
+  }
+
+  public goPrev(): void {
+    this.changePeriodOfType(-1);
+  }
+
+  public changePeriodOfType(jump: number): void {
+    switch (this.currentChartType) {
+      case ChartType.Year:
+        this.date.setFullYear(this.date.getFullYear() + jump);
+        break;
+      case ChartType.Month:
+        this.date.setMonth(this.date.getMonth() + jump);
+        break;
+      case ChartType.Week:
+        this.date.setDate(this.date.getDate() + jump * 7);
+        break;
+      default:
+        this.date.setDate(this.date.getDate() + jump);
+    }
+
+    this.loadDataByChartType(this.currentChartType);
+  }
+
+
 }
