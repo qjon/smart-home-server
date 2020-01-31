@@ -6,6 +6,15 @@
       </button>
       <span title="{{weatherStation.name}}">{{weatherStation.name}}</span>
       <div class="header-actions">
+        <button mat-raised-button
+                color="primary"
+                class="today-button"
+                *ngIf="now.toString() !== date.toString()"
+                (click)="goToday()"
+        >
+          <mat-icon>calendar_today</mat-icon>
+          <span>Today</span>
+        </button>
         <mat-button-toggle-group [value]="currentChartType" (change)="onChangeChartType($event.value)">
           <mat-button-toggle [value]="chartTypes.Day">Day</mat-button-toggle>
           <mat-button-toggle [value]="chartTypes.Week">Week</mat-button-toggle>

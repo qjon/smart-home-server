@@ -14,7 +14,8 @@ export interface WeatherStationDayAvgDataDto extends WeatherStationAvgDataDto{
   hour: number;
 }
 
-export interface WeatherStationMonthAvgDataDto extends WeatherStationAvgDataDto{
+export interface WeatherStationMonthAvgDataDto extends WeatherStationAvgDataDto {
+  month: number;
   day: number;
 }
 

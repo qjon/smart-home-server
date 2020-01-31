@@ -126,7 +126,7 @@ export class WeatherStationsController {
         return data.map((wsd: Partial<WeatherStationMonthAvgDataDto>, index) => {
           return {
             id: index,
-            timestamp: (new Date(year, month, wsd.day, 0, 0, 0)).getTime(),
+            timestamp: (new Date(year, wsd.month, wsd.day, 0, 0, 0)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
           };

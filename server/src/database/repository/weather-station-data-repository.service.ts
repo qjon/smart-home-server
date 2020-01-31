@@ -69,7 +69,11 @@ export class WeatherStationDataRepositoryService {
   public fetchDataFromWeek(weatherStationId: number, from: number, to: number): Promise<WeatherStationMonthAvgDataDto[]> {
     const queryBuilder = this.repository
       .createQueryBuilder('wsd')
-      .select('DAY(FROM_UNIXTIME(wsd.timestamp))', 'day');
+      .select('DAY(FROM_UNIXTIME(wsd.timestamp))', 'day')
+      .addSelect('MONTH(FROM_UNIXTIME(wsd.timestamp))', 'month')
+      .groupBy('month')
+      .orderBy('month', 'ASC')
+    ;
 
     return this.updateQueryBuilder(queryBuilder, weatherStationId, from, to, 'day')
       .getRawMany();
@@ -103,7 +107,7 @@ export class WeatherStationDataRepositoryService {
       .andWhere('wsd.weatherStationId = :weatherStationId', { weatherStationId })
       .andWhere('wsd.timestamp >= :from', { from })
       .andWhere('wsd.timestamp < :to', { to })
-      .groupBy(groupBy)
-      .orderBy(groupBy, 'ASC');
+      .addGroupBy(groupBy)
+      .addOrderBy(groupBy, 'ASC');
   }
 }

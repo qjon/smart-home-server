@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { combineLatest, Observable } from 'rxjs';
-import { distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { Chart } from 'angular-highcharts';
 
 import { Destroyable } from '@core/classes/destroyable.component';
@@ -11,7 +11,6 @@ import { WeatherStationsStateConnectorService } from '@weather-stations/store/st
 import { WeatherStationChartDataParserService } from '@weather-stations/services/weather-station-chart-data-parser.service';
 import { WeatherStationDataDto } from '@weather-stations/interfaces/weather-station-data-dto';
 import { WeatherStationDto } from '@weather-stations/interfaces/weather-station-dto';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ChartType } from '@weather-stations/interfaces/weather-station-chart-type';
 
 @Component({
@@ -33,7 +32,9 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
 
   public weatherStation$: Observable<WeatherStationDto>;
 
-  public date: Date = new Date();
+  public now: Date = new Date();
+
+  public date: Date = new Date(this.now.toString());
 
   constructor(private weatherStationChartDataParserService: WeatherStationChartDataParserService,
               private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
@@ -180,6 +181,14 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
     this.changePeriodOfType(-1);
   }
 
+  public goToday(): void {
+    this.date = new Date(this.now.toString());
+
+    this.currentChartType = ChartType.Day;
+
+    this.loadDataByChartType(this.currentChartType);
+  }
+
   public changePeriodOfType(jump: number): void {
     switch (this.currentChartType) {
       case ChartType.Year:
@@ -197,6 +206,4 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
 
     this.loadDataByChartType(this.currentChartType);
   }
-
-
 }
