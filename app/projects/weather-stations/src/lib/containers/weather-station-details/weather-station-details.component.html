@@ -1,0 +1,67 @@
+<mat-card *ngIf="(weatherStation$ | async) as weatherStation ">
+  <mat-card-header>
+    <mat-card-title>
+      <button mat-icon-button [routerLink]="['..']">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span title="{{weatherStation.name}}">{{weatherStation.name}}</span>
+      <div class="header-actions">
+        <button mat-raised-button
+                color="primary"
+                class="today-button"
+                *ngIf="now.toString() !== date.toString()"
+                (click)="goToday()"
+        >
+          <mat-icon>calendar_today</mat-icon>
+          <span>Today</span>
+        </button>
+        <mat-button-toggle-group [value]="currentChartType" (change)="onChangeChartType($event.value)">
+          <mat-button-toggle [value]="chartTypes.Day">Day</mat-button-toggle>
+          <mat-button-toggle [value]="chartTypes.Week">Week</mat-button-toggle>
+          <mat-button-toggle [value]="chartTypes.Month">Month</mat-button-toggle>
+          <mat-button-toggle [value]="chartTypes.Year">Year</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu" id="small-device-menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item
+                  [ngClass]="{selected: currentChartType === chartTypes.Day}"
+                  (click)="onChangeChartType(chartTypes.Day)">
+            <span>Day</span>
+          </button>
+          <button mat-menu-item
+                  [ngClass]="{selected: currentChartType === chartTypes.Week}"
+                  (click)="onChangeChartType(chartTypes.Week)">
+            <span>Week</span>
+          </button>
+          <button mat-menu-item
+                  [ngClass]="{selected: currentChartType === chartTypes.Month}"
+                  (click)="onChangeChartType(chartTypes.Month)">
+            <span>Month</span>
+          </button>
+          <button mat-menu-item
+                  [ngClass]="{selected: currentChartType === chartTypes.Year}"
+                  (click)="onChangeChartType(chartTypes.Year)">
+            <span>Year</span>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div class="chart-box" [chart]="chart"></div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button class="arrow-left" (click)="goPrev()">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      Prev
+    </button>
+    <button mat-raised-button class="arrow-right" (click)="goNext()">
+      Next
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

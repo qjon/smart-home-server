@@ -14,9 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { EffectsModule } from '@ngrx/effects';
 
-import { FormModule as CoreFormModule } from '@core/form/form.module';
-import { OnSubmitErrorStateMatcher } from '@core/form/error/on-submit-error-state-matcher';
-import { DialogModule } from '@core/dialog/dialog.module';
+import { FormModule as CoreFormModule } from '@rign/sh-core';
+import { OnSubmitErrorStateMatcher } from '@rign/sh-core';
+import { DialogModule } from '@rign/sh-core';
 
 import { AddScheduleModalComponent } from './containers/add-schedule-modal/add-schedule-modal.component';
 import { ScheduleApiModule } from './api/schedule-api.module';

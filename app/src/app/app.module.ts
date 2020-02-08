@@ -13,6 +13,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { CoreModule } from '@rign/sh-core';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import {MatIconModule} from '@angular/material/icon';
   ],
   imports: [
     AppRoutingModule,
+    CoreModule,
     BrowserAnimationsModule,
     EffectsModule.forRoot([]),
     HttpClientModule,
@@ -35,8 +38,9 @@ import {MatIconModule} from '@angular/material/icon';
     StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
-      logOnly: environment.production
+      logOnly: environment.production,
     }),
+    MatButtonToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

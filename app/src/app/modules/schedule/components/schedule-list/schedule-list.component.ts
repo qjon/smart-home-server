@@ -22,7 +22,7 @@ import {
   ScheduleRemoveSuccessAction,
 } from '../../store/schedule-actions';
 import { Actions, ofType } from '@ngrx/effects';
-import { Destroyable } from '@core/classes/destroyable.component';
+import { Destroyable } from '@rign/sh-core';
 import { ScheduleStateConnectorInterface } from '../../interfaces/schedule-state-connector.interface';
 import { ScheduleStateConnectorService } from '../../store/state-connectors/schedule-state-connector.service';
 import { Observable } from 'rxjs';

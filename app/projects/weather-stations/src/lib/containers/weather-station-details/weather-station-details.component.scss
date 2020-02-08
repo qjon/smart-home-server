@@ -1,0 +1,78 @@
+@import '../../../../../../src/variables';
+
+::ng-deep {
+  .mat-card-header-text {
+    width: 100%;
+  }
+}
+
+#small-device-menu {
+  display: inline-block;
+}
+
+mat-button-toggle-group {
+  display: none;
+}
+
+.header-actions {
+  width: 250px;
+  text-align: right;
+  font-size: 0.8em;
+}
+
+@media all and (min-width: $smallWindowWidth) {
+  mat-button-toggle-group {
+    display: inline-flex;
+  }
+
+  .today-button {
+    padding: 0.40em 1em;
+    margin-right: 1em;
+    font-size: 1em;
+  }
+
+  #small-device-menu {
+    display: none;
+  }
+
+  .header-actions {
+    width: 570px;
+  }
+}
+
+@media all and (max-width: $smallWindowWidth) {
+  .today-button {
+    span {
+      display: none;
+    }
+  }
+}
+
+mat-card-content {
+  padding: 10px 0;
+}
+
+mat-card-title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  span {
+    flex: 1 1 100%;
+  }
+}
+
+.chart-box {
+  height: 600px;
+}
+
+button {
+  &.selected {
+    background: $grayBg;
+  }
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+}

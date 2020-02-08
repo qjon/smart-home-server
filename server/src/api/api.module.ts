@@ -6,6 +6,7 @@ import { RoomsController } from './rooms/rooms.controller';
 import { RoomController } from './rooms/room.controller';
 import { ScheduleController } from './schedules/schedule.controller';
 import { AdapterModule } from '../adapters/adapters.module';
+import { WeatherStationsController } from './weather-stations/weather-stations.controller';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AdapterModule } from '../adapters/adapters.module';
     RoomsController,
     RoomController,
     ScheduleController,
+    WeatherStationsController,
   ],
   providers: [],
 })

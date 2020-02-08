@@ -4,7 +4,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 
 import {Actions} from '@ngrx/effects';
 
-import {AbstractFormDialogComponent} from '@core/classes/abstract-form-dialog.component';
+import {AbstractFormDialogComponent} from '@rign/sh-core';
 
 import {RoomsStateConnectorService} from '../../store/state-connectors/rooms-state-connector.service';
 import {RoomsStateConnectorInterface} from '../../interfaces/rooms-state-connector.interface';

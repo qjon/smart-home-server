@@ -13,6 +13,10 @@ It contains two application
 
 ## Change log
 
+### v1.4.0
+
+- weather stations module, which allows to monitor temperature in humidity from different weather stations devices
+
 ### v1.3.1
 
 - upgrade to Angular 8

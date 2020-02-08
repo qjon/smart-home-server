@@ -1,0 +1,35 @@
+{
+  "name": "@rign/sh-weather-stations",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Rafal Ignaszewski <rafal@ignaszewski.pl> http://ignaszewski.pl",
+  "description": "Library which allows to display information about temperature and humidity from multiple weather stations in different period of times: day, week, month, year",
+  "keywords": [
+    "Angular",
+    "core",
+    "UI",
+    "smart home"
+  ],
+  "scripts": {
+    "build": "ng build --project=core",
+    "start": "ng build --project=core --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qjon/smart-home-server.git"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "^8.2.3",
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "@angular/forms": "~8.2.14",
+    "@angular/material": "^8.2.3",
+    "@rign/sh-core": "1.0.0",
+    "@ngrx/effects": "^7.3.0",
+    "@ngrx/store": "^7.3.0",
+    "angular-highcharts": "^8.0.3",
+    "highcharts": "^8.0.0",
+    "material-icons": "^0.3.1",
+    "rxjs": "~6.5.4"
+  }
+}

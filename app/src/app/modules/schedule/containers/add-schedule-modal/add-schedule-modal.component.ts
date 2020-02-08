@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 
-import { AbstractFormDialogComponent } from '@core/classes/abstract-form-dialog.component';
+import { AbstractFormDialogComponent } from '@rign/sh-core';
 import { ScheduleActions, ScheduleCreateAction } from '../../store/schedule-actions';
 
 @Component({

@@ -11,6 +11,11 @@ import { RoomRepositoryService } from './repository/room-repository.service';
 import { ScheduleService } from './services/schedule.service';
 import { ScheduleEntity } from './entity/schedule.entity';
 import { ScheduleRepositoryService } from './repository/schedule-repository.service';
+import { WeatherStationEntity } from './entity/weather-station.entity';
+import { WeatherStationDataEntity } from './entity/weather-station-data.entity';
+import { WeatherStationService } from './services/weather-station.service';
+import { WeatherStationRepositoryService } from './repository/weather-station-repository.service';
+import { WeatherStationDataRepositoryService } from './repository/weather-station-data-repository.service';
 
 @Module({
   imports: [
@@ -20,6 +25,8 @@ import { ScheduleRepositoryService } from './repository/schedule-repository.serv
       DeviceParamsEntity,
       RoomEntity,
       ScheduleEntity,
+      WeatherStationEntity,
+      WeatherStationDataEntity,
     ]),
   ],
   providers: [
@@ -29,6 +36,9 @@ import { ScheduleRepositoryService } from './repository/schedule-repository.serv
     RoomService,
     ScheduleRepositoryService,
     ScheduleService,
+    WeatherStationDataRepositoryService,
+    WeatherStationRepositoryService,
+    WeatherStationService,
   ],
   exports: [
     DeviceRepositoryService,
@@ -37,6 +47,9 @@ import { ScheduleRepositoryService } from './repository/schedule-repository.serv
     RoomService,
     ScheduleRepositoryService,
     ScheduleService,
+    WeatherStationDataRepositoryService,
+    WeatherStationRepositoryService,
+    WeatherStationService,
   ],
 })
 export class DatabaseModule {

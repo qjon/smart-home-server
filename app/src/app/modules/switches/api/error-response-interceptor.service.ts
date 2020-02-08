@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
-import {NotificationsService} from '@core/notifications/notifications.service';
+import {NotificationsService} from '@rign/sh-core';
 
 @Injectable({
   providedIn: 'root'

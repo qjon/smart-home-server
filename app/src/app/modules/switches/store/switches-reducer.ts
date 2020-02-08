@@ -1,5 +1,5 @@
-import {SwitchDeviceDto, SwitchNameDto, SwitchStatus} from '../interfaces/switch-device.interface';
-import {SwitchActionTypes, SwitchesAction} from './switches-actions';
+import { SwitchDeviceDto, SwitchNameDto, SwitchStatus } from '../interfaces/switch-device.interface';
+import { SwitchActionTypes, SwitchesAction } from './switches-actions';
 
 export interface SwitchesState {
   devices: { [key: string]: SwitchDeviceDto };
@@ -23,20 +23,25 @@ export function switchesReducer(state: SwitchesState = emptySwitchesState, actio
           [action.payload['deviceId']]: {
             ...state.devices[action.payload['deviceId']],
             isConnected: action.payload['isConnected'],
-          }
-        }
+          },
+        },
       };
     case SwitchActionTypes.Load:
-      const newState: SwitchesState = {...emptySwitchesState};
+      const devices: { [key: string]: SwitchDeviceDto } = {};
+      const ids: string[] = [];
 
       action.payload['devices'].forEach((d) => {
         const id = d.deviceid;
 
-        newState.devices[id] = d;
-        newState.ids.push(id);
+        devices[id] = d;
+        ids.push(id);
       });
 
-      return newState;
+      return {
+        ...state,
+        devices,
+        ids,
+      };
     case SwitchActionTypes.OnOffSuccess:
       const status = action.payload['status'] === SwitchStatus.ON ? SwitchStatus.ON : SwitchStatus.OFF;
       return {
@@ -50,12 +55,12 @@ export function switchesReducer(state: SwitchesState = emptySwitchesState, actio
               switches: state.devices[action.payload['deviceId']].params.switches.map((s: SwitchNameDto) => {
                 return {
                   ...s,
-                  switch: status
+                  switch: status,
                 };
-              })
-            }
-          }
-        }
+              }),
+            },
+          },
+        },
       };
     case SwitchActionTypes.ChangeStatusSuccess:
       const deviceId = action.payload['deviceId'];
@@ -69,14 +74,14 @@ export function switchesReducer(state: SwitchesState = emptySwitchesState, actio
               ...state.devices[deviceId].params,
               switches: state.devices[deviceId].params.switches.map((s: SwitchNameDto) => {
                 if (s.outlet === action.payload['switch'].outlet) {
-                  return {...s, ...action.payload.switch};
+                  return { ...s, ...action.payload.switch };
                 } else {
                   return s;
                 }
-              })
-            }
-          }
-        }
+              }),
+            },
+          },
+        },
       };
     case SwitchActionTypes.Update:
       return {
@@ -87,10 +92,10 @@ export function switchesReducer(state: SwitchesState = emptySwitchesState, actio
             ...state.devices[action.payload['deviceId']],
             params: {
               ...state.devices[action.payload['deviceId']].params,
-              switches: action.payload['params']
-            }
-          }
-        }
+              switches: action.payload['params'],
+            },
+          },
+        },
       };
     case SwitchActionTypes.ChangeSettingsSuccess:
       const data = action.payload.data;
@@ -114,10 +119,10 @@ export function switchesReducer(state: SwitchesState = emptySwitchesState, actio
                   ...s,
                   name: nameObj.name,
                 };
-              })
-            }
-          }
-        }
+              }),
+            },
+          },
+        },
       };
     case SwitchActionTypes.SetRoom:
       return {
@@ -126,11 +131,11 @@ export function switchesReducer(state: SwitchesState = emptySwitchesState, actio
           ...state.devices,
           [action.payload.deviceId]: {
             ...state.devices[action.payload.deviceId],
-            room: action.payload.room
-          }
-        }
+            room: action.payload.room,
+          },
+        },
       };
     default:
-      return {...state};
+      return { ...state };
   }
 }

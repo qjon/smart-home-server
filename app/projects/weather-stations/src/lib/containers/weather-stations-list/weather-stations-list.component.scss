@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+
+  sh-weather-station-item {
+    margin: 0.5em 0;
+  }
+}

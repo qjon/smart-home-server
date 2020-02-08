@@ -134,7 +134,7 @@
       <mat-divider></mat-divider>
       <mat-card-actions>
         <div class="last-update">
-          <sh-last-update [lastUpdate]="device.lastStatusChangeTimestamp"></sh-last-update>
+          <sh-core-last-update [lastUpdate]="device.lastStatusChangeTimestamp"></sh-core-last-update>
         </div>
         <div class="actions">
           <button mat-raised-button type="button" *ngIf="isEditMode" (click)="cancelEditMode()"
