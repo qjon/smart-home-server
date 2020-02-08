@@ -1,4 +1,4 @@
-import { TimeValue } from '@core/form/fields/time-field/time-field.component';
+import { TimeValue } from '@rign/sh-core';
 
 export interface ScheduleDto {
   id: number;

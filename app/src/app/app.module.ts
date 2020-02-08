@@ -14,6 +14,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { CoreModule } from '@rign/sh-core';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
   ],
   imports: [
     AppRoutingModule,
+    CoreModule,
     BrowserAnimationsModule,
     EffectsModule.forRoot([]),
     HttpClientModule,

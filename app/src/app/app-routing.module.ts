@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: 'weather-stations',
-    loadChildren: './modules/weather-stations/weather-stations.module#WeatherStationsModule'
+    loadChildren: './modules/weather-stations-wrapper/weather-stations-wrapper.module#WeatherStationsWrapperModule'
   },
   {
     path: '**',

@@ -20,7 +20,6 @@ import { TrueFalseComponent } from './components/true-false/true-false.component
 import { DeviceOnOffComponent } from './components/device-on-off/device-on-off.component';
 import { ServerWebsocketService } from './websocket/server-websocket.service';
 import { SwitchesSettingsEffectsService } from './store/effects/switches-settings-effects.service';
-import { SmartHomeCoreModule } from '@core/smart-home-core.module';
 import { DeviceBoxComponent } from './components/device-box/device-box.component';
 import { ErrorResponseInterceptorService } from './api/error-response-interceptor.service';
 import { AddDeviceComponent } from './components/add-device/add-device.component';
@@ -28,7 +27,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { NotificationsModule } from '@core/notifications/notifications.module';
+import { NotificationsModule } from '@rign/sh-core';
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { SwitchesStateConnectorsModule } from './store/state-connectors/switches-state-connectors.module';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,6 +35,7 @@ import { AddRoomComponent } from '../rooms/components/add-room/add-room.componen
 import { RoomsModule } from '../rooms/rooms.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { ScheduleModule } from '../schedule/schedule.module';
+import { CoreModule } from '@rign/sh-core';
 
 @NgModule({
   declarations: [
@@ -72,7 +72,7 @@ import { ScheduleModule } from '../schedule/schedule.module';
     ReactiveFormsModule,
     RoomsModule,
     ScheduleModule,
-    SmartHomeCoreModule,
+    CoreModule,
     StoreModule.forFeature(SWITCHES_STATE_NAME, switchesReducer),
     SwitchesRoutingModule,
     SwitchesStateConnectorsModule,

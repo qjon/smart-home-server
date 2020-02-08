@@ -5,7 +5,7 @@ import { select, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 
-import { NotificationsService } from '@core/notifications/notifications.service';
+import { NotificationsService } from '@rign/sh-core';
 
 import {
   AttachDeviceToRoomAction,

@@ -4,13 +4,15 @@
     "baseUrl": "../",
     "outDir": "../dist/out-tsc",
     "paths": {
-      "@core/*": [
-        "app/src/app/core/*"
+      "@rign/sh-core": [
+        "app/projects/core/src/public-api"
       ],
-      "@weather-stations/*": [
-        "app/src/app/modules/weather-stations/*"
+      "@rign/sh-weather-stations": [
+        "app/projects/weather-stations/src/public-api"
       ]
     },
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   }
 }

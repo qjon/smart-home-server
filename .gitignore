@@ -1,6 +1,7 @@
 .idea
 node_modules
 dist
+dist-projects
 /.editorconfig
 /app/proxy.config.json
 /server/config.env

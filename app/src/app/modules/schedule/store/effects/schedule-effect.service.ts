@@ -5,7 +5,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { NotificationsService } from '@core/notifications/notifications.service';
+import { NotificationsService } from '@rign/sh-core';
 
 import {
   ScheduleActions,

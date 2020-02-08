@@ -74,7 +74,7 @@ export class WeatherStationsController {
         return data.map((wsd: Partial<WeatherStationMonthAvgDataDto>, index) => {
           return {
             id: index,
-            timestamp: (new Date(year, month, wsd.day)).getTime(),
+            timestamp: (new Date(year, month - 1, wsd.day)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
           };
@@ -97,7 +97,7 @@ export class WeatherStationsController {
         return data.map((wsd: Partial<WeatherStationYearAvgDataDto>, index) => {
           return {
             id: index,
-            timestamp: (new Date(year, wsd.month, 1)).getTime(),
+            timestamp: (new Date(year, wsd.month - 1, 1)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
           };
@@ -123,10 +123,11 @@ export class WeatherStationsController {
 
     const response = await this.weatherStationDataRepositoryService.fetchDataFromWeek(weatherStationId, from / 1000, to / 1000)
       .then((data: Array<Partial<WeatherStationMonthAvgDataDto>>) => {
+        this.logger.log(JSON.stringify(data));
         return data.map((wsd: Partial<WeatherStationMonthAvgDataDto>, index) => {
           return {
             id: index,
-            timestamp: (new Date(year, wsd.month, wsd.day, 0, 0, 0)).getTime(),
+            timestamp: (new Date(year, wsd.month - 1, wsd.day, 0, 0, 0)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
           };
@@ -151,7 +152,7 @@ export class WeatherStationsController {
         return data.map((wsd: Partial<WeatherStationDayAvgDataDto>, index) => {
           return {
             id: index,
-            timestamp: (new Date(year, month, day, wsd.hour, 0, 0)).getTime(),
+            timestamp: (new Date(year, month - 1, day, wsd.hour, 0, 0)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
           };
