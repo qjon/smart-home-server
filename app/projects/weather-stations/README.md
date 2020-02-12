@@ -69,6 +69,8 @@ You need to implement service based on below interface.
       getAggregateDataForMonth(id: number, year: number, month: number): Observable<WeatherStationDataDto[]>;
     
       getAggregateDataForYear(id: number, year: number): Observable<WeatherStationDataDto[]>;
+
+      sync(id: number): Observable<WeatherStationDto>;
     }
 
 And provide it in your _AppModule_ 
@@ -111,6 +113,11 @@ That's all now you are able to enter weather station module.
 
 
 # Change Log
+
+## v1.1.0
+
+- possibility to manually synchronize data
+- change API interface
 
 ## v1.0.0
 

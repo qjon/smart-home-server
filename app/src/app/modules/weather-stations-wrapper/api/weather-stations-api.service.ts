@@ -51,4 +51,8 @@ export class WeatherStationsApiService {
 
     return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/year`, { params });
   }
+
+  public sync(id: number): Observable<WeatherStationDto> {
+    return this.httpClient.get<WeatherStationDto>(`/api/weather-stations/${id}/sync`);
+  }
 }

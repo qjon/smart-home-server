@@ -18,7 +18,7 @@ import {
   WeatherStationLoadDataForYearSuccessAction,
   WeatherStationsActionTypes,
   WeatherStationsLoadErrorAction,
-  WeatherStationsLoadSuccessAction,
+  WeatherStationsLoadSuccessAction, WeatherStationSyncDataAction, WeatherStationSyncDataSuccessAction,
 } from '../weather-stations-actions';
 import { WeatherStationDto } from '../../interfaces/weather-station-dto';
 import { WeatherStationDataDto } from '../../interfaces/weather-station-data-dto';
@@ -67,7 +67,7 @@ export class WeatherStationsEffectsService {
         action.payload.weatherStationId,
         action.payload.year,
         action.payload.month,
-        action.payload.day
+        action.payload.day,
         )
           .pipe(
             map((items: WeatherStationDataDto[]) => new WeatherStationLoadAggregateDataForDaySuccessAction({
@@ -92,7 +92,7 @@ export class WeatherStationsEffectsService {
         action.payload.weatherStationId,
         action.payload.year,
         action.payload.month,
-        action.payload.day
+        action.payload.day,
         )
           .pipe(
             map((items: WeatherStationDataDto[]) => new WeatherStationLoadAggregateDataForWeekSuccessAction({
@@ -121,6 +121,23 @@ export class WeatherStationsEffectsService {
             items,
           })),
           catchError((error: any) => of(new WeatherStationLoadDataForYearErrorAction({ error }))),
+        ),
+      ),
+    );
+
+  @Effect({
+    dispatch: true,
+  })
+  public syncWeatherStations$ = this.actions$
+    .pipe(
+      ofType(WeatherStationsActionTypes.SyncStationsData),
+      switchMap((action: WeatherStationSyncDataAction) => this.weatherStationsApiService.sync(action.payload.weatherStationId)
+        .pipe(
+          map((data: WeatherStationDto) => new WeatherStationSyncDataSuccessAction({
+            weatherStationId: action.payload.weatherStationId,
+            data,
+          })),
+          catchError((error: any) => of(new WeatherStationsLoadErrorAction({ error }))),
         ),
       ),
     );

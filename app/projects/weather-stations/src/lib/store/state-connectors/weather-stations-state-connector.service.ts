@@ -12,7 +12,7 @@ import {
   WeatherStationLoadAggregateDataForDayAction, WeatherStationLoadAggregateDataForWeekAction,
   WeatherStationLoadDataForMonthAction,
   WeatherStationLoadDataForYearAction,
-  WeatherStationsLoadAction,
+  WeatherStationsLoadAction, WeatherStationSyncDataAction,
 } from '../weather-stations-actions';
 import { WeatherStationDataDto } from '../../interfaces/weather-station-data-dto';
 
@@ -69,7 +69,6 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     }));
   }
 
-
   public loadAggregateDataForWeek(year: number, month: number, day: number): void {
     this.store.dispatch(new WeatherStationLoadAggregateDataForWeekAction({
       weatherStationId: this.weatherStation.getValue(),
@@ -96,5 +95,11 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
 
   public setWeatherStationId(weatherStationId: number): void {
     this.weatherStation.next(weatherStationId);
+  }
+
+  public synchronize(weatherStationId: number): void {
+    this.store.dispatch(new WeatherStationSyncDataAction({
+      weatherStationId: weatherStationId,
+    }));
   }
 }

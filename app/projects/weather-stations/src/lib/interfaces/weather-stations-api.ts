@@ -6,7 +6,6 @@ import { InjectionToken } from '@angular/core';
 
 export interface WeatherStationsApi {
   getList(): Observable<WeatherStationDto[]>;
-
   getAggregateDataForWeek(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]>;
 
   getAggregateDataForDay(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]>;
@@ -14,6 +13,8 @@ export interface WeatherStationsApi {
   getAggregateDataForMonth(id: number, year: number, month: number): Observable<WeatherStationDataDto[]>;
 
   getAggregateDataForYear(id: number, year: number): Observable<WeatherStationDataDto[]>;
+
+  sync(id: number): Observable<WeatherStationDto>;
 }
 
 export const WEATHER_STATIONS_API = new InjectionToken<WeatherStationsApi>('[Weather Stations] - API service');

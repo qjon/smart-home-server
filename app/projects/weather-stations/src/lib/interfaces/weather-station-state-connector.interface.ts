@@ -21,4 +21,6 @@ export interface WeatherStationStateConnectorInterface {
   loadDataForMonth(year: number, month: number): void;
 
   loadDataForYear(year: number): void;
+
+  synchronize(weatherStationId: number): void;
 }

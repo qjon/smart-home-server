@@ -13,6 +13,11 @@ It contains two application
 
 ## Change log
 
+### v1.5.0
+
+- fix in synchronize data with Weather Stations
+- API method /weather-station/:id/sync - manual synchronize
+
 ### v1.4.0
 
 - weather stations module, which allows to monitor temperature in humidity from different weather stations devices

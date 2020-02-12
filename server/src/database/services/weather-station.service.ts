@@ -13,12 +13,12 @@ export class WeatherStationService {
 
   async importData(weatherStation: WeatherStationEntity, data: WeatherStationDataInterface[]): Promise<WeatherStationDataEntity[]> {
     const entities: WeatherStationDataEntity[] = data.map((wsd: WeatherStationDataInterface) => {
-      const entity: WeatherStationDataEntity = this.entityManager.create(WeatherStationDataEntity, wsd);
+        const entity: WeatherStationDataEntity = this.entityManager.create(WeatherStationDataEntity, wsd);
 
-      entity.weatherStation = weatherStation;
+        entity.weatherStation = weatherStation;
 
-      return entity;
-    });
+        return entity;
+      });
 
     const lastDataEntity: WeatherStationDataEntity = entities[entities.length - 1];
 
