@@ -1,9 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   Inject,
   Logger,
-  Param, Query,
+  Param, Post, Query,
   Req,
   Request,
   UseFilters,
@@ -19,7 +20,10 @@ import {
 import { WeatherStationDataEntity } from '../../database/entity/weather-station-data.entity';
 import { WeatherStationEntity } from '../../database/entity/weather-station.entity';
 import { WeatherStationsSyncService } from '../../services/weather-stations-services/weather-stations-sync.service';
-import { WeatherStationDataInterface } from '../../interfaces/weather-station/weather-station-data';
+import {
+  WeatherStationDataInterface,
+  WeatherStationSyncDataInterface,
+} from '../../interfaces/weather-station/weather-station-data';
 import { WeatherStationService } from '../../database/services/weather-station.service';
 
 @Controller('/api/weather-stations')
@@ -191,6 +195,26 @@ export class WeatherStationsController {
     weatherStation = await this.weatherStationRepositoryService.fetchWeatherStationById(weatherStationId);
 
     const response: WeatherStationDto = weatherStation.toJSON();
+
+    this.logger.log(`RES | API | ${req.url}: ${JSON.stringify(response)}`);
+
+    return response;
+  }
+
+  @Post('sync')
+  async sync2(@Req() req: Request,
+              @Body() body: {ip: string, data: WeatherStationSyncDataInterface[]}): Promise<any[]> {
+    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
+
+    const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByHost(body.ip);
+
+    const entities: WeatherStationDataEntity[] = await this.weatherStationService.syncData(weatherStation, body.data);
+
+    let response: any[];
+
+    response = entities.map((value: WeatherStationDataEntity) => {
+      return {time: value.timestamp, sync: value.id > 0};
+    });
 
     this.logger.log(`RES | API | ${req.url}: ${JSON.stringify(response)}`);
 
