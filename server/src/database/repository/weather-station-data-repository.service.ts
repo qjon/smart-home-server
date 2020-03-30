@@ -12,6 +12,8 @@ import {
 export class WeatherStationDataRepositoryService {
   private logger = new Logger(this.constructor.name);
 
+  private timezone = '+01:00';
+
   public constructor(@InjectRepository(WeatherStationDataEntity) protected repository: Repository<WeatherStationDataEntity>) {
 
   }

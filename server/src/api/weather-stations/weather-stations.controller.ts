@@ -24,7 +24,7 @@ import {
   WeatherStationDataInterface,
   WeatherStationSyncDataInterface,
 } from '../../interfaces/weather-station/weather-station-data';
-import { WeatherStationService } from '../../database/services/weather-station.service';
+import { WeatherStationDataResponseItem, WeatherStationService } from '../../database/services/weather-station.service';
 
 @Controller('/api/weather-stations')
 @UseFilters(new ApiExceptionFilters())
@@ -88,7 +88,7 @@ export class WeatherStationsController {
         return data.map((wsd: Partial<WeatherStationMonthAvgDataDto>, index) => {
           return {
             id: index,
-            timestamp: (new Date(year, month - 1, wsd.day)).getTime(),
+            timestamp: (new Date(year, month, wsd.day)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
           };
@@ -208,12 +208,12 @@ export class WeatherStationsController {
 
     const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByHost(body.ip);
 
-    const entities: WeatherStationDataEntity[] = await this.weatherStationService.syncData(weatherStation, body.data);
+    const entities: WeatherStationDataResponseItem[] = await this.weatherStationService.syncData(weatherStation, body.data);
 
     let response: any[];
 
-    response = entities.map((value: WeatherStationDataEntity) => {
-      return {time: value.timestamp, sync: value.id > 0};
+    response = entities.map((value: WeatherStationDataResponseItem) => {
+      return {time: value.originalTimestamp, sync: !value.isValid || (value.isValid && value.entity.id > 0)};
     });
 
     this.logger.log(`RES | API | ${req.url}: ${JSON.stringify(response)}`);

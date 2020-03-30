@@ -8,6 +8,12 @@ import {
 } from '../../interfaces/weather-station/weather-station-data';
 import { WeatherStationDataRepositoryService } from '../repository/weather-station-data-repository.service';
 
+export interface WeatherStationDataResponseItem {
+  originalTimestamp: number;
+  isValid: boolean;
+  entity?: WeatherStationDataEntity;
+}
+
 @Injectable()
 export class WeatherStationService {
 
@@ -37,15 +43,22 @@ export class WeatherStationService {
     return entities;
   }
 
-  async syncData(weatherStation: WeatherStationEntity, data: WeatherStationSyncDataInterface[]): Promise<WeatherStationDataEntity[]> {
-    const findEntity = async (wsd: WeatherStationSyncDataInterface) => {
+  async syncData(weatherStation: WeatherStationEntity, data: WeatherStationSyncDataInterface[]): Promise<WeatherStationDataResponseItem[]> {
+    const currentTimestamp = Math.ceil(Date.now() / 1000);
+
+    const wrongTimestampData: WeatherStationDataResponseItem[] = this.filterWrongTimestampData(data, currentTimestamp);
+
+
+    const findEntity = async (wsd: WeatherStationSyncDataInterface): Promise<WeatherStationDataResponseItem> => {
+      const timestamp = wsd.time;
+
       const entityData: WeatherStationDataInterface = {
         humidity: parseFloat(wsd.hum),
         temperature: parseFloat(wsd.temp),
-        timestamp: wsd.time,
+        timestamp,
       };
 
-      const weatherStationData: WeatherStationDataEntity = await this.weatherStationDataRepositoryService.fetchDataByTimestamp(weatherStation.id, entityData.timestamp);
+      const weatherStationData: WeatherStationDataEntity = await this.weatherStationDataRepositoryService.fetchDataByTimestamp(weatherStation.id, timestamp);
 
       if (!weatherStationData) {
 
@@ -53,17 +66,28 @@ export class WeatherStationService {
 
         entity.weatherStation = weatherStation;
 
-        return entity;
+        return {
+          originalTimestamp: wsd.time,
+          isValid: true,
+          entity,
+        };
       } else {
-        return weatherStationData;
+        return {
+          originalTimestamp: wsd.time,
+          isValid: true,
+          entity: weatherStationData,
+        };
       }
     };
 
-    const findEntities = async () => {
-      return Promise.all(data.map(item => findEntity(item)));
+    const findEntities = async (): Promise<WeatherStationDataResponseItem[]> => {
+      return Promise.all(data.filter((item: WeatherStationSyncDataInterface) => {
+        return item.time <= currentTimestamp;
+      }).map(item => findEntity(item)));
     };
 
-    const entities: WeatherStationDataEntity[] = await findEntities();
+    const entitiesData: WeatherStationDataResponseItem[] = await findEntities();
+    const entities: WeatherStationDataEntity[] = entitiesData.map((item) => item.entity);
 
     const lastDataEntity: WeatherStationDataEntity = entities[entities.length - 1];
 
@@ -72,6 +96,20 @@ export class WeatherStationService {
     weatherStation.lastData = lastDataEntity;
     await this.entityManager.save(weatherStation);
 
-    return entities;
+    return [...entitiesData, ...wrongTimestampData];
+  }
+
+  private filterWrongTimestampData(data: WeatherStationSyncDataInterface[], currentTimestamp: number): WeatherStationDataResponseItem[] {
+    return data
+      .filter((item: WeatherStationSyncDataInterface) => {
+        return item.time > currentTimestamp;
+      })
+      .map((item: WeatherStationSyncDataInterface) => {
+        return {
+          originalTimestamp: item.time,
+          isValid: false,
+        };
+      });
   }
 }
+

@@ -4,8 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { WeatherStationsApiModule } from './weather-stations-api.module';
-import { WeatherStationDto } from '../../../../../projects/weather-stations/src/lib/interfaces/weather-station-dto';
-import { WeatherStationDataDto } from '../../../../../projects/weather-stations/src/lib/interfaces/weather-station-data-dto';
+import { WeatherStationDto, WeatherStationDataDto } from '@rign/sh-weather-stations';
 
 @Injectable({
   providedIn: WeatherStationsApiModule,
