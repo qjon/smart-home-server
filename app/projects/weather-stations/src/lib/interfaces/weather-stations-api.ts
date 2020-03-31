@@ -1,12 +1,12 @@
+import { InjectionToken } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 import { WeatherStationDto } from '../interfaces/weather-station-dto';
 import { WeatherStationDataDto } from '../interfaces/weather-station-data-dto';
-import { InjectionToken } from '@angular/core';
 
 export interface WeatherStationsApi {
   getList(): Observable<WeatherStationDto[]>;
-
   getAggregateDataForWeek(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]>;
 
   getAggregateDataForDay(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]>;

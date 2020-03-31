@@ -1,9 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   Inject,
   Logger,
-  Param, Query,
+  Param, Post, Query,
   Req,
   Request,
   UseFilters,
@@ -17,6 +18,13 @@ import {
   WeatherStationMonthAvgDataDto, WeatherStationYearAvgDataDto,
 } from '../../interfaces/weather-station/weather-station-data-dto';
 import { WeatherStationDataEntity } from '../../database/entity/weather-station-data.entity';
+import { WeatherStationEntity } from '../../database/entity/weather-station.entity';
+import { WeatherStationsSyncService } from '../../services/weather-stations-services/weather-stations-sync.service';
+import {
+  WeatherStationDataInterface,
+  WeatherStationSyncDataInterface,
+} from '../../interfaces/weather-station/weather-station-data';
+import { WeatherStationDataResponseItem, WeatherStationService } from '../../database/services/weather-station.service';
 
 @Controller('/api/weather-stations')
 @UseFilters(new ApiExceptionFilters())
@@ -29,6 +37,12 @@ export class WeatherStationsController {
 
   @Inject(WeatherStationDataRepositoryService)
   protected weatherStationDataRepositoryService: WeatherStationDataRepositoryService;
+
+  @Inject(WeatherStationsSyncService)
+  protected weatherStationsSyncService: WeatherStationsSyncService;
+
+  @Inject(WeatherStationService)
+  protected weatherStationService: WeatherStationService;
 
   @Get()
   async list(@Req() req: Request): Promise<WeatherStationDto[]> {
@@ -74,7 +88,7 @@ export class WeatherStationsController {
         return data.map((wsd: Partial<WeatherStationMonthAvgDataDto>, index) => {
           return {
             id: index,
-            timestamp: (new Date(year, month - 1, wsd.day)).getTime(),
+            timestamp: (new Date(year, month, wsd.day)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
           };
@@ -108,7 +122,6 @@ export class WeatherStationsController {
 
     return response;
   }
-
 
   @Get(':id/data/week')
   async dayAggregateDataForWeek(@Req() req: Request,
@@ -160,6 +173,26 @@ export class WeatherStationsController {
       });
 
     this.logger.log(`RES | API | ${req.url} | number of items: ${JSON.stringify(response.length)}`);
+
+    return response;
+  }
+
+  @Post('sync')
+  async sync2(@Req() req: Request,
+              @Body() body: {ip: string, data: WeatherStationSyncDataInterface[]}): Promise<any[]> {
+    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
+
+    const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByHost(body.ip);
+
+    const entities: WeatherStationDataResponseItem[] = await this.weatherStationService.syncData(weatherStation, body.data);
+
+    let response: any[];
+
+    response = entities.map((value: WeatherStationDataResponseItem) => {
+      return {time: value.originalTimestamp, sync: !value.isValid || (value.isValid && value.entity.id > 0)};
+    });
+
+    this.logger.log(`RES | API | ${req.url}: ${JSON.stringify(response)}`);
 
     return response;
   }

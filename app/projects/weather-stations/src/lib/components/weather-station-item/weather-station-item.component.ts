@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { WeatherStationDto } from '../../interfaces/weather-station-dto';
 
 @Component({
@@ -7,14 +7,8 @@ import { WeatherStationDto } from '../../interfaces/weather-station-dto';
   styleUrls: ['./weather-station-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WeatherStationItemComponent implements OnInit {
+export class WeatherStationItemComponent {
 
   @Input()
   public weatherStation: WeatherStationDto;
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }

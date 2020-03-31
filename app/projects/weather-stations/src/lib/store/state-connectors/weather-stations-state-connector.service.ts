@@ -69,7 +69,6 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     }));
   }
 
-
   public loadAggregateDataForWeek(year: number, month: number, day: number): void {
     this.store.dispatch(new WeatherStationLoadAggregateDataForWeekAction({
       weatherStationId: this.weatherStation.getValue(),

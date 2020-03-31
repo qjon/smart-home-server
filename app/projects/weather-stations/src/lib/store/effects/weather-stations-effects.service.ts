@@ -18,7 +18,7 @@ import {
   WeatherStationLoadDataForYearSuccessAction,
   WeatherStationsActionTypes,
   WeatherStationsLoadErrorAction,
-  WeatherStationsLoadSuccessAction,
+  WeatherStationsLoadSuccessAction
 } from '../weather-stations-actions';
 import { WeatherStationDto } from '../../interfaces/weather-station-dto';
 import { WeatherStationDataDto } from '../../interfaces/weather-station-data-dto';
@@ -67,7 +67,7 @@ export class WeatherStationsEffectsService {
         action.payload.weatherStationId,
         action.payload.year,
         action.payload.month,
-        action.payload.day
+        action.payload.day,
         )
           .pipe(
             map((items: WeatherStationDataDto[]) => new WeatherStationLoadAggregateDataForDaySuccessAction({
@@ -92,7 +92,7 @@ export class WeatherStationsEffectsService {
         action.payload.weatherStationId,
         action.payload.year,
         action.payload.month,
-        action.payload.day
+        action.payload.day,
         )
           .pipe(
             map((items: WeatherStationDataDto[]) => new WeatherStationLoadAggregateDataForWeekSuccessAction({

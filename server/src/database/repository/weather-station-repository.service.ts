@@ -22,6 +22,14 @@ export class WeatherStationRepositoryService {
       .getOne();
   }
 
+  public fetchWeatherStationByHost(host: string): Promise<WeatherStationEntity> {
+    return this.repository
+      .createQueryBuilder('ws')
+      .leftJoinAndSelect('ws.lastData', 'wsd')
+      .andWhere('ws.host = :host', { host })
+      .getOne();
+  }
+
   public fetchAllWithLastData(): Promise<WeatherStationEntity[]> {
     return this.repository
       .createQueryBuilder('ws')

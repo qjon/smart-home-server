@@ -10,7 +10,6 @@ import { MdnsModule } from '../mdns/mdns.module';
 import { DeviceStateChangeUpdateWorkerService } from './device-state-change-update-worker.service';
 import { ScheduleWorkerService } from './schedule.service';
 import { AdapterModule } from '../adapters/adapters.module';
-import { WeatherStationSyncService } from './weather-station-sync.service';
 
 @Module({
   imports: [
@@ -18,7 +17,7 @@ import { WeatherStationSyncService } from './weather-station-sync.service';
     DatabaseModule,
     HttpModule,
     StorageModule,
-    MdnsModule,
+    MdnsModule
   ],
   providers: [
     PingDeviceService,
@@ -28,7 +27,6 @@ import { WeatherStationSyncService } from './weather-station-sync.service';
     DeviceStateChangeListenerWorkerService,
     DeviceStateChangeUpdateWorkerService,
     ScheduleWorkerService,
-    WeatherStationSyncService,
   ],
 })
 export class WorkersModule {
@@ -37,15 +35,12 @@ export class WorkersModule {
                      private deviceDiscoverService: DevicesUpdateWorkerService,
                      private deviceStateChangeListenerWorkerService: DeviceStateChangeListenerWorkerService,
                      private deviceStateChangeUpdateWorkerService: DeviceStateChangeUpdateWorkerService,
-                     private scheduleWorkerService: ScheduleWorkerService,
-                     private weatherStationSyncService: WeatherStationSyncService) {
+                     private scheduleWorkerService: ScheduleWorkerService) {
     // this.pingDeviceService.execute();
     this.deviceDiscoverService.execute();
 
     this.deviceStateChangeListenerWorkerService.execute();
     this.deviceStateChangeUpdateWorkerService.execute();
     this.scheduleWorkerService.execute();
-
-    this.weatherStationSyncService.execute();
   }
 }

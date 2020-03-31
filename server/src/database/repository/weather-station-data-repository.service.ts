@@ -12,8 +12,18 @@ import {
 export class WeatherStationDataRepositoryService {
   private logger = new Logger(this.constructor.name);
 
+  private timezone = '+01:00';
+
   public constructor(@InjectRepository(WeatherStationDataEntity) protected repository: Repository<WeatherStationDataEntity>) {
 
+  }
+
+  public fetchDataByTimestamp(weatherStationId: number, time: number) {
+    return this.repository
+      .createQueryBuilder('wsd')
+      .andWhere('wsd.weatherStationId = :weatherStationId', { weatherStationId })
+      .andWhere('wsd.timestamp = :time', { time })
+      .getOne();
   }
 
   public fetchDataFromPeriodOfType(weatherStationId: number, from: number, to: number = null): Promise<WeatherStationDataEntity[]> {

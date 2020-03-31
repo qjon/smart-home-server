@@ -1,6 +1,6 @@
 {
   "name": "@rign/sh-weather-stations",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "license": "MIT",
   "author": "Rafal Ignaszewski <rafal@ignaszewski.pl> http://ignaszewski.pl",
   "description": "Library which allows to display information about temperature and humidity from multiple weather stations in different period of times: day, week, month, year",

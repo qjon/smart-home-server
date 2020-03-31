@@ -112,6 +112,17 @@ That's all now you are able to enter weather station module.
 
 # Change Log
 
+## v1.2.0
+
+- remove manual sync (now Weather Station is send data to server, they are not connected to network full time)
+- fix: weather station Week Title range
+- fix: go to next/prev in Month Chart
+
+## v1.1.0
+
+- possibility to manually synchronize data
+- change API interface
+
 ## v1.0.0
 
 - list of weather stations with current temperature and humidity 

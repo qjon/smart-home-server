@@ -4,8 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { WeatherStationsApiModule } from './weather-stations-api.module';
-import { WeatherStationDto } from '../../../../../projects/weather-stations/src/lib/interfaces/weather-station-dto';
-import { WeatherStationDataDto } from '../../../../../projects/weather-stations/src/lib/interfaces/weather-station-data-dto';
+import { WeatherStationDto, WeatherStationDataDto } from '@rign/sh-weather-stations';
 
 @Injectable({
   providedIn: WeatherStationsApiModule,
@@ -50,5 +49,9 @@ export class WeatherStationsApiService {
       .set('year', year.toString());
 
     return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/year`, { params });
+  }
+
+  public sync(id: number): Observable<WeatherStationDto> {
+    return this.httpClient.get<WeatherStationDto>(`/api/weather-stations/${id}/sync`);
   }
 }
