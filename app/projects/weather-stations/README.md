@@ -69,8 +69,6 @@ You need to implement service based on below interface.
       getAggregateDataForMonth(id: number, year: number, month: number): Observable<WeatherStationDataDto[]>;
     
       getAggregateDataForYear(id: number, year: number): Observable<WeatherStationDataDto[]>;
-
-      sync(id: number): Observable<WeatherStationDto>;
     }
 
 And provide it in your _AppModule_ 
@@ -113,6 +111,12 @@ That's all now you are able to enter weather station module.
 
 
 # Change Log
+
+## v1.2.0
+
+- remove manual sync (now Weather Station is send data to server, they are not connected to network full time)
+- fix: weather station Week Title range
+- fix: go to next/prev in Month Chart
 
 ## v1.1.0
 

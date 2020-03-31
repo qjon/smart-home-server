@@ -13,6 +13,14 @@ It contains two application
 
 ## Change log
 
+### v2.0.0
+
+- change communication with Weather Stations (now Weather Station sends data to server, previously server connects to Weather Station API)
+- fix problem with timestamp (now all communications, send data from Weather Station or server API used UTC timestamp)
+- add new API method to sync data with Weather Station /api/weather-stations/sync
+- fix: weather station Week Title range
+- fix: go to next/prev in Month Chart
+
 ### v1.5.0
 
 - fix in synchronize data with Weather Stations
