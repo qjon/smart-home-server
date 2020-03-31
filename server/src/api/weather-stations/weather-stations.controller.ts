@@ -177,30 +177,6 @@ export class WeatherStationsController {
     return response;
   }
 
-  @Get(':id/sync')
-  async sync(@Req() req: Request,
-             @Param('id') weatherStationId: number): Promise<WeatherStationDto> {
-    this.logger.log(`REQ | API | ${req.url}`);
-
-    let weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationById(weatherStationId);
-
-    await this.weatherStationsSyncService.import(weatherStation)
-      .toPromise()
-      .then((data: WeatherStationDataInterface[]) => {
-        if (data) {
-          return this.weatherStationService.importData(weatherStation, data);
-        }
-      });
-
-    weatherStation = await this.weatherStationRepositoryService.fetchWeatherStationById(weatherStationId);
-
-    const response: WeatherStationDto = weatherStation.toJSON();
-
-    this.logger.log(`RES | API | ${req.url}: ${JSON.stringify(response)}`);
-
-    return response;
-  }
-
   @Post('sync')
   async sync2(@Req() req: Request,
               @Body() body: {ip: string, data: WeatherStationSyncDataInterface[]}): Promise<any[]> {

@@ -18,9 +18,6 @@ export enum WeatherStationsActionTypes {
   LoadStationsDataForYear = '[Weather Stations] Load station data for year',
   LoadStationsDataForYearError = '[Weather Stations] Load station data for year error',
   LoadStationsDataForYearSuccess = '[Weather Stations] Load station data for year success',
-  SyncStationsData = '[Weather Stations] Sync station data',
-  SyncStationsDataError = '[Weather Stations] Sync station data error',
-  SyncStationsDataSuccess = '[Weather Stations] Sync station data success',
 }
 
 
@@ -126,27 +123,6 @@ export class WeatherStationLoadDataForYearSuccessAction implements Action {
   }
 }
 
-export class WeatherStationSyncDataAction implements Action {
-  readonly type = WeatherStationsActionTypes.SyncStationsData;
-
-  constructor(public payload: { weatherStationId: number }) {
-  }
-}
-
-export class WeatherStationSyncDataErrorAction implements Action {
-  readonly type = WeatherStationsActionTypes.SyncStationsDataError;
-
-  constructor(public payload: { error: any }) {
-  }
-}
-
-export class WeatherStationSyncDataSuccessAction implements Action {
-  readonly type = WeatherStationsActionTypes.SyncStationsDataSuccess;
-
-  constructor(public payload: { weatherStationId: number, data: WeatherStationDataDto }) {
-  }
-}
-
 export type WeatherStationsActions =
   WeatherStationsLoadAction
   | WeatherStationsLoadErrorAction
@@ -163,7 +139,4 @@ export type WeatherStationsActions =
   | WeatherStationLoadDataForYearAction
   | WeatherStationLoadDataForYearErrorAction
   | WeatherStationLoadDataForYearSuccessAction
-  | WeatherStationSyncDataAction
-  | WeatherStationSyncDataErrorAction
-  | WeatherStationSyncDataSuccessAction
   ;

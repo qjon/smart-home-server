@@ -96,10 +96,4 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
   public setWeatherStationId(weatherStationId: number): void {
     this.weatherStation.next(weatherStationId);
   }
-
-  public synchronize(weatherStationId: number): void {
-    this.store.dispatch(new WeatherStationSyncDataAction({
-      weatherStationId: weatherStationId,
-    }));
-  }
 }

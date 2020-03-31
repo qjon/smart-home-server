@@ -24,25 +24,6 @@ export class WeatherStationService {
 
   }
 
-  async importData(weatherStation: WeatherStationEntity, data: WeatherStationDataInterface[]): Promise<WeatherStationDataEntity[]> {
-    const entities: WeatherStationDataEntity[] = data.map((wsd: WeatherStationDataInterface) => {
-      const entity: WeatherStationDataEntity = this.entityManager.create(WeatherStationDataEntity, wsd);
-
-      entity.weatherStation = weatherStation;
-
-      return entity;
-    });
-
-    const lastDataEntity: WeatherStationDataEntity = entities[entities.length - 1];
-
-    await this.entityManager.save<WeatherStationDataEntity>(entities);
-
-    weatherStation.lastData = lastDataEntity;
-    await this.entityManager.save(weatherStation);
-
-    return entities;
-  }
-
   async syncData(weatherStation: WeatherStationEntity, data: WeatherStationSyncDataInterface[]): Promise<WeatherStationDataResponseItem[]> {
     const currentTimestamp = Math.ceil(Date.now() / 1000);
 
@@ -112,4 +93,3 @@ export class WeatherStationService {
       });
   }
 }
-

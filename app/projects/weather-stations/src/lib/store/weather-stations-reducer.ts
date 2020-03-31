@@ -50,17 +50,6 @@ export function weatherStationReducer(state: WeatherStationsState = emptyWeather
         ...state,
         data: action.payload.items,
       };
-    case WeatherStationsActionTypes.SyncStationsDataSuccess:
-      return {
-        ...state,
-        stations: {
-          ...state.stations,
-          [action.payload.weatherStationId]: {
-            ...state.stations[action.payload.weatherStationId],
-            ...action.payload.data
-          }
-        }
-      }
     default:
       return state;
   }
