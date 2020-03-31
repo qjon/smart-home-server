@@ -146,7 +146,7 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
         return this.datePipe.transform(this.date, 'dd MMM yyyy');
       default:
         const startOfWeek = new Date(this.date.toString());
-        startOfWeek.setDate(startOfWeek.getDate() - 7);
+        startOfWeek.setDate(startOfWeek.getDate() - 6);
 
         return this.datePipe.transform(startOfWeek, 'dd-MMM yyyy') + ' - ' + this.datePipe.transform(this.date, 'dd-MMM yyyy');
     }
@@ -165,7 +165,7 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
         break;
       default:
         const from = new Date(this.date.toString());
-        from.setDate(from.getDate() - 7);
+        from.setDate(from.getDate() - 6);
 
         this.weatherStationsStateConnectorService.loadAggregateDataForWeek(from.getFullYear(), from.getMonth(), from.getDate());
     }
@@ -195,6 +195,7 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
         this.date.setFullYear(this.date.getFullYear() + jump);
         break;
       case ChartType.Month:
+        this.date.setDate(1);
         this.date.setMonth(this.date.getMonth() + jump);
         break;
       case ChartType.Week:
