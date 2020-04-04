@@ -1,6 +1,6 @@
 {
   "name": "@rign/sh-core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "author": "Rafal Ignaszewski <rafal@ignaszewski.pl> http://ignaszewski.pl",
   "description": "UI library components use in other projects",

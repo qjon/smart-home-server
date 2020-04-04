@@ -16,6 +16,7 @@ It contains two application
 ### v2.1.0
 
 - add possibility to use more than one sensor on Weather Station device
+- allow to refresh all device data
 
 ### v2.0.0
 

@@ -112,6 +112,11 @@ That's all now you are able to enter weather station module.
 
 # Change Log
 
+## v1.3.0
+
+- allow to refresh all device data
+- update dependency _@rign/sh-core to v1.1.0_
+
 ## v1.2.0
 
 - remove manual sync (now Weather Station is send data to server, they are not connected to network full time)

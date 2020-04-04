@@ -25,4 +25,8 @@ export class WeatherStationsListComponent {
   public trackBy(item: WeatherStationDto): number {
     return item.id;
   }
+
+  public refresh(): void {
+    this.weatherStationsStateConnectorService.loadList();
+  }
 }
