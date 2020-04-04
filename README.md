@@ -13,6 +13,10 @@ It contains two application
 
 ## Change log
 
+### v2.1.0
+
+- add possibility to use more than one sensor on Weather Station device
+
 ### v2.0.0
 
 - change communication with Weather Stations (now Weather Station sends data to server, previously server connects to Weather Station API)

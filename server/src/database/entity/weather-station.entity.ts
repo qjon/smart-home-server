@@ -13,8 +13,8 @@ export class WeatherStationEntity {
   @Column({ length: 15, default: '' })
   host: string;
 
-  @Column({ default: 80 })
-  port: number;
+  @Column({ default: 0 })
+  sensor: number;
 
   @OneToMany(type => WeatherStationDataEntity, data => data.weatherStation)
   data: WeatherStationDataEntity[];

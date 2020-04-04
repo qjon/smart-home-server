@@ -7,14 +7,12 @@ import { RoomController } from './rooms/room.controller';
 import { ScheduleController } from './schedules/schedule.controller';
 import { AdapterModule } from '../adapters/adapters.module';
 import { WeatherStationsController } from './weather-stations/weather-stations.controller';
-import { WeatherStationsServicesModule } from '../services/weather-stations-services/weather-stations-services.module';
 
 @Module({
   imports: [
     AdapterModule,
     DatabaseModule,
     StorageModule,
-    WeatherStationsServicesModule,
   ],
   controllers: [
     DevicesController,

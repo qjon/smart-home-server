@@ -19,9 +19,7 @@ import {
 } from '../../interfaces/weather-station/weather-station-data-dto';
 import { WeatherStationDataEntity } from '../../database/entity/weather-station-data.entity';
 import { WeatherStationEntity } from '../../database/entity/weather-station.entity';
-import { WeatherStationsSyncService } from '../../services/weather-stations-services/weather-stations-sync.service';
 import {
-  WeatherStationDataInterface,
   WeatherStationSyncDataInterface,
 } from '../../interfaces/weather-station/weather-station-data';
 import { WeatherStationDataResponseItem, WeatherStationService } from '../../database/services/weather-station.service';
@@ -37,9 +35,6 @@ export class WeatherStationsController {
 
   @Inject(WeatherStationDataRepositoryService)
   protected weatherStationDataRepositoryService: WeatherStationDataRepositoryService;
-
-  @Inject(WeatherStationsSyncService)
-  protected weatherStationsSyncService: WeatherStationsSyncService;
 
   @Inject(WeatherStationService)
   protected weatherStationService: WeatherStationService;
@@ -179,10 +174,10 @@ export class WeatherStationsController {
 
   @Post('sync')
   async sync2(@Req() req: Request,
-              @Body() body: {ip: string, data: WeatherStationSyncDataInterface[]}): Promise<any[]> {
+              @Body() body: {ip: string, sensor: number, data: WeatherStationSyncDataInterface[]}): Promise<any[]> {
     this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
 
-    const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByHost(body.ip);
+    const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByHostAndSensor(body.ip, body.sensor || 0);
 
     const entities: WeatherStationDataResponseItem[] = await this.weatherStationService.syncData(weatherStation, body.data);
 

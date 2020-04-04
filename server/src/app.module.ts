@@ -9,7 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { environment } from './environments';
 import { WorkersModule } from './workers/workers.module';
 import { MdnsModule } from './mdns/mdns.module';
-import { WeatherStationsServicesModule } from './services/weather-stations-services/weather-stations-services.module';
 
 @Module({
   imports: [
@@ -29,8 +28,6 @@ import { WeatherStationsServicesModule } from './services/weather-stations-servi
     WorkersModule,
 
     MdnsModule,
-
-    WeatherStationsServicesModule,
   ],
   controllers: [AppController],
   providers: [],
