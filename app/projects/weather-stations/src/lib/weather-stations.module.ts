@@ -38,6 +38,7 @@ import { WeatherStationsServicesModule } from './services/weather-stations-servi
     WeatherStationsStoreModule,
     MatButtonToggleModule,
     MatMenuModule,
+    CoreModule,
   ],
 })
 export class WeatherStationsModule {

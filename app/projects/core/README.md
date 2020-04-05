@@ -12,7 +12,8 @@ This library was contains list off UI components, pipes and directives used in o
 
 - ___InlineEditComponent___ - component allow to edit inline using _contenteditable_ property
 - ___LastUpdateComponent___ - simple component to display last update date or "never"
-- ___MainActionButtonSection___ - component display title and main action buttons passed as _content_
+- ___MainActionButtonSectionComponent___ - component display back icon, title and main action buttons passed as _content_
+- ___BottomActionButtonSectionComponent___ - component display bottom button action bar  
 
 ### Form
 
@@ -43,7 +44,8 @@ This library was contains list off UI components, pipes and directives used in o
 
 ### v1.1.0
 
-- add MainActionButtonSection - component for displaying title and main action buttons
+- add MainActionButtonSectionComponent - component for displaying back icon, title and main action buttons
+- add BottomActionButtonSectionComponent - component for displaying bottom buttons action bar
 
 ### v1.0.0
 

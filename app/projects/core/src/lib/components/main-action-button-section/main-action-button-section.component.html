@@ -1,5 +1,10 @@
 <div class="action-buttons-section">
-  <div class="title mat-h2" *ngIf="title">{{title}}</div>
+  <div class="title">
+    <button *ngIf="hasBackButton" class="back-button" mat-icon-button type="button" (click)="back()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="mat-h2" *ngIf="title">{{title}}</div>
+  </div>
   <div class="buttons">
     <ng-content></ng-content>
   </div>

@@ -9,7 +9,15 @@
   padding: 1em 0;
   border-bottom: 1px solid $border-light-color;
 
+  .back-button {
+  }
+
   .title {
-    margin: 0;
+    display: flex;
+
+    .mat-h2 {
+      padding-top: 4px;
+      margin: 0;
+    }
   }
 }

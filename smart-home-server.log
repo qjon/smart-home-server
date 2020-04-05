@@ -1,0 +1,84 @@
+[32m[Nest] 27957   - [39m2020-04-05 09:01:25   [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:28   [38;5;3m[InstanceLoader] [39m[32mStorageModule dependencies initialized[39m[38;5;3m +2497ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:28   [38;5;3m[InstanceLoader] [39m[32mAdapterModule dependencies initialized[39m[38;5;3m +24ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:28   [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:28   [38;5;3m[InstanceLoader] [39m[32mMdnsModule dependencies initialized[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:28   [38;5;3m[InstanceLoader] [39m[32mHttpModule dependencies initialized[39m[38;5;3m +30ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:28   [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +23ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:28   [38;5;3m[InstanceLoader] [39m[32mSslModule dependencies initialized[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:32   [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +4374ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:32   [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +26ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:32   [38;5;3m[InstanceLoader] [39m[32mDatabaseModule dependencies initialized[39m[38;5;3m +68ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:33   [38;5;3m[InstanceLoader] [39m[32mApiModule dependencies initialized[39m[38;5;3m +411ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:33   [38;5;3m[InstanceLoader] [39m[32mWebsocketModule dependencies initialized[39m[38;5;3m +23ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:33   [38;5;3m[InstanceLoader] [39m[32mWorkersModule dependencies initialized[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +841ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +87ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RoutesResolver] [39m[32mMainController {/dispatch}:[39m[38;5;3m +23ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/device, POST} route[39m[38;5;3m +53ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RoutesResolver] [39m[32mDevicesController {/api/devices}:[39m[38;5;3m +21ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/, POST} route[39m[38;5;3m +52ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +42ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:deviceId, PUT} route[39m[38;5;3m +44ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:deviceId/settings, PUT} route[39m[38;5;3m +41ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:deviceId/rename, PUT} route[39m[38;5;3m +40ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:deviceId/outlet/:outlet/rename, PUT} route[39m[38;5;3m +40ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:deviceId/timer, GET} route[39m[38;5;3m +41ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:deviceId/name/:name, GET} route[39m[38;5;3m +41ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RoutesResolver] [39m[32mRoomsController {/api/rooms}:[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +40ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RoutesResolver] [39m[32mRoomController {/api/room}:[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/, POST} route[39m[38;5;3m +41ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:roomId/:actionType, PUT} route[39m[38;5;3m +38ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RoutesResolver] [39m[32mScheduleController {/api/schedule/:deviceId}:[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +43ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/, POST} route[39m[38;5;3m +39ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:scheduleId, PUT} route[39m[38;5;3m +40ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RouterExplorer] [39m[32mMapped {/:scheduleId, DELETE} route[39m[38;5;3m +40ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:34   [38;5;3m[RoutesResolver] [39m[32mWeatherStationsController {/api/weather-stations}:[39m[38;5;3m +22ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +43ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[RouterExplorer] [39m[32mMapped {/:id/data, GET} route[39m[38;5;3m +42ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[RouterExplorer] [39m[32mMapped {/:id/data/month, GET} route[39m[38;5;3m +41ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[RouterExplorer] [39m[32mMapped {/:id/data/year, GET} route[39m[38;5;3m +42ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[RouterExplorer] [39m[32mMapped {/:id/data/week, GET} route[39m[38;5;3m +41ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[RouterExplorer] [39m[32mMapped {/:id/data/day, GET} route[39m[38;5;3m +41ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[RouterExplorer] [39m[32mMapped {/sync, POST} route[39m[38;5;3m +40ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +140ms[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:35   [38;5;3m[DeviceDiscoverService] [39m[32mStart looking for new devices[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:36   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:37   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:37   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:37   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:38   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:38   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:38   [38;5;3m[DeviceStateChangeUpdateWorkerService] [39m[32mStart updating device: 10003aa25f[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:39   [38;5;3m[DeviceStateChangeUpdateWorkerService] [39m[32mDevice: 5 has been updated to: [{"name":"Switch 1","outlet":0,"switch":"off"},{"name":"Switch 2","outlet":1,"switch":"off"},{"name":"Switch 3","outlet":2,"switch":"off"},{"name":"Switch 4","outlet":3,"switch":"off"}][39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:39   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:39   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[95m[Nest] 27957   - [39m2020-04-05 09:01:39   [38;5;3m[DeviceStateChangeListenerWorkerService] [39m[95mNew possible update from eWelink device send to recognize[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:39   [38;5;3m[DeviceStateChangeUpdateWorkerService] [39m[32mStart updating device: 10006cbf5b[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:39   [38;5;3m[DeviceDiscoverService] [39m[32mFound 3 devices[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:39   [38;5;3m[DevicesUpdateWorkerService] [39m[32mStatus of device: 10006cbf5b has been updated[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:40   [38;5;3m[DevicesUpdateWorkerService] [39m[32mStatus of device: 10008c7a10 has been updated[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:40   [38;5;3m[DevicesUpdateWorkerService] [39m[32mStatus of device: 10003aa25f has been updated[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:01:40   [38;5;3m[DeviceStateChangeUpdateWorkerService] [39m[32mDevice: 2 has been updated to: [{"name":"Switch 1","outlet":0,"switch":"off"}][39m
+[32m[Nest] 27957   - [39m2020-04-05 09:02:00   [38;5;3m[ScheduleWorkerService] [39m[32m0[39m
+POST /api/weather-stations/sync
+[32m[Nest] 27957   - [39m2020-04-05 09:02:29   [38;5;3m[WeatherStationsController] [39m[32mREQ | API | /api/weather-stations/sync | {"ip":"192.168.100.211","data":[{"time":1586070148,"temp":"21.00","hum":"79.00"}]}[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:02:29   [38;5;3m[WeatherStationsController] [39m[32mRES | API | /api/weather-stations/sync: [{"time":1586070148,"sync":true}][39m
+201 Created; 33b sent
+[32m[Nest] 27957   - [39m2020-04-05 09:03:00   [38;5;3m[ScheduleWorkerService] [39m[32m0[39m
+[96m[Nest] 27957   - [39m2020-04-05 09:03:18   [38;5;3m[SmartWsAdapterService] [39m[96mWS | STart[39m
+[33m[Nest] 27957   - [39m2020-04-05 09:03:18   [38;5;3m[ApplicationService] [39m[33mREQ | WS | Connect | bbfD7Q9XOMM+ZecuKYpzBQ==[39m
+[33m[Nest] 27957   - [39m2020-04-05 09:03:18   [38;5;3m[ApplicationService] [39m[33mREQ | WS | Connect | bbfD7Q9XOMM+ZecuKYpzBQ==[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:03:18   [38;5;3m[ApplicationService] [39m[32mREQ | WS | some | {"sender":"application","action":"app:register"}[39m
+[96m[Nest] 27957   - [39m2020-04-05 09:03:19   [38;5;3m[SmartWsAdapterService] [39m[96mWS | STart[39m
+[33m[Nest] 27957   - [39m2020-04-05 09:03:19   [38;5;3m[ApplicationService] [39m[33mREQ | WS | Connect | pGCRl5s4uBb9KaC4jK1hgA==[39m
+[33m[Nest] 27957   - [39m2020-04-05 09:03:19   [38;5;3m[ApplicationService] [39m[33mREQ | WS | Connect | pGCRl5s4uBb9KaC4jK1hgA==[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:03:19   [38;5;3m[ApplicationService] [39m[32mREQ | WS | some | {"sender":"application","action":"app:register"}[39m
+GET /api/weather-stations
+[32m[Nest] 27957   - [39m2020-04-05 09:03:19   [38;5;3m[WeatherStationsController] [39m[32mREQ | API | /api/weather-stations[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:03:19   [38;5;3m[WeatherStationsController] [39m[32mRES | API | /api/weather-stations | [{"id":3,"name":"Sypialnia","humidity":57,"temperature":21.2,"timestamp":1586069829000},{"id":4,"name":"Zewnętrzny","humidity":56,"temperature":6.5,"timestamp":1586069829000},{"id":1,"name":"Zosia","humidity":79,"temperature":21.3,"timestamp":1586069897000},{"id":2,"name":"Zuzia","humidity":79,"temperature":21,"timestamp":1586070148000}][39m
+200 OK; 340b sent
+[32m[Nest] 27957   - [39m2020-04-05 09:04:00   [38;5;3m[ScheduleWorkerService] [39m[32m0[39m
+[32m[Nest] 27957   - [39m2020-04-05 09:05:00   [38;5;3m[ScheduleWorkerService] [39m[32m0[39m

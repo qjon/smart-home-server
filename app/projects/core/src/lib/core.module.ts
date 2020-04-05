@@ -5,14 +5,18 @@ import { MatIconModule } from '@angular/material';
 import { InlineEditComponent } from './components/inline-edit/inline-edit.component';
 import { LastUpdateComponent } from './components/last-update/last-update.component';
 import { MainActionButtonSectionComponent } from './components/main-action-button-section/main-action-button-section.component';
+import { MatButtonModule } from '@angular/material/button';
+import { BottomActionButtonSectionComponent } from './components/bottom-action-button-section/bottom-action-button-section.component';
 
 @NgModule({
   declarations: [
+    BottomActionButtonSectionComponent,
     InlineEditComponent,
     LastUpdateComponent,
     MainActionButtonSectionComponent,
   ],
   exports: [
+    BottomActionButtonSectionComponent,
     InlineEditComponent,
     LastUpdateComponent,
     MainActionButtonSectionComponent,
@@ -20,6 +24,7 @@ import { MainActionButtonSectionComponent } from './components/main-action-butto
   imports: [
     CommonModule,
     MatIconModule,
+    MatButtonModule,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

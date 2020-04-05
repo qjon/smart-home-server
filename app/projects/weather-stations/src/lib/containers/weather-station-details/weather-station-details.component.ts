@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
@@ -40,10 +40,15 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
               private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
               private activatedRoute: ActivatedRoute,
               private datePipe: DatePipe,
-              private cdr: ChangeDetectorRef) {
+              private cdr: ChangeDetectorRef,
+              private router: Router) {
     super();
 
     this.weatherStation$ = this.weatherStationsStateConnectorService.current$;
+  }
+
+  public back(): void {
+    this.router.navigate(['..'], {relativeTo: this.activatedRoute});
   }
 
   public ngOnInit(): void {
@@ -69,30 +74,39 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
     this.loadDataByChartType(this.currentChartType);
   }
 
-  private listenOnDataChange(): void {
-    this.weatherStationsStateConnectorService.data$
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe((items: WeatherStationDataDto[]) => {
-        this.weatherStationChartDataParserService.setData(this.currentChartType, items);
-      });
+  public goNext(): void {
+    this.changePeriodOfType(1);
   }
 
-  private listenOnChartDataChange(): void {
-    combineLatest(
-      this.weatherStationChartDataParserService.xAxis$,
-      this.weatherStationChartDataParserService.seriesTemperature$,
-      this.weatherStationChartDataParserService.seriesHumidity$,
-    )
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe(([xAxis, seriesTemperature, seriesHumidity]) => {
-        this.chart = this.getChart(xAxis, seriesTemperature, seriesHumidity);
+  public goPrev(): void {
+    this.changePeriodOfType(-1);
+  }
 
-        this.cdr.detectChanges();
-      });
+  public goToday(): void {
+    this.date = new Date(this.now.toString());
+
+    this.currentChartType = ChartType.Day;
+
+    this.loadDataByChartType(this.currentChartType);
+  }
+
+  public changePeriodOfType(jump: number): void {
+    switch (this.currentChartType) {
+      case ChartType.Year:
+        this.date.setFullYear(this.date.getFullYear() + jump);
+        break;
+      case ChartType.Month:
+        this.date.setDate(1);
+        this.date.setMonth(this.date.getMonth() + jump);
+        break;
+      case ChartType.Week:
+        this.date.setDate(this.date.getDate() + jump * 7);
+        break;
+      default:
+        this.date.setDate(this.date.getDate() + jump);
+    }
+
+    this.loadDataByChartType(this.currentChartType);
   }
 
   private getChart(xAxis: string[], seriesTemperature: number[], seriesHumidity: number[]): Chart {
@@ -152,6 +166,32 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
     }
   }
 
+  private listenOnChartDataChange(): void {
+    combineLatest(
+      this.weatherStationChartDataParserService.xAxis$,
+      this.weatherStationChartDataParserService.seriesTemperature$,
+      this.weatherStationChartDataParserService.seriesHumidity$,
+    )
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe(([xAxis, seriesTemperature, seriesHumidity]) => {
+        this.chart = this.getChart(xAxis, seriesTemperature, seriesHumidity);
+
+        this.cdr.detectChanges();
+      });
+  }
+
+  private listenOnDataChange(): void {
+    this.weatherStationsStateConnectorService.data$
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe((items: WeatherStationDataDto[]) => {
+        this.weatherStationChartDataParserService.setData(this.currentChartType, items);
+      });
+  }
+
   private loadDataByChartType(chartType: ChartType): void {
     switch (chartType) {
       case ChartType.Year:
@@ -171,40 +211,5 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
     }
 
     this.cdr.markForCheck();
-  }
-
-  public goNext(): void {
-    this.changePeriodOfType(1);
-  }
-
-  public goPrev(): void {
-    this.changePeriodOfType(-1);
-  }
-
-  public goToday(): void {
-    this.date = new Date(this.now.toString());
-
-    this.currentChartType = ChartType.Day;
-
-    this.loadDataByChartType(this.currentChartType);
-  }
-
-  public changePeriodOfType(jump: number): void {
-    switch (this.currentChartType) {
-      case ChartType.Year:
-        this.date.setFullYear(this.date.getFullYear() + jump);
-        break;
-      case ChartType.Month:
-        this.date.setDate(1);
-        this.date.setMonth(this.date.getMonth() + jump);
-        break;
-      case ChartType.Week:
-        this.date.setDate(this.date.getDate() + jump * 7);
-        break;
-      default:
-        this.date.setDate(this.date.getDate() + jump);
-    }
-
-    this.loadDataByChartType(this.currentChartType);
   }
 }
