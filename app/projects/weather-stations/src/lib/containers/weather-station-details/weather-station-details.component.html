@@ -4,13 +4,13 @@
     <button mat-raised-button
             color="primary"
             class="today-button"
-            *ngIf="now.toString() !== date.toString()"
+            *ngIf="!this.weatherStationChartTypeAndPeriodService.isToday()"
             (click)="goToday()"
     >
       <mat-icon>calendar_today</mat-icon>
       <span>Today</span>
     </button>
-    <mat-button-toggle-group appearance="legacy" [value]="currentChartType" (change)="onChangeChartType($event.value)">
+    <mat-button-toggle-group appearance="legacy" [value]="currentChartType" (change)="weatherStationChartTypeAndPeriodService.changeChartType($event.value)">
       <mat-button-toggle [value]="chartTypes.Day">Day</mat-button-toggle>
       <mat-button-toggle [value]="chartTypes.Week">Week</mat-button-toggle>
       <mat-button-toggle [value]="chartTypes.Month">Month</mat-button-toggle>
@@ -23,37 +23,26 @@
     <mat-menu #menu="matMenu">
       <button mat-menu-item
               [ngClass]="{selected: currentChartType === chartTypes.Day}"
-              (click)="onChangeChartType(chartTypes.Day)">
+              (click)="weatherStationChartTypeAndPeriodService.changeChartType(chartTypes.Day)">
         <span>Day</span>
       </button>
       <button mat-menu-item
               [ngClass]="{selected: currentChartType === chartTypes.Week}"
-              (click)="onChangeChartType(chartTypes.Week)">
+              (click)="weatherStationChartTypeAndPeriodService.changeChartType(chartTypes.Week)">
         <span>Week</span>
       </button>
       <button mat-menu-item
               [ngClass]="{selected: currentChartType === chartTypes.Month}"
-              (click)="onChangeChartType(chartTypes.Month)">
+              (click)="weatherStationChartTypeAndPeriodService.changeChartType(chartTypes.Month)">
         <span>Month</span>
       </button>
       <button mat-menu-item
               [ngClass]="{selected: currentChartType === chartTypes.Year}"
-              (click)="onChangeChartType(chartTypes.Year)">
+              (click)="weatherStationChartTypeAndPeriodService.changeChartType(chartTypes.Year)">
         <span>Year</span>
       </button>
     </mat-menu>
   </sh-core-main-action-button-section>
 
-  <div class="chart-box" [chart]="chart"></div>
-
-  <sh-core-bottom-action-button-section>
-    <button mat-raised-button class="arrow-left" (click)="goPrev()">
-      <mat-icon>keyboard_arrow_left</mat-icon>
-      Prev
-    </button>
-    <button mat-raised-button class="arrow-right" (click)="goNext()">
-      Next
-      <mat-icon>keyboard_arrow_right</mat-icon>
-    </button>
-  </sh-core-bottom-action-button-section>
+  <sh-weather-station-details-chart (compare)="setCompareMode($event)"></sh-weather-station-details-chart>
 </ng-container>

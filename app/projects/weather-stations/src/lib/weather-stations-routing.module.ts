@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { WeatherStationsListComponent } from './containers/weather-stations-list/weather-stations-list.component';
 import { WeatherStationDetailsComponent } from './containers/weather-station-details/weather-station-details.component';
 import { WeatherStationsListResolverService } from './services/resolvers/weather-stations-list-resolver.service';
+import { WeatherStationIdResolverService } from './services/resolvers/weather-station-id-resolver.service';
 
 
 const routes: Routes = [
@@ -18,6 +19,9 @@ const routes: Routes = [
       {
         path: ':weatherStationId',
         component: WeatherStationDetailsComponent,
+        resolve: {
+          weatherStationId: WeatherStationIdResolverService,
+        },
       },
       {
         path: '**',

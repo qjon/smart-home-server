@@ -1,0 +1,24 @@
+<div class="compare-button-list">
+  <button mat-raised-button
+          color="primary"
+          class="compare-button"
+          (click)="clickToggleCompare()"
+  >
+    <ng-container  *ngIf="!isCompare; else turnOffCompare">
+      <mat-icon>compare_arrows</mat-icon>
+      <span>Compare</span>
+    </ng-container>
+  </button>
+
+  <ng-container *ngIf="isCompare">
+    <ng-container *ngFor="let ws of list$ | async">
+      <button *ngIf="ws.isAdded" (click)="removeFromCompare(ws.id)" mat-raised-button color="primary">Remove: {{ws.name}}</button>
+      <button *ngIf="!ws.isAdded" [disabled]="isLimit$ | async" (click)="addToCompare(ws.id)" mat-raised-button>Add: {{ws.name}}</button>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #turnOffCompare>
+  <mat-icon>show_chart</mat-icon>
+  <span>Back to single view</span>
+</ng-template>

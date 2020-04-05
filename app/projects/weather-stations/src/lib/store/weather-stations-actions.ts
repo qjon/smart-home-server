@@ -1,25 +1,21 @@
 import { Action } from '@ngrx/store';
 import { WeatherStationDto } from '../interfaces/weather-station-dto';
 import { WeatherStationDataDto } from '../interfaces/weather-station-data-dto';
+import { ChartType } from '../interfaces/weather-station-chart-type';
 
 export enum WeatherStationsActionTypes {
+  CompareAdd = '[Weather Stations] Add Weather Station to compare',
+  CompareAddSuccess = '[Weather Stations] Add Weather Station to compare success',
+  CompareEnd = '[Weather Stations] End compare',
+  CompareRemove = '[Weather Stations] Remove Weather Station from compare',
+  CompareStart = '[Weather Stations] Start compare',
   LoadStations = '[Weather Stations] Load station list',
   LoadStationsError = '[Weather Stations] Load station list error',
   LoadStationsSuccess = '[Weather Stations] Load station list success',
-  LoadStationsAggregateDataForDay = '[Weather Stations] Load station aggregate data for day',
-  LoadStationsAggregateDataForDayError = '[Weather Stations] Load station aggregate data for day error',
-  LoadStationsAggregateDataForDaySuccess = '[Weather Stations] Load station aggregate data for day success',
-  LoadStationsAggregateDataForWeek = '[Weather Stations] Load station aggregate data for week',
-  LoadStationsAggregateDataForWeekError = '[Weather Stations] Load station aggregate data for week error',
-  LoadStationsAggregateDataForWeekSuccess = '[Weather Stations] Load station aggregate data for week success',
-  LoadStationsDataForMonth = '[Weather Stations] Load station data for month',
-  LoadStationsDataForMonthError = '[Weather Stations] Load station data for month error',
-  LoadStationsDataForMonthSuccess = '[Weather Stations] Load station data for month success',
-  LoadStationsDataForYear = '[Weather Stations] Load station data for year',
-  LoadStationsDataForYearError = '[Weather Stations] Load station data for year error',
-  LoadStationsDataForYearSuccess = '[Weather Stations] Load station data for year success',
+  LoadStationAggregatedData = '[Weather Stations] Load station aggregated data',
+  LoadStationAggregatedDataError = '[Weather Stations] Load station aggregated data error',
+  LoadStationAggregatedDataSuccess = '[Weather Stations] Load station aggregated data success',
 }
-
 
 export class WeatherStationsLoadAction implements Action {
   readonly type = WeatherStationsActionTypes.LoadStations;
@@ -39,104 +35,102 @@ export class WeatherStationsLoadSuccessAction implements Action {
   }
 }
 
-export class WeatherStationLoadAggregateDataForDayAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsAggregateDataForDay;
+export class WeatherStationLoadAggregateDataAction implements Action {
+  readonly type = WeatherStationsActionTypes.LoadStationAggregatedData;
 
-  constructor(public payload: { weatherStationId: number, year: number, month: number, day: number }) {
+  public readonly payload: { type: ChartType, weatherStationId: number, year: number, month?: number, day?: number };
+
+  constructor(type: ChartType.Day | ChartType.Week, weatherStationId: number, year: number, month: number, day: number);
+  constructor(type: ChartType.Month, weatherStationId: number, year: number, month: number);
+  constructor(type: ChartType.Year, weatherStationId: number, year: number);
+  constructor(type: ChartType, weatherStationId: number, year: number, month?: number, day?: number) {
+    this.payload = {
+      type,
+      weatherStationId,
+      year,
+      month,
+      day,
+    };
   }
 }
 
-export class WeatherStationLoadAggregateDataForDayErrorAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsAggregateDataForDayError;
+export class WeatherStationLoadAggregateDataErrorAction implements Action {
+  readonly type = WeatherStationsActionTypes.LoadStationAggregatedDataError;
 
   constructor(public payload: { error: any }) {
   }
 }
 
-export class WeatherStationLoadAggregateDataForDaySuccessAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsAggregateDataForDaySuccess;
+export class WeatherStationLoadAggregateDataSuccessAction implements Action {
+  readonly type = WeatherStationsActionTypes.LoadStationAggregatedDataSuccess;
 
-  constructor(public payload: { weatherStationId: number, year: number, month: number, day: number, items: WeatherStationDataDto[] }) {
+  public readonly payload: {
+    type: ChartType,
+    weatherStationId: number,
+    year: number,
+    month?: number,
+    day?: number,
+    items: WeatherStationDataDto[],
+  };
+
+  constructor(type: ChartType.Day | ChartType.Week, weatherStationId: number, items: WeatherStationDataDto[], year: number, month: number, day: number);
+  constructor(type: ChartType.Month, weatherStationId: number, items: WeatherStationDataDto[], year: number, month: number);
+  constructor(type: ChartType.Year, weatherStationId: number, items: WeatherStationDataDto[], year: number);
+  constructor(type: ChartType, weatherStationId: number, items: WeatherStationDataDto[], year: number, month?: number, day?: number) {
+    this.payload = {
+      type,
+      weatherStationId,
+      items,
+      year,
+      month,
+      day,
+    };
   }
 }
 
-export class WeatherStationLoadAggregateDataForWeekAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsAggregateDataForWeek;
+export class WeatherStationCompareAddAction implements Action {
+  readonly type = WeatherStationsActionTypes.CompareAdd;
 
-  constructor(public payload: { weatherStationId: number, year: number, month: number, day: number }) {
+  constructor(public payload: { weatherStationId: number, type: ChartType, date: Date }) {
   }
 }
 
-export class WeatherStationLoadAggregateDataForWeekErrorAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsAggregateDataForWeekError;
+export class WeatherStationCompareAddSuccessAction implements Action {
+  readonly type = WeatherStationsActionTypes.CompareAddSuccess;
 
-  constructor(public payload: { error: any }) {
+  constructor(public payload: { weatherStationId: number, data: WeatherStationDataDto[] }) {
   }
 }
 
-export class WeatherStationLoadAggregateDataForWeekSuccessAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsAggregateDataForWeekSuccess;
+export class WeatherStationCompareEndAction implements Action {
+  readonly type = WeatherStationsActionTypes.CompareEnd;
+}
 
-  constructor(public payload: { weatherStationId: number, year: number, month: number, day: number, items: WeatherStationDataDto[] }) {
+export class WeatherStationCompareRemoveAction implements Action {
+  readonly type = WeatherStationsActionTypes.CompareRemove;
+
+  constructor(public payload: { weatherStationId: number }) {
   }
 }
 
-export class WeatherStationLoadDataForMonthAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsDataForMonth;
+export class WeatherStationCompareStartAction implements Action {
+  readonly type = WeatherStationsActionTypes.CompareStart;
 
-  constructor(public payload: { weatherStationId: number, year: number, month: number }) {
+  constructor(public payload: { weatherStationId: number }) {
   }
 }
 
-export class WeatherStationLoadDataForMonthErrorAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsDataForMonthError;
-
-  constructor(public payload: { error: any }) {
-  }
-}
-
-export class WeatherStationLoadDataForMonthSuccessAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsDataForMonthSuccess;
-
-  constructor(public payload: { weatherStationId: number, year: number, month: number, items: WeatherStationDataDto[] }) {
-  }
-}
-
-export class WeatherStationLoadDataForYearAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsDataForYear;
-
-  constructor(public payload: { weatherStationId: number, year: number }) {
-  }
-}
-
-export class WeatherStationLoadDataForYearErrorAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsDataForYearError;
-
-  constructor(public payload: { error: any }) {
-  }
-}
-
-export class WeatherStationLoadDataForYearSuccessAction implements Action {
-  readonly type = WeatherStationsActionTypes.LoadStationsDataForYearSuccess;
-
-  constructor(public payload: { weatherStationId: number, year: number, items: WeatherStationDataDto[] }) {
-  }
-}
 
 export type WeatherStationsActions =
-  WeatherStationsLoadAction
+  WeatherStationCompareAddAction
+  | WeatherStationCompareAddSuccessAction
+  | WeatherStationCompareEndAction
+  | WeatherStationCompareRemoveAction
+  | WeatherStationCompareStartAction
+  | WeatherStationsLoadAction
   | WeatherStationsLoadErrorAction
   | WeatherStationsLoadSuccessAction
-  | WeatherStationLoadAggregateDataForDayAction
-  | WeatherStationLoadAggregateDataForDayErrorAction
-  | WeatherStationLoadAggregateDataForDaySuccessAction
-  | WeatherStationLoadAggregateDataForWeekAction
-  | WeatherStationLoadAggregateDataForWeekErrorAction
-  | WeatherStationLoadAggregateDataForWeekSuccessAction
-  | WeatherStationLoadDataForMonthAction
-  | WeatherStationLoadDataForMonthErrorAction
-  | WeatherStationLoadDataForMonthSuccessAction
-  | WeatherStationLoadDataForYearAction
-  | WeatherStationLoadDataForYearErrorAction
-  | WeatherStationLoadDataForYearSuccessAction
+  | WeatherStationLoadAggregateDataAction
+  | WeatherStationLoadAggregateDataErrorAction
+  | WeatherStationLoadAggregateDataSuccessAction
   ;

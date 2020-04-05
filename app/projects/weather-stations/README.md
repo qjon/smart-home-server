@@ -116,6 +116,8 @@ That's all now you are able to enter weather station module.
 
 - allow to refresh all device data
 - update dependency _@rign/sh-core to v1.1.0_
+- change displaying charts - now you can see hours/days without input data (if some data missing)
+- possibility to compare up to three Weather Station data
 
 ## v1.2.0
 

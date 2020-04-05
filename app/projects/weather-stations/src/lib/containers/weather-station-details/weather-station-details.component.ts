@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { combineLatest, Observable } from 'rxjs';
-import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
-import { Chart } from 'angular-highcharts';
-
 import { Destroyable } from '@rign/sh-core';
+
+import { combineLatest, Observable } from 'rxjs';
+import { distinctUntilChanged, filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
+
 import { WeatherStationsStateConnectorService } from '../../store/state-connectors/weather-stations-state-connector.service';
-import { WeatherStationChartDataParserService } from '../../services/weather-station-chart-data-parser.service';
-import { WeatherStationDataDto } from '../../interfaces/weather-station-data-dto';
+import { WeatherStationChartDataParserService } from '../../services/chart/weather-station-chart-data-parser.service';
 import { WeatherStationDto } from '../../interfaces/weather-station-dto';
 import { ChartType } from '../../interfaces/weather-station-chart-type';
+import { WeatherStationChartTypeAndPeriodService } from '../../services/chart/weather-station-chart-type-and-period.service';
+import { CompareWeatherStationButton } from '../../interfaces/compare-weather-station-button';
 
 @Component({
   selector: 'sh-weather-station-details',
@@ -20,11 +21,11 @@ import { ChartType } from '../../interfaces/weather-station-chart-type';
   providers: [
     WeatherStationChartDataParserService,
     DatePipe,
+    WeatherStationChartTypeAndPeriodService,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherStationDetailsComponent extends Destroyable implements OnInit {
-  public chart: Chart;
 
   public chartTypes: typeof ChartType = ChartType;
 
@@ -32,184 +33,115 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
 
   public weatherStation$: Observable<WeatherStationDto>;
 
-  public now: Date = new Date();
+  private date: Date;
+  private isCompareMode: boolean = false;
 
-  public date: Date = new Date(this.now.toString());
-
-  constructor(private weatherStationChartDataParserService: WeatherStationChartDataParserService,
-              private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
+  constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
               private activatedRoute: ActivatedRoute,
-              private datePipe: DatePipe,
-              private cdr: ChangeDetectorRef,
-              private router: Router) {
+              private router: Router,
+              public weatherStationChartTypeAndPeriodService: WeatherStationChartTypeAndPeriodService) {
     super();
 
     this.weatherStation$ = this.weatherStationsStateConnectorService.current$;
   }
 
   public back(): void {
-    this.router.navigate(['..'], {relativeTo: this.activatedRoute});
+    this.router.navigate(['..'], { relativeTo: this.activatedRoute });
   }
 
   public ngOnInit(): void {
-    this.listenOnChartDataChange();
-    this.listenOnDataChange();
+    this.listenOnDateChange();
+    this.listenOnChartTypeChange();
+    this.listenOnParamsChange();
+  }
 
-    this.activatedRoute.paramMap
+  private listenOnChartTypeChange(): void {
+    this.weatherStationChartTypeAndPeriodService.chartType$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(type => this.currentChartType = type);
+  }
+
+  private listenOnDateChange(): void {
+    this.weatherStationChartTypeAndPeriodService
+      .date$
       .pipe(
-        map((paramsMap) => paramsMap.get('weatherStationId')),
-        distinctUntilChanged(),
         takeUntil(this.destroy$),
       )
-      .subscribe((val => {
-        this.weatherStationsStateConnectorService.setWeatherStationId(parseInt(val, 10));
-
-        this.loadDataByChartType(this.currentChartType);
-      }));
+      .subscribe(date => this.date = date);
   }
 
-  public onChangeChartType(value: ChartType): void {
-    this.currentChartType = value;
+  private listenOnParamsChange(): void {
+    combineLatest(
+      this.weatherStationsStateConnectorService.current$
+        .pipe(
+          filter(Boolean),
+          map((weatherStation: WeatherStationDto) => weatherStation.id),
+          distinctUntilChanged(),
+        ),
+      this.weatherStationChartTypeAndPeriodService.date$,
+      this.weatherStationChartTypeAndPeriodService.chartType$,
+    )
 
-    this.loadDataByChartType(this.currentChartType);
-  }
+      .pipe(
+        filter(() => !this.isCompareMode),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(([val, date, chartType]: [number, Date, ChartType]) => {
+        this.loadDataByChartType(chartType, date);
+      });
 
-  public goNext(): void {
-    this.changePeriodOfType(1);
-  }
 
-  public goPrev(): void {
-    this.changePeriodOfType(-1);
+    combineLatest(
+      this.weatherStationChartTypeAndPeriodService.date$,
+      this.weatherStationChartTypeAndPeriodService.chartType$,
+    )
+
+      .pipe(
+        withLatestFrom(this.weatherStationsStateConnectorService.compareButtonList$),
+        filter(() => this.isCompareMode),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(([[date, chartType], compareList]: [[Date, ChartType], CompareWeatherStationButton[]]) => {
+        const startFromDate: Date = new Date(date);
+
+        if (chartType === ChartType.Week) {
+          startFromDate.setDate(startFromDate.getDate() - 6);
+        }
+
+        compareList
+          .filter((button) => button.isAdded)
+          .forEach((button: CompareWeatherStationButton) => {
+            this.weatherStationsStateConnectorService.addWeatherStationToCompare(button.id, chartType, startFromDate);
+          });
+      });
   }
 
   public goToday(): void {
-    this.date = new Date(this.now.toString());
-
-    this.currentChartType = ChartType.Day;
-
-    this.loadDataByChartType(this.currentChartType);
+    this.weatherStationChartTypeAndPeriodService.jumpToToday();
+    this.weatherStationChartTypeAndPeriodService.changeChartType(ChartType.Day);
   }
 
-  public changePeriodOfType(jump: number): void {
-    switch (this.currentChartType) {
-      case ChartType.Year:
-        this.date.setFullYear(this.date.getFullYear() + jump);
-        break;
-      case ChartType.Month:
-        this.date.setDate(1);
-        this.date.setMonth(this.date.getMonth() + jump);
-        break;
-      case ChartType.Week:
-        this.date.setDate(this.date.getDate() + jump * 7);
-        break;
-      default:
-        this.date.setDate(this.date.getDate() + jump);
-    }
-
-    this.loadDataByChartType(this.currentChartType);
-  }
-
-  private getChart(xAxis: string[], seriesTemperature: number[], seriesHumidity: number[]): Chart {
-    return new Chart({
-      chart: {
-        type: 'line',
-      },
-      colors: ['#f39c12', '#3498db'],
-      title: {
-        text: this.getChartTitle(),
-      },
-      subtitle: {
-        text: '',
-      },
-      xAxis: {
-        categories: xAxis,
-      },
-      yAxis: {
-        title: {
-          text: 'Temperature (°C), Humidity (%)',
-        },
-      },
-      plotOptions: {
-        line: {
-          dataLabels: {
-            enabled: true,
-          },
-          enableMouseTracking: true,
-        },
-      },
-      series: [
-        <any>{
-          name: 'Temperature',
-          data: seriesTemperature,
-        },
-        <any>{
-          name: 'Humidity',
-          data: seriesHumidity,
-        },
-      ],
-    });
-  }
-
-  private getChartTitle(): string {
-    switch (this.currentChartType) {
-      case ChartType.Year:
-        return 'Year: ' + this.date.getFullYear();
-      case ChartType.Month:
-        return this.datePipe.transform(this.date, 'MMM yyyy');
-      case ChartType.Day:
-        return this.datePipe.transform(this.date, 'dd MMM yyyy');
-      default:
-        const startOfWeek = new Date(this.date.toString());
-        startOfWeek.setDate(startOfWeek.getDate() - 6);
-
-        return this.datePipe.transform(startOfWeek, 'dd-MMM yyyy') + ' - ' + this.datePipe.transform(this.date, 'dd-MMM yyyy');
-    }
-  }
-
-  private listenOnChartDataChange(): void {
-    combineLatest(
-      this.weatherStationChartDataParserService.xAxis$,
-      this.weatherStationChartDataParserService.seriesTemperature$,
-      this.weatherStationChartDataParserService.seriesHumidity$,
-    )
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe(([xAxis, seriesTemperature, seriesHumidity]) => {
-        this.chart = this.getChart(xAxis, seriesTemperature, seriesHumidity);
-
-        this.cdr.detectChanges();
-      });
-  }
-
-  private listenOnDataChange(): void {
-    this.weatherStationsStateConnectorService.data$
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe((items: WeatherStationDataDto[]) => {
-        this.weatherStationChartDataParserService.setData(this.currentChartType, items);
-      });
-  }
-
-  private loadDataByChartType(chartType: ChartType): void {
+  private loadDataByChartType(chartType: ChartType, date: Date): void {
     switch (chartType) {
       case ChartType.Year:
-        this.weatherStationsStateConnectorService.loadDataForYear(this.date.getFullYear());
+        this.weatherStationsStateConnectorService.loadAggregateData(chartType, date.getFullYear());
         break;
       case ChartType.Month:
-        this.weatherStationsStateConnectorService.loadDataForMonth(this.date.getFullYear(), this.date.getMonth());
+        this.weatherStationsStateConnectorService.loadAggregateData(chartType, date.getFullYear(), date.getMonth());
         break;
-      case ChartType.Day:
-        this.weatherStationsStateConnectorService.loadAggregateDataForDay(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
-        break;
-      default:
-        const from = new Date(this.date.toString());
+      case ChartType.Week:
+        const from = new Date(date.toString());
         from.setDate(from.getDate() - 6);
 
-        this.weatherStationsStateConnectorService.loadAggregateDataForWeek(from.getFullYear(), from.getMonth(), from.getDate());
+        this.weatherStationsStateConnectorService.loadAggregateData(chartType, from.getFullYear(), from.getMonth(), from.getDate());
+        break;
+      case ChartType.Day:
+        this.weatherStationsStateConnectorService.loadAggregateData(chartType, date.getFullYear(), date.getMonth(), date.getDate());
+        break;
     }
+  }
 
-    this.cdr.markForCheck();
+  public setCompareMode(isCompare: boolean): void {
+    this.isCompareMode = isCompare;
   }
 }

@@ -161,6 +161,16 @@
       "root": "projects/weather-stations",
       "sourceRoot": "projects/weather-stations/src",
       "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "changeDetection": "OnPush",
+          "spec": false
+        },
+        "@schematics/angular:service": {
+          "spec": false
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",

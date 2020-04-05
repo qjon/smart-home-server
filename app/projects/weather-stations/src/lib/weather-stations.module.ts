@@ -17,6 +17,9 @@ import { WeatherStationItemComponent } from './components/weather-station-item/w
 import { WeatherStationsStoreModule } from './store/weather-stations-store.module';
 import { WeatherStationDetailsComponent } from './containers/weather-station-details/weather-station-details.component';
 import { WeatherStationsServicesModule } from './services/weather-stations-services.module';
+import { WeatherStationChartComponent } from './components/weather-station-chart/weather-station-chart.component';
+import { WeatherStationDetailsChartComponent } from './components/weather-station-details-chart/weather-station-details-chart.component';
+import { WeatherStationCompareButtonsComponent } from './components/weather-station-compare-buttons/weather-station-compare-buttons.component';
 
 
 @NgModule({
@@ -24,6 +27,9 @@ import { WeatherStationsServicesModule } from './services/weather-stations-servi
     WeatherStationsListComponent,
     WeatherStationItemComponent,
     WeatherStationDetailsComponent,
+    WeatherStationChartComponent,
+    WeatherStationDetailsChartComponent,
+    WeatherStationCompareButtonsComponent,
   ],
   imports: [
     CommonModule,
