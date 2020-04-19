@@ -13,4 +13,11 @@ export const environment = {
     password: envConfig.DB_PASS,
     name: envConfig.DB_SCHEMA,
   },
+  mail: {
+    username: envConfig.MAIL_USERNAME,
+    password: envConfig.MAIL_PASSWORD,
+    smtp: envConfig.MAIL_SMTP,
+    from: envConfig.MAIL_FROm,
+    sendNotifications: envConfig.SEND_NOTIFICATIONS,
+  },
 };

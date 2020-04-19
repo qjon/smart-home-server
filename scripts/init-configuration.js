@@ -50,7 +50,14 @@ rl.question('Server IP? ', function(ip) {
                   'DB_HOST=localhost\n' +
                   'DB_USER=smart\n' +
                   'DB_PASS=home\n' +
-                  'DB_SCHEMA=smarthome';
+                  'DB_SCHEMA=smarthome\n' +
+                  '##########################\n' +
+                  'MAIL_USERNAME=\n' +
+                  'MAIL_PASSWORD=\n' +
+                  'MAIL_SMTP=\n' +
+                  'MAIL_FROM=\n' +
+                  'SEND_NOTIFICATIONS=false\n'
+                ;
 
                 fs.writeFileSync(__dirname + '/../server/config.env', envServer, { encoding: 'utf8' });
 

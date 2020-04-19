@@ -10,6 +10,7 @@ import { MdnsModule } from '../mdns/mdns.module';
 import { DeviceStateChangeUpdateWorkerService } from './device-state-change-update-worker.service';
 import { ScheduleWorkerService } from './schedule.service';
 import { AdapterModule } from '../adapters/adapters.module';
+import { WeatherStationNoResultWorkerService } from './weather-stations/weather-station-no-result-worker.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AdapterModule } from '../adapters/adapters.module';
     DeviceStateChangeListenerWorkerService,
     DeviceStateChangeUpdateWorkerService,
     ScheduleWorkerService,
+    WeatherStationNoResultWorkerService,
   ],
 })
 export class WorkersModule {
@@ -35,12 +37,14 @@ export class WorkersModule {
                      private deviceDiscoverService: DevicesUpdateWorkerService,
                      private deviceStateChangeListenerWorkerService: DeviceStateChangeListenerWorkerService,
                      private deviceStateChangeUpdateWorkerService: DeviceStateChangeUpdateWorkerService,
-                     private scheduleWorkerService: ScheduleWorkerService) {
+                     private scheduleWorkerService: ScheduleWorkerService,
+                     private weatherStationNoResultWorkerService: WeatherStationNoResultWorkerService) {
     // this.pingDeviceService.execute();
     this.deviceDiscoverService.execute();
 
     this.deviceStateChangeListenerWorkerService.execute();
     this.deviceStateChangeUpdateWorkerService.execute();
     this.scheduleWorkerService.execute();
+    this.weatherStationNoResultWorkerService.execute();
   }
 }

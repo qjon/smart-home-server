@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { environment } from './environments';
 import { WorkersModule } from './workers/workers.module';
 import { MdnsModule } from './mdns/mdns.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -28,6 +29,13 @@ import { MdnsModule } from './mdns/mdns.module';
     WorkersModule,
 
     MdnsModule,
+
+    MailerModule.forRoot({
+      transport: 'smtps://' + environment.mail.username + ':' + environment.mail.password + '@' + environment.mail.smtp,
+      defaults: {
+        from: environment.mail.from,
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [],
