@@ -63,7 +63,7 @@ export class WeatherStationService {
 
     const findEntities = async (): Promise<WeatherStationDataResponseItem[]> => {
       return Promise.all(data.filter((item: WeatherStationSyncDataInterface) => {
-        return item.time <= currentTimestamp;
+        return item.time <= currentTimestamp && !isNaN(parseInt(item.hum, 10)) && !isNaN(parseInt(item.temp, 10));
       }).map(item => findEntity(item)));
     };
 
@@ -83,7 +83,7 @@ export class WeatherStationService {
   private filterWrongTimestampData(data: WeatherStationSyncDataInterface[], currentTimestamp: number): WeatherStationDataResponseItem[] {
     return data
       .filter((item: WeatherStationSyncDataInterface) => {
-        return item.time > currentTimestamp;
+        return item.time > currentTimestamp || isNaN(parseInt(item.hum, 10)) || isNaN(parseInt(item.temp, 10));
       })
       .map((item: WeatherStationSyncDataInterface) => {
         return {
