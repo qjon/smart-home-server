@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>RiHomeAssistant</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="app/projects/ri-home-assistant/src/favicon.ico">
+</head>
+<body>
+<weather-station-wrapper></weather-station-wrapper>
+
+<script>
+  setTimeout(() => {
+    const element = document.getElementsByTagName('weather-station-wrapper');
+
+    console.log(element);
+    element[0].setConfig({object: 3})
+  }, 200);
+</script>
+</body>
+</html>
