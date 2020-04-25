@@ -1,28 +1,72 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+
+import { ChartType, WeatherStationDataDto, WeatherStationDto, WeatherStationsApi } from '@rign/sh-weather-stations';
 
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { HaWeatherStationsApiModule } from './ha-weather-stations-api.module';
-import { ChartType, WeatherStationDataDto, WeatherStationDto, WeatherStationsApi } from '@rign/sh-weather-stations';
+import { HaEntityModel } from '../models/ha-entity.model';
+import { HaWeatherStationItemConfigModel } from '../models/ha-weather-station-item-config.model';
+
+export type HaEntityStateMap = Map<string, HaEntityModel>;
 
 @Injectable({
   providedIn: HaWeatherStationsApiModule,
 })
-export class HaWeatherStationsApiService implements WeatherStationsApi{
+export class HaWeatherStationsApiService implements WeatherStationsApi {
+  private token: string;
+  private ws: HaWeatherStationItemConfigModel[] = [];
 
   constructor(private httpClient: HttpClient) {
   }
 
-  public getList(): Observable<WeatherStationDto[]> {
-    console.log('LIST LOAD');
-    return this.httpClient.get<WeatherStationDto[]>('/api/weather-stations');
+  public setToken(token: string) {
+    this.token = token;
   }
 
-  public getAggregateData(type: ChartType.Day | ChartType.Week, id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]>;
-  public getAggregateData(type: ChartType.Month, id: number, year: number, month: number): Observable<WeatherStationDataDto[]>;
-  public getAggregateData(type: ChartType.Year, id: number, year: number): Observable<WeatherStationDataDto[]>;
-  public getAggregateData(type: ChartType, id: number, year: number, month?: number, day?: number): Observable<WeatherStationDataDto[]> {
+  public setHaEntities(ws: HaWeatherStationItemConfigModel[]) {
+    this.ws = ws;
+  }
+
+  public getList(): Observable<WeatherStationDto[]> {
+    const headers: HttpHeaders = new HttpHeaders().append('Authorization', 'Bearer ' + this.token);
+
+    return this.httpClient.get<HaEntityModel[]>('/api/states', {headers})
+      .pipe(
+        filter(() => this.ws.length > 0),
+        map((entities: HaEntityModel[]): HaEntityStateMap => {
+          const state: HaEntityStateMap = new Map<string, HaEntityModel>();
+
+          entities.forEach((entity: HaEntityModel) => {
+            state.set(entity.entity_id, entity);
+          });
+
+          return state;
+        }),
+        map((entities: HaEntityStateMap) => {
+          return this.ws.map((ws: HaWeatherStationItemConfigModel): WeatherStationDto => {
+            const statusEntity: HaEntityModel = entities.get(ws.statusEntityId);
+            const tempEntity: HaEntityModel = entities.get(ws.tempEntityId);
+            const humEntity: HaEntityModel = entities.get(ws.humEntityId);
+
+            return {
+              id: statusEntity.entity_id,
+              name: ws.title,
+              humidity: parseFloat(humEntity.state),
+              temperature: parseFloat(tempEntity.state),
+              timestamp: (new Date(statusEntity.last_updated)).getTime()
+            };
+          });
+        }),
+      );
+  }
+
+  public getAggregateData(type: ChartType.Day | ChartType.Week, id: string, year: number, month: number, day: number): Observable<WeatherStationDataDto[]>;
+  public getAggregateData(type: ChartType.Month, id: string, year: number, month: number): Observable<WeatherStationDataDto[]>;
+  public getAggregateData(type: ChartType.Year, id: string, year: number): Observable<WeatherStationDataDto[]>;
+  public getAggregateData(type: ChartType, id: string, year: number, month?: number, day?: number): Observable<WeatherStationDataDto[]> {
     switch (type) {
       case ChartType.Week:
         return this.getAggregateDataForWeek(id, year, month, day);
@@ -35,7 +79,7 @@ export class HaWeatherStationsApiService implements WeatherStationsApi{
     }
   }
 
-  private getAggregateDataForWeek(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]> {
+  private getAggregateDataForWeek(id: string, year: number, month: number, day: number): Observable<WeatherStationDataDto[]> {
     const params = new HttpParams()
       .set('year', year.toString())
       .set('month', month.toString())
@@ -44,7 +88,7 @@ export class HaWeatherStationsApiService implements WeatherStationsApi{
     return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/week`, { params });
   }
 
-  private getAggregateDataForDay(id: number, year: number, month: number, day: number): Observable<WeatherStationDataDto[]> {
+  private getAggregateDataForDay(id: string, year: number, month: number, day: number): Observable<WeatherStationDataDto[]> {
     const params = new HttpParams()
       .set('year', year.toString())
       .set('month', month.toString())
@@ -53,7 +97,7 @@ export class HaWeatherStationsApiService implements WeatherStationsApi{
     return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/day`, { params });
   }
 
-  private getAggregateDataForMonth(id: number, year: number, month: number): Observable<WeatherStationDataDto[]> {
+  private getAggregateDataForMonth(id: string, year: number, month: number): Observable<WeatherStationDataDto[]> {
     const params = new HttpParams()
       .set('year', year.toString())
       .set('month', month.toString());
@@ -61,7 +105,7 @@ export class HaWeatherStationsApiService implements WeatherStationsApi{
     return this.httpClient.get<WeatherStationDataDto[]>(`/api/weather-stations/${id}/data/month`, { params });
   }
 
-  private getAggregateDataForYear(id: number, year: number): Observable<WeatherStationDataDto[]> {
+  private getAggregateDataForYear(id: string, year: number): Observable<WeatherStationDataDto[]> {
     const params = new HttpParams()
       .set('year', year.toString());
 

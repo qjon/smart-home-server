@@ -37,9 +37,9 @@ export class WeatherStationCompareButtonsComponent extends Destroyable implement
 
   public isLimit$: Observable<boolean>;
 
-  public isAllowedCompare: boolean = true;
+  private weatherStationId: string;
 
-  private weatherStationId: number;
+  public isAllowedCompare: boolean = true;
 
   constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
               @Inject(WEATHER_STATION_CONFIGURATION) private wsConfiguration: WeatherStationConfigurationModel) {
@@ -64,11 +64,11 @@ export class WeatherStationCompareButtonsComponent extends Destroyable implement
     this.toggleCompare.emit(!this.isCompare);
   }
 
-  public addToCompare(id: number) {
+  public addToCompare(id: string) {
     this.weatherStationsStateConnectorService.addWeatherStationToCompare(id, this.chartType, this.date);
   }
 
-  public removeFromCompare(id: number) {
+  public removeFromCompare(id: string) {
     this.weatherStationsStateConnectorService.removeWeatherStationFromCompare(id);
   }
 }

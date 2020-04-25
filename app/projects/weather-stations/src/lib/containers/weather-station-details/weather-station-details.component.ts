@@ -101,7 +101,7 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
         filter(() => !this.isCompareMode),
         takeUntil(this.destroy$),
       )
-      .subscribe(([val, date, chartType]: [number, Date, ChartType]) => {
+      .subscribe(([val, date, chartType]: [string, Date, ChartType]) => {
         this.loadDataByChartType(chartType, date);
       });
 

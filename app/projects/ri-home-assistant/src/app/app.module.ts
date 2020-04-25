@@ -1,17 +1,22 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, DoBootstrap, Injector, NgModule } from '@angular/core';
 
+import { WEATHER_STATIONS_API } from '@rign/sh-weather-stations';
+
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+
 import { HomeAssistantComponentModel } from './models/home-assistant-component.model';
 import { HomeAssistantHassModel } from './models/home-assistant-hass.model';
 import { HomeAssistantConfigModel } from './models/home-assistant-config.model';
 import { AppRoutingModule } from './app-routing.module';
-import { EffectsModule } from '@ngrx/effects';
-import { SimpleNotificationsModule } from 'angular2-notifications';
-import { StoreModule } from '@ngrx/store';
 import { WeatherStationWrapperComponent } from './elements-modules/ha-weather-stations/components/weather-station-wrapper/weather-station-wrapper.component';
 import { HaWeatherStationsModule } from './elements-modules/ha-weather-stations/ha-weather-stations.module';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../../../../src/environments/environment';
+import { HaWeatherStationConfigModel } from './elements-modules/ha-weather-stations/models/ha-weather-station-config.model';
+import { HaWeatherStationsApiService } from './elements-modules/ha-weather-stations/api/ha-weather-stations-api.service';
 
 @NgModule({
   imports: [
@@ -38,20 +43,40 @@ export class AppModule implements DoBootstrap {
   }
 
   public ngDoBootstrap(): void {
-    const weatherStationWrapper = customElementPlease(WeatherStationWrapperComponent, this.injector);
+    const weatherStationWrapper = customElementPlease<HaWeatherStationConfigModel>(
+      WeatherStationWrapperComponent,
+      this.injector,
+      this.weatherStationSetApiConfig.bind(this),
+      this.weatherStationSetApiToken.bind(this),
+    );
 
     customElements.define('weather-station-wrapper', weatherStationWrapper);
   }
+
+  private weatherStationSetApiConfig(config: HaWeatherStationConfigModel): void {
+    (this.injector.get(WEATHER_STATIONS_API) as HaWeatherStationsApiService).setHaEntities(config.ws);
+  }
+
+  private weatherStationSetApiToken(hass: HomeAssistantHassModel): void {
+    (this.injector.get(WEATHER_STATIONS_API) as HaWeatherStationsApiService).setToken(hass.auth.data.access_token);
+  }
 }
 
-function customElementPlease(component, injector) {
+function customElementPlease<T extends HomeAssistantConfigModel>(component,
+                                                                 injector,
+                                                                 configCallback: (config: T) => void = (config: T) => {
+                                                                 },
+                                                                 hassCallback: (hass: HomeAssistantHassModel) => void = (hass: HomeAssistantHassModel) => {
+                                                                 }) {
   class NgElement extends HTMLElement {
-    private componentRef: ComponentRef<HomeAssistantComponentModel>;
-    private _config: HomeAssistantConfigModel;
+    private componentRef: ComponentRef<HomeAssistantComponentModel<T>>;
+    private _config: T;
     private _hass: HomeAssistantHassModel;
 
     public set hass(hass: HomeAssistantHassModel) {
       this._hass = hass;
+
+      hassCallback(hass);
 
       this.updateHass();
     }
@@ -60,8 +85,9 @@ function customElementPlease(component, injector) {
       super();
     }
 
-    public setConfig(config: HomeAssistantConfigModel): void {
+    public setConfig(config: T): void {
       this._config = config;
+      configCallback(config);
 
       this.initConfig();
     }
@@ -121,12 +147,4 @@ function initializeComponent(element, component, injector) {
   applicationRef.attachView(componentRef.hostView);
 
   return componentRef;
-}
-
-function loadCSS(url) {
-  const link = document.createElement('link');
-  link.type = 'text/css';
-  link.rel = 'stylesheet';
-  link.href = url;
-  document.head.appendChild(link);
 }

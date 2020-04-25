@@ -38,12 +38,12 @@ export class WeatherStationsLoadSuccessAction implements Action {
 export class WeatherStationLoadAggregateDataAction implements Action {
   readonly type = WeatherStationsActionTypes.LoadStationAggregatedData;
 
-  public readonly payload: { type: ChartType, weatherStationId: number, year: number, month?: number, day?: number };
+  public readonly payload: { type: ChartType, weatherStationId: string, year: number, month?: number, day?: number };
 
-  constructor(type: ChartType.Day | ChartType.Week, weatherStationId: number, year: number, month: number, day: number);
-  constructor(type: ChartType.Month, weatherStationId: number, year: number, month: number);
-  constructor(type: ChartType.Year, weatherStationId: number, year: number);
-  constructor(type: ChartType, weatherStationId: number, year: number, month?: number, day?: number) {
+  constructor(type: ChartType.Day | ChartType.Week, weatherStationId: string, year: number, month: number, day: number);
+  constructor(type: ChartType.Month, weatherStationId: string, year: number, month: number);
+  constructor(type: ChartType.Year, weatherStationId: string, year: number);
+  constructor(type: ChartType, weatherStationId: string, year: number, month?: number, day?: number) {
     this.payload = {
       type,
       weatherStationId,
@@ -66,17 +66,17 @@ export class WeatherStationLoadAggregateDataSuccessAction implements Action {
 
   public readonly payload: {
     type: ChartType,
-    weatherStationId: number,
+    weatherStationId: string,
     year: number,
     month?: number,
     day?: number,
     items: WeatherStationDataDto[],
   };
 
-  constructor(type: ChartType.Day | ChartType.Week, weatherStationId: number, items: WeatherStationDataDto[], year: number, month: number, day: number);
-  constructor(type: ChartType.Month, weatherStationId: number, items: WeatherStationDataDto[], year: number, month: number);
-  constructor(type: ChartType.Year, weatherStationId: number, items: WeatherStationDataDto[], year: number);
-  constructor(type: ChartType, weatherStationId: number, items: WeatherStationDataDto[], year: number, month?: number, day?: number) {
+  constructor(type: ChartType.Day | ChartType.Week, weatherStationId: string, items: WeatherStationDataDto[], year: number, month: number, day: number);
+  constructor(type: ChartType.Month, weatherStationId: string, items: WeatherStationDataDto[], year: number, month: number);
+  constructor(type: ChartType.Year, weatherStationId: string, items: WeatherStationDataDto[], year: number);
+  constructor(type: ChartType, weatherStationId: string, items: WeatherStationDataDto[], year: number, month?: number, day?: number) {
     this.payload = {
       type,
       weatherStationId,
@@ -91,14 +91,14 @@ export class WeatherStationLoadAggregateDataSuccessAction implements Action {
 export class WeatherStationCompareAddAction implements Action {
   readonly type = WeatherStationsActionTypes.CompareAdd;
 
-  constructor(public payload: { weatherStationId: number, type: ChartType, date: Date }) {
+  constructor(public payload: { weatherStationId: string, type: ChartType, date: Date }) {
   }
 }
 
 export class WeatherStationCompareAddSuccessAction implements Action {
   readonly type = WeatherStationsActionTypes.CompareAddSuccess;
 
-  constructor(public payload: { weatherStationId: number, data: WeatherStationDataDto[] }) {
+  constructor(public payload: { weatherStationId: string, data: WeatherStationDataDto[] }) {
   }
 }
 
@@ -109,14 +109,14 @@ export class WeatherStationCompareEndAction implements Action {
 export class WeatherStationCompareRemoveAction implements Action {
   readonly type = WeatherStationsActionTypes.CompareRemove;
 
-  constructor(public payload: { weatherStationId: number }) {
+  constructor(public payload: { weatherStationId: string }) {
   }
 }
 
 export class WeatherStationCompareStartAction implements Action {
   readonly type = WeatherStationsActionTypes.CompareStart;
 
-  constructor(public payload: { weatherStationId: number }) {
+  constructor(public payload: { weatherStationId: string }) {
   }
 }
 

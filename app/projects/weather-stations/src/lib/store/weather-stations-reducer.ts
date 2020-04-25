@@ -3,10 +3,10 @@ import { WeatherStationDataDto } from '../interfaces/weather-station-data-dto';
 import { WeatherStationsActions, WeatherStationsActionTypes } from './weather-stations-actions';
 
 export interface WeatherStationsState {
-  stations: { [key: number]: WeatherStationDto };
-  ids: number[];
+  stations: { [key: string]: WeatherStationDto };
+  ids: string[];
   data: WeatherStationDataDto[];
-  compare: {[key: number]: WeatherStationDataDto[]};
+  compare: {[key: string]: WeatherStationDataDto[]};
 }
 
 export const emptyWeatherStationsState: WeatherStationsState = {
@@ -30,7 +30,7 @@ export function weatherStationReducer(state: WeatherStationsState = emptyWeather
       };
     case WeatherStationsActionTypes.LoadStationsSuccess:
       const stations: { [key: number]: WeatherStationDto } = {};
-      const ids: number[] = [];
+      const ids: string[] = [];
 
       action.payload.items.forEach((item: WeatherStationDto) => {
         const id = item.id;
@@ -56,7 +56,7 @@ export function weatherStationReducer(state: WeatherStationsState = emptyWeather
       };
 
     case WeatherStationsActionTypes.CompareRemove:
-      const compare: {[key: number]: WeatherStationDataDto[]} = {...state.compare};
+      const compare: {[key: string]: WeatherStationDataDto[]} = {...state.compare};
       delete compare[action.payload.weatherStationId];
 
       return {

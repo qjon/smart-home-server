@@ -9,15 +9,33 @@
   <link rel="icon" type="image/x-icon" href="app/projects/ri-home-assistant/src/favicon.ico">
 </head>
 <body>
-<weather-station-wrapper></weather-station-wrapper>
 
 <script>
   setTimeout(() => {
-    const element = document.getElementsByTagName('weather-station-wrapper');
+    const element = document.createElement('weather-station-wrapper');
+    document.body.append(element);
 
     console.log(element);
-    element[0].setConfig({object: 3})
-  }, 1000);
+    element.setConfig({
+      type: 'custom:weather-station-wrapper',
+      ws: [
+        {
+          humEntityId: 'sensor.testowy_czujnik_temperatury_dht11_humidity',
+          statusEntityId: 'sensor.testowy_czujnik_temperatury_status',
+          tempEntityId: 'sensor.testowy_czujnik_temperatury_dht11_temperature',
+          title: 'Sypialnia',
+        },
+      ],
+    });
+
+    element.hass = {
+      auth: {
+        data: {
+          access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4MjhiYzc2ODc0ZTQ0MTg3OTEyNmUxYjNhZjY1MGMwYiIsImlhdCI6MTU4NzcxNzU2MCwiZXhwIjoxOTAzMDc3NTYwfQ.98FNy2zSXwKeFtmUxUmmV0ftMZF04t4iVU-0ytMxunA',
+        },
+      },
+    };
+  }, 140);
 </script>
 </body>
 </html>

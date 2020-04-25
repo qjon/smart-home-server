@@ -14,7 +14,7 @@
     "deploy": "rm -rf dist-projects && npm run build:core && npm run build:weather-stations && npm run build:server && npm run build:app && node scripts/post-deploy.js",
     "lint:server": "tslint -p tsconfig.json -c tslint.json",
     "start:app": "npm run timestamp && cd app && ng serve --proxy-config proxy.config.json",
-    "start:app:ha": "cd app && ng serve --project=ri-home-assistant --proxy-config proxy.config.json",
+    "start:app:ha": "cd app && ng serve --project=ri-home-assistant --proxy-config proxy-ha.config.json",
     "start:server": "cd server && nodemon",
     "start": "concurrently \"npm run start:app\" \"npm run start:server\" ",
     "timestamp": "node scripts/timestamp.js",

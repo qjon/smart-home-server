@@ -1,5 +1,5 @@
 export interface CompareWeatherStationButton {
-  id: number;
+  id: string;
   name: string;
   isAdded: boolean;
 }

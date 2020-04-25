@@ -44,7 +44,7 @@ export class WeatherStationDetailsChartComponent extends Destroyable implements 
 
   public chart: Chart;
 
-  private weatherStationId: number;
+  private weatherStationId: string;
 
   constructor(private weatherStationChartDataParserService: WeatherStationChartDataParserService,
               private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
@@ -60,7 +60,7 @@ export class WeatherStationDetailsChartComponent extends Destroyable implements 
         map((weatherStation: WeatherStationDataDto) => weatherStation.id),
         takeUntil(this.destroy$),
       )
-      .subscribe((weatherStationId: number) => this.weatherStationId = weatherStationId);
+      .subscribe((weatherStationId: string) => this.weatherStationId = weatherStationId);
 
     this.listenOnChartDataChange();
     this.listenOnRefresh();

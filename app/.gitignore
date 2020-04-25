@@ -38,6 +38,7 @@ testem.log
 .DS_Store
 Thumbs.db
 /proxy.config.json
+/proxy-ha.config.json
 /.editorconfig
 /package-lock.json
 /src/environments/environment.prod.ts

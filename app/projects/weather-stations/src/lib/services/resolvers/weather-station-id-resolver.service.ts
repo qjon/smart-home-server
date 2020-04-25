@@ -6,13 +6,13 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 @Injectable({
   providedIn: WeatherStationsServicesModule,
 })
-export class WeatherStationIdResolverService implements Resolve<number> {
+export class WeatherStationIdResolverService implements Resolve<string> {
 
   constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService) {
   }
 
-  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): number {
-    const weatherStationId: number = parseInt(route.paramMap.get('weatherStationId'), 10);
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): string {
+    const weatherStationId: string = route.paramMap.get('weatherStationId');
 
     this.weatherStationsStateConnectorService.setWeatherStationId(weatherStationId);
 
