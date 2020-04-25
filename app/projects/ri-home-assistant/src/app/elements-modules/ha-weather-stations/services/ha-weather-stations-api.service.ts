@@ -1,23 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { ChartType, WeatherStationDataDto, WeatherStationDto, WeatherStationsApi } from '@rign/sh-weather-stations';
 
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 
-import { HaWeatherStationsApiModule } from './ha-weather-stations-api.module';
-import { HaEntityModel } from '../models/ha-entity.model';
-import { HaWeatherStationItemConfigModel } from '../models/ha-weather-station-item-config.model';
-
-export type HaEntityStateMap = Map<string, HaEntityModel>;
+import { HaWeatherStationsServicesModule } from './ha-weather-stations-services.module';
 
 @Injectable({
-  providedIn: HaWeatherStationsApiModule,
+  providedIn: HaWeatherStationsServicesModule,
 })
 export class HaWeatherStationsApiService implements WeatherStationsApi {
   private token: string;
-  private ws: HaWeatherStationItemConfigModel[] = [];
 
   constructor(private httpClient: HttpClient) {
   }
@@ -26,41 +20,10 @@ export class HaWeatherStationsApiService implements WeatherStationsApi {
     this.token = token;
   }
 
-  public setHaEntities(ws: HaWeatherStationItemConfigModel[]) {
-    this.ws = ws;
-  }
-
   public getList(): Observable<WeatherStationDto[]> {
-    const headers: HttpHeaders = new HttpHeaders().append('Authorization', 'Bearer ' + this.token);
+    // const headers: HttpHeaders = new HttpHeaders().append('Authorization', 'Bearer ' + this.token);
 
-    return this.httpClient.get<HaEntityModel[]>('/api/states', {headers})
-      .pipe(
-        filter(() => this.ws.length > 0),
-        map((entities: HaEntityModel[]): HaEntityStateMap => {
-          const state: HaEntityStateMap = new Map<string, HaEntityModel>();
-
-          entities.forEach((entity: HaEntityModel) => {
-            state.set(entity.entity_id, entity);
-          });
-
-          return state;
-        }),
-        map((entities: HaEntityStateMap) => {
-          return this.ws.map((ws: HaWeatherStationItemConfigModel): WeatherStationDto => {
-            const statusEntity: HaEntityModel = entities.get(ws.statusEntityId);
-            const tempEntity: HaEntityModel = entities.get(ws.tempEntityId);
-            const humEntity: HaEntityModel = entities.get(ws.humEntityId);
-
-            return {
-              id: statusEntity.entity_id,
-              name: ws.title,
-              humidity: parseFloat(humEntity.state),
-              temperature: parseFloat(tempEntity.state),
-              timestamp: (new Date(statusEntity.last_updated)).getTime()
-            };
-          });
-        }),
-      );
+    return throwError('not need to be implemented');
   }
 
   public getAggregateData(type: ChartType.Day | ChartType.Week, id: string, year: number, month: number, day: number): Observable<WeatherStationDataDto[]>;

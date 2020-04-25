@@ -10,3 +10,4 @@ export * from './lib/interfaces/weather-station-dto';
 export * from './lib/interfaces/weather-station-state-connector.interface';
 export * from './lib/interfaces/weather-stations-api';
 export * from './lib/interfaces/weather-station-configuration.model';
+export * from './lib/store/weather-stations-actions';

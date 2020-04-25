@@ -4,9 +4,9 @@ import { RouterModule } from '@angular/router';
 
 import { WEATHER_STATIONS_API, WeatherStationsModule } from '@rign/sh-weather-stations';
 
-import { HaWeatherStationsApiModule } from './api/ha-weather-stations-api.module';
 import { WeatherStationWrapperComponent } from './components/weather-station-wrapper/weather-station-wrapper.component';
-import { HaWeatherStationsApiService } from './api/ha-weather-stations-api.service';
+import { HaWeatherStationsApiService } from './services/ha-weather-stations-api.service';
+import { HaWeatherStationsServicesModule } from './services/ha-weather-stations-services.module';
 
 
 @NgModule({
@@ -21,7 +21,7 @@ import { HaWeatherStationsApiService } from './api/ha-weather-stations-api.servi
   ],
   imports: [
     CommonModule,
-    HaWeatherStationsApiModule,
+    HaWeatherStationsServicesModule,
     RouterModule,
     WeatherStationsModule
   ],

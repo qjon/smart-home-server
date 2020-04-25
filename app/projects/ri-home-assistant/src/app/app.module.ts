@@ -1,14 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ApplicationRef, ComponentFactoryResolver, ComponentRef, DoBootstrap, Injector, NgModule } from '@angular/core';
-
-import { WEATHER_STATIONS_API } from '@rign/sh-weather-stations';
+import {
+  ApplicationRef,
+  ComponentFactoryResolver,
+  ComponentRef,
+  DoBootstrap,
+  Injector,
+  NgModule,
+} from '@angular/core';
 
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
-import { HomeAssistantComponentModel } from './models/home-assistant-component.model';
+import { HomeAssistantAdapterModel } from './models/home-assistant-adapter.model';
 import { HomeAssistantHassModel } from './models/home-assistant-hass.model';
 import { HomeAssistantConfigModel } from './models/home-assistant-config.model';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,7 +21,7 @@ import { WeatherStationWrapperComponent } from './elements-modules/ha-weather-st
 import { HaWeatherStationsModule } from './elements-modules/ha-weather-stations/ha-weather-stations.module';
 import { environment } from '../../../../src/environments/environment';
 import { HaWeatherStationConfigModel } from './elements-modules/ha-weather-stations/models/ha-weather-station-config.model';
-import { HaWeatherStationsApiService } from './elements-modules/ha-weather-stations/api/ha-weather-stations-api.service';
+import { HaWeatherStationAdapterService } from './elements-modules/ha-weather-stations/services/ha-weather-station-adapter.service';
 
 @NgModule({
   imports: [
@@ -54,11 +59,11 @@ export class AppModule implements DoBootstrap {
   }
 
   private weatherStationSetApiConfig(config: HaWeatherStationConfigModel): void {
-    (this.injector.get(WEATHER_STATIONS_API) as HaWeatherStationsApiService).setHaEntities(config.ws);
+    this.injector.get(HaWeatherStationAdapterService).setConfig(config);
   }
 
   private weatherStationSetApiToken(hass: HomeAssistantHassModel): void {
-    (this.injector.get(WEATHER_STATIONS_API) as HaWeatherStationsApiService).setToken(hass.auth.data.access_token);
+    this.injector.get(HaWeatherStationAdapterService).setHass(hass);
   }
 }
 
@@ -69,16 +74,10 @@ function customElementPlease<T extends HomeAssistantConfigModel>(component,
                                                                  hassCallback: (hass: HomeAssistantHassModel) => void = (hass: HomeAssistantHassModel) => {
                                                                  }) {
   class NgElement extends HTMLElement {
-    private componentRef: ComponentRef<HomeAssistantComponentModel<T>>;
-    private _config: T;
-    private _hass: HomeAssistantHassModel;
+    private componentRef: ComponentRef<HomeAssistantAdapterModel<T>>;
 
     public set hass(hass: HomeAssistantHassModel) {
-      this._hass = hass;
-
       hassCallback(hass);
-
-      this.updateHass();
     }
 
     constructor() {
@@ -86,10 +85,7 @@ function customElementPlease<T extends HomeAssistantConfigModel>(component,
     }
 
     public setConfig(config: T): void {
-      this._config = config;
       configCallback(config);
-
-      this.initConfig();
     }
 
     public getCardSize(): number {
@@ -97,33 +93,8 @@ function customElementPlease<T extends HomeAssistantConfigModel>(component,
     }
 
     public connectedCallback(): void {
-      if (!this.componentRef) {
-        this.componentRef = initializeComponent(this, component, injector);
-
-        this.initConfig();
-        this.updateHass();
-      }
-    }
-
-    public attributeChangedCallback(attrName, oldValue, newValue): void {
-      if (!this.componentRef) {
-        this.componentRef = initializeComponent(this, component, injector);
-
-        this.initConfig();
-        this.updateHass();
-      }
-    }
-
-    private initConfig(): void {
-      if (this._config && this.componentRef) {
-        this.componentRef.instance.config = this._config;
-      }
-    }
-
-    private updateHass(): void {
-      if (this._hass && this.componentRef) {
-        this.componentRef.instance.hass = this._hass;
-      }
+      console.log('connected')
+      initializeComponent(this, component, injector);
     }
   }
 
@@ -136,12 +107,10 @@ function getComponentFactory(component, injector) {
 }
 
 function initializeComponent(element, component, injector) {
-  console.log('init Component');
-
   const childInjector = Injector.create({ providers: [], parent: injector });
   const componentFactory = getComponentFactory(component, injector);
   const projectableNodes = [];
-  let componentRef = componentFactory.create(childInjector, projectableNodes, element);
+  const componentRef = componentFactory.create(childInjector, projectableNodes, element);
   componentRef.changeDetectorRef.detectChanges();
   const applicationRef = injector.get(ApplicationRef);
   applicationRef.attachView(componentRef.hostView);

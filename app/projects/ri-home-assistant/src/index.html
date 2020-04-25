@@ -11,8 +11,362 @@
 <body>
 
 <script>
+  let element;
+  const hass = {
+    auth: {
+      data: {
+        access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4MjhiYzc2ODc0ZTQ0MTg3OTEyNmUxYjNhZjY1MGMwYiIsImlhdCI6MTU4NzcxNzU2MCwiZXhwIjoxOTAzMDc3NTYwfQ.98FNy2zSXwKeFtmUxUmmV0ftMZF04t4iVU-0ytMxunA',
+      },
+    },
+    states: {
+      'sun.sun': {
+        'entity_id': 'sun.sun',
+        'state': 'above_horizon',
+        'attributes': {
+          'next_dawn': '2020-04-26T02:57:22+00:00',
+          'next_dusk': '2020-04-25T18:40:21+00:00',
+          'next_midnight': '2020-04-25T22:49:43+00:00',
+          'next_noon': '2020-04-26T10:49:46+00:00',
+          'next_rising': '2020-04-26T03:34:15+00:00',
+          'next_setting': '2020-04-25T18:03:39+00:00',
+          'elevation': 16.15,
+          'azimuth': 272.01,
+          'rising': false,
+          'friendly_name': 'Sun',
+        },
+        'last_changed': '2020-04-25T09:38:16.219061+00:00',
+        'last_updated': '2020-04-25T16:14:41.002780+00:00',
+        'context': { 'id': '0dcb8edac0a04b32bc5fcf354cbf26a8', 'parent_id': null, 'user_id': null },
+      },
+      'script.1587582224383': {
+        'entity_id': 'script.1587582224383',
+        'state': 'off',
+        'attributes': { 'last_triggered': null, 'friendly_name': 'Turn OFF google' },
+        'last_changed': '2020-04-25T09:38:16.277506+00:00',
+        'last_updated': '2020-04-25T09:38:16.277506+00:00',
+        'context': { 'id': 'bd55208c120747ba894368e162ced60f', 'parent_id': null, 'user_id': null },
+      },
+      'zone.home': {
+        'entity_id': 'zone.home',
+        'state': 'zoning',
+        'attributes': {
+          'hidden': true,
+          'latitude': 51.10470760389893,
+          'longitude': 17.008091211318973,
+          'radius': 100,
+          'passive': false,
+          'editable': true,
+          'friendly_name': 'Dom',
+          'icon': 'mdi:home',
+        },
+        'last_changed': '2020-04-25T09:38:16.537249+00:00',
+        'last_updated': '2020-04-25T09:38:16.537249+00:00',
+        'context': { 'id': '4d4a3baae17e447baf69d3282e166666', 'parent_id': null, 'user_id': null },
+      },
+      'media_player.samsung_ue43ku6072': {
+        'entity_id': 'media_player.samsung_ue43ku6072',
+        'state': 'off',
+        'attributes': {
+          'source_list': ['TV', 'HDMI'],
+          'friendly_name': 'Samsung UE43KU6072',
+          'supported_features': 20281,
+          'device_class': 'tv',
+        },
+        'last_changed': '2020-04-25T12:52:44.008458+00:00',
+        'last_updated': '2020-04-25T12:52:44.008458+00:00',
+        'context': { 'id': '6f3fe79c860c41898817ed675057b091', 'parent_id': null, 'user_id': null },
+      },
+      'person.rafal': {
+        'entity_id': 'person.rafal',
+        'state': 'unknown',
+        'attributes': {
+          'editable': true,
+          'id': 'rafal',
+          'user_id': '1175819ad9b041fa9063eb6031016aad',
+          'friendly_name': 'Rafał',
+        },
+        'last_changed': '2020-04-25T09:38:16.576854+00:00',
+        'last_updated': '2020-04-25T09:38:18.287317+00:00',
+        'context': { 'id': '9d7c1bbf17d444138684e933cabde789', 'parent_id': null, 'user_id': null },
+      },
+      'automation.nowa_automatyzacja': {
+        'entity_id': 'automation.nowa_automatyzacja',
+        'state': 'on',
+        'attributes': {
+          'last_triggered': '2020-04-22T19:20:58.748792+00:00',
+          'id': '1587582975656',
+          'friendly_name': 'Nowa automatyzacja',
+        },
+        'last_changed': '2020-04-25T09:38:16.577119+00:00',
+        'last_updated': '2020-04-25T09:38:16.577119+00:00',
+        'context': { 'id': '204d82bc80544b75a0051c006608bf94', 'parent_id': null, 'user_id': null },
+      },
+      'automation.nowa_automatyzacja_2': {
+        'entity_id': 'automation.nowa_automatyzacja_2',
+        'state': 'on',
+        'attributes': {
+          'last_triggered': '2020-04-23T19:28:31.674458+00:00',
+          'id': '1587666116451',
+          'friendly_name': 'Nowa automatyzacja',
+        },
+        'last_changed': '2020-04-25T09:38:16.577379+00:00',
+        'last_updated': '2020-04-25T09:38:16.577379+00:00',
+        'context': { 'id': 'db57bd6f71d94caa8fcda54b319d7f4f', 'parent_id': null, 'user_id': null },
+      },
+      'binary_sensor.drzwi_wejsciowe': {
+        'entity_id': 'binary_sensor.drzwi_wejsciowe',
+        'state': 'off',
+        'attributes': { 'friendly_name': 'Drzwi wejściowe', 'device_class': 'door' },
+        'last_changed': '2020-04-25T09:38:16.582335+00:00',
+        'last_updated': '2020-04-25T09:38:16.582335+00:00',
+        'context': { 'id': '9bb535791a1d4e5098ce0e99f8027f4e', 'parent_id': null, 'user_id': null },
+      },
+      'sensor.testowy_czujnik_temperatury_dht11_temperature': {
+        'entity_id': 'sensor.testowy_czujnik_temperatury_dht11_temperature',
+        'state': '24.2',
+        'attributes': {
+          'unit_of_measurement': '°C',
+          'friendly_name': 'Testowy czujnik temperatury DHT11 Temperature',
+          'device_class': 'temperature',
+        },
+        'last_changed': '2020-04-25T16:15:12.423611+00:00',
+        'last_updated': '2020-04-25T16:15:12.423611+00:00',
+        'context': { 'id': '561b0332a28445de826f236605b6d403', 'parent_id': null, 'user_id': null },
+      },
+      'sensor.testowy_czujnik_temperatury_dht11_humidity': {
+        'entity_id': 'sensor.testowy_czujnik_temperatury_dht11_humidity',
+        'state': '49.0',
+        'attributes': {
+          'unit_of_measurement': '%',
+          'friendly_name': 'Testowy czujnik temperatury DHT11 Humidity',
+          'device_class': 'humidity',
+        },
+        'last_changed': '2020-04-25T16:15:12.423845+00:00',
+        'last_updated': '2020-04-25T16:15:12.423845+00:00',
+        'context': { 'id': 'cab2e076c9e94392a9f9af326bb7cba5', 'parent_id': null, 'user_id': null },
+      },
+      'sensor.testowy_czujnik_temperatury_dht11_dewpoint': {
+        'entity_id': 'sensor.testowy_czujnik_temperatury_dht11_dewpoint',
+        'state': '12.8',
+        'attributes': {
+          'unit_of_measurement': '°C',
+          'friendly_name': 'Testowy czujnik temperatury DHT11 DewPoint',
+          'icon': 'mdi:weather-rainy',
+        },
+        'last_changed': '2020-04-25T16:15:12.424027+00:00',
+        'last_updated': '2020-04-25T16:15:12.424027+00:00',
+        'context': { 'id': '03bf384ca2f848f193b4a89527bec244', 'parent_id': null, 'user_id': null },
+      },
+      'sensor.testowy_czujnik_temperatury_status': {
+        'entity_id': 'sensor.testowy_czujnik_temperatury_status',
+        'state': '68',
+        'attributes': {
+          'Version': '8.2.0(tasmota)',
+          'BuildDateTime': '2020-03-20T15:01:50',
+          'Core': 'STAGE',
+          'SDK': '2.2.2-dev(38a443e)',
+          'Module': 'Generic',
+          'RestartReason': 'Power On',
+          'Uptime': '0T09:45:02',
+          'WiFi LinkCount': 1,
+          'WiFi Downtime': '0T00:00:08',
+          'MqttCount': 1,
+          'BootCount': 20,
+          'SaveCount': 36,
+          'IPAddress': '192.168.100.150',
+          'RSSI': '68',
+          'LoadAvg': 19,
+          'unit_of_measurement': '%',
+          'friendly_name': 'Testowy czujnik temperatury status',
+          'icon': 'mdi:information-outline',
+        },
+        'last_changed': '2020-04-25T16:09:49.392667+00:00',
+        'last_updated': '2020-04-25T16:14:49.385943+00:00',
+        'context': { 'id': '340f98352c164097a74cf7b64e56902c', 'parent_id': null, 'user_id': null },
+      },
+      'media_player.storm': {
+        'entity_id': 'media_player.storm',
+        'state': 'off',
+        'attributes': { 'friendly_name': 'Storm', 'supported_features': 21389 },
+        'last_changed': '2020-04-25T09:38:17.151004+00:00',
+        'last_updated': '2020-04-25T09:38:17.151004+00:00',
+        'context': { 'id': '15544d35a2574d77a3b0d251daed1b49', 'parent_id': null, 'user_id': null },
+      },
+      'media_player.thunder': {
+        'entity_id': 'media_player.thunder',
+        'state': 'off',
+        'attributes': { 'friendly_name': 'Thunder', 'supported_features': 21389 },
+        'last_changed': '2020-04-25T09:38:17.159398+00:00',
+        'last_updated': '2020-04-25T09:38:17.159398+00:00',
+        'context': { 'id': '67bac1c3c4b2440ebc2d0f1369f65355', 'parent_id': null, 'user_id': null },
+      },
+      'media_player.lightning': {
+        'entity_id': 'media_player.lightning',
+        'state': 'off',
+        'attributes': { 'friendly_name': 'Lightning', 'supported_features': 21389 },
+        'last_changed': '2020-04-25T09:38:17.151374+00:00',
+        'last_updated': '2020-04-25T09:38:17.151374+00:00',
+        'context': { 'id': 'd349610f948e4d49a2254c4cc421adc0', 'parent_id': null, 'user_id': null },
+      },
+      'binary_sensor.updater': {
+        'entity_id': 'binary_sensor.updater',
+        'state': 'on',
+        'attributes': {
+          'release_notes': 'https://www.home-assistant.io/latest-release-notes/',
+          'newest_version': '0.108.9',
+          'friendly_name': 'Updater',
+        },
+        'last_changed': '2020-04-25T09:38:17.120790+00:00',
+        'last_updated': '2020-04-25T09:38:17.120790+00:00',
+        'context': { 'id': 'fedff8bf2f684bc8940342a4153f98cb', 'parent_id': null, 'user_id': null },
+      },
+      'weather.dom': {
+        'entity_id': 'weather.dom',
+        'state': 'partlycloudy',
+        'attributes': {
+          'temperature': 13.7,
+          'humidity': 38,
+          'pressure': 1008.7,
+          'wind_bearing': 339.6,
+          'wind_speed': 20.5,
+          'attribution': 'Weather forecast from met.no, delivered by the Norwegian Meteorological Institute.',
+          'forecast': [{
+            'datetime': '2020-04-26T12:00:00+02:00',
+            'temperature': 14.7,
+            'condition': 'cloudy',
+            'pressure': 1011.7,
+            'humidity': 36.3,
+            'wind_speed': 10.1,
+            'wind_bearing': 301.9,
+          }, {
+            'datetime': '2020-04-27T12:00:00+02:00',
+            'temperature': 18.6,
+            'condition': 'sunny',
+            'pressure': 1011,
+            'humidity': 28.4,
+            'wind_speed': 8.3,
+            'wind_bearing': 181.8,
+          }, {
+            'datetime': '2020-04-28T12:00:00+02:00',
+            'temperature': 24.5,
+            'condition': 'partlycloudy',
+            'pressure': 1005.1,
+            'humidity': 24.5,
+            'wind_speed': 12.2,
+            'wind_bearing': 227.4,
+          }, {
+            'datetime': '2020-04-29T12:00:00+02:00',
+            'temperature': 17.8,
+            'condition': 'rainy',
+            'pressure': 1002.9,
+            'humidity': 68.9,
+            'wind_speed': 20.2,
+            'wind_bearing': 287.9,
+          }, {
+            'datetime': '2020-04-30T12:00:00+02:00',
+            'temperature': 19.6,
+            'condition': 'partlycloudy',
+            'pressure': 1003.5,
+            'humidity': 48,
+            'wind_speed': 7.9,
+            'wind_bearing': 207.3,
+          }],
+          'friendly_name': 'Dom',
+        },
+        'last_changed': '2020-04-25T15:30:23.734335+00:00',
+        'last_updated': '2020-04-25T15:30:23.734335+00:00',
+        'context': { 'id': '5db5f1f151e4486b9deb5a1b55fbefb3', 'parent_id': null, 'user_id': null },
+      },
+      'binary_sensor.sonoff_bridge_rf_button1': {
+        'entity_id': 'binary_sensor.sonoff_bridge_rf_button1',
+        'state': 'unavailable',
+        'attributes': { 'restored': true, 'supported_features': 0, 'friendly_name': 'Sonoff Bridge RF Button1' },
+        'last_changed': '2020-04-25T09:38:18.286439+00:00',
+        'last_updated': '2020-04-25T09:38:18.286439+00:00',
+        'context': { 'id': 'af7924181608402485284309f4d7f89a', 'parent_id': null, 'user_id': null },
+      },
+      'sensor.sonoff_bridge_rf_status': {
+        'entity_id': 'sensor.sonoff_bridge_rf_status',
+        'state': 'unavailable',
+        'attributes': {
+          'restored': true,
+          'supported_features': 0,
+          'unit_of_measurement': ' ',
+          'friendly_name': 'Sonoff Bridge RF status',
+          'icon': 'mdi:information-outline',
+        },
+        'last_changed': '2020-04-25T09:38:18.286485+00:00',
+        'last_updated': '2020-04-25T09:38:18.286485+00:00',
+        'context': { 'id': 'fb4a42804154454f819ae5ec1b1c0e82', 'parent_id': null, 'user_id': null },
+      },
+      'switch.wlacznik': {
+        'entity_id': 'switch.wlacznik',
+        'state': 'unavailable',
+        'attributes': { 'restored': true, 'supported_features': 0, 'friendly_name': 'Włącznik' },
+        'last_changed': '2020-04-25T09:38:18.286521+00:00',
+        'last_updated': '2020-04-25T09:38:18.286521+00:00',
+        'context': { 'id': '9d9e584ee3ec422389859cb53a133013', 'parent_id': null, 'user_id': null },
+      },
+      'sensor.wlacznik_status': {
+        'entity_id': 'sensor.wlacznik_status',
+        'state': 'unavailable',
+        'attributes': {
+          'restored': true,
+          'supported_features': 0,
+          'unit_of_measurement': '%',
+          'friendly_name': 'Włącznik status',
+          'icon': 'mdi:information-outline',
+        },
+        'last_changed': '2020-04-25T09:38:18.286561+00:00',
+        'last_updated': '2020-04-25T09:38:18.286561+00:00',
+        'context': { 'id': 'e8042e2497154385af8e9cdaf76b7663', 'parent_id': null, 'user_id': null },
+      },
+      'switch.tasmota': {
+        'entity_id': 'switch.tasmota',
+        'state': 'unavailable',
+        'attributes': { 'restored': true, 'supported_features': 0, 'friendly_name': 'Przycisk 1' },
+        'last_changed': '2020-04-25T09:38:18.286592+00:00',
+        'last_updated': '2020-04-25T09:38:18.286592+00:00',
+        'context': { 'id': 'a27c772f69084deca93a499d78e989c1', 'parent_id': null, 'user_id': null },
+      },
+      'switch.tasmota2': {
+        'entity_id': 'switch.tasmota2',
+        'state': 'unavailable',
+        'attributes': { 'restored': true, 'supported_features': 0, 'friendly_name': 'Przycisk 2' },
+        'last_changed': '2020-04-25T09:38:18.286643+00:00',
+        'last_updated': '2020-04-25T09:38:18.286643+00:00',
+        'context': { 'id': '65e03087d1304236b8b584576fb365d5', 'parent_id': null, 'user_id': null },
+      },
+      'sensor.tasmota_status': {
+        'entity_id': 'sensor.tasmota_status',
+        'state': 'unavailable',
+        'attributes': {
+          'restored': true,
+          'supported_features': 0,
+          'unit_of_measurement': '%',
+          'friendly_name': 'Przycisk 1 status',
+          'icon': 'mdi:information-outline',
+        },
+        'last_changed': '2020-04-25T09:38:18.286693+00:00',
+        'last_updated': '2020-04-25T09:38:18.286693+00:00',
+        'context': { 'id': '6bbc3677d0b54194a1b0421746b35aae', 'parent_id': null, 'user_id': null },
+      },
+      'persistent_notification.http_login': {
+        'entity_id': 'persistent_notification.http_login',
+        'state': 'notifying',
+        'attributes': {
+          'title': 'Login attempt failed',
+          'message': 'Login attempt or request with invalid authentication from 127.0.0.1',
+        },
+        'last_changed': '2020-04-25T16:03:41.375177+00:00',
+        'last_updated': '2020-04-25T16:03:41.375177+00:00',
+        'context': { 'id': '8dfe33984b504a19924783e7c6a76723', 'parent_id': null, 'user_id': null },
+      },
+    },
+  };
+
   setTimeout(() => {
-    const element = document.createElement('weather-station-wrapper');
+    element = document.createElement('weather-station-wrapper');
     document.body.append(element);
 
     console.log(element);
@@ -28,14 +382,14 @@
       ],
     });
 
-    element.hass = {
-      auth: {
-        data: {
-          access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4MjhiYzc2ODc0ZTQ0MTg3OTEyNmUxYjNhZjY1MGMwYiIsImlhdCI6MTU4NzcxNzU2MCwiZXhwIjoxOTAzMDc3NTYwfQ.98FNy2zSXwKeFtmUxUmmV0ftMZF04t4iVU-0ytMxunA',
-        },
-      },
-    };
+    element.hass = hass;
   }, 140);
+
+  // setInterval(() => {
+  //
+  //
+  //   element.hass = hass;
+  // }, 5_000);
 </script>
 </body>
 </html>
