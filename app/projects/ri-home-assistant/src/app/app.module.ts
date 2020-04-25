@@ -1,21 +1,34 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, DoBootstrap, Injector, NgModule } from '@angular/core';
 
-import { WeatherStationWrapperComponent } from './components/weather-station-wrapper/weather-station-wrapper.component';
-import { createCustomElement, NgElementConstructor } from '@angular/elements';
 import { HomeAssistantComponentModel } from './models/home-assistant-component.model';
 import { HomeAssistantHassModel } from './models/home-assistant-hass.model';
 import { HomeAssistantConfigModel } from './models/home-assistant-config.model';
+import { AppRoutingModule } from './app-routing.module';
+import { EffectsModule } from '@ngrx/effects';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { StoreModule } from '@ngrx/store';
+import { WeatherStationWrapperComponent } from './elements-modules/ha-weather-stations/components/weather-station-wrapper/weather-station-wrapper.component';
+import { HaWeatherStationsModule } from './elements-modules/ha-weather-stations/ha-weather-stations.module';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../../../../src/environments/environment';
 
 @NgModule({
-  declarations: [
-    WeatherStationWrapperComponent,
-  ],
-  entryComponents: [
-    WeatherStationWrapperComponent,
-  ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
+    EffectsModule.forRoot([]),
+    HaWeatherStationsModule,
+    SimpleNotificationsModule.forRoot({
+      timeOut: 3000,
+      showProgressBar: true,
+      clickToClose: false,
+    }),
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
   providers: [],
   bootstrap: [],
@@ -110,3 +123,10 @@ function initializeComponent(element, component, injector) {
   return componentRef;
 }
 
+function loadCSS(url) {
+  const link = document.createElement('link');
+  link.type = 'text/css';
+  link.rel = 'stylesheet';
+  link.href = url;
+  document.head.appendChild(link);
+}

@@ -245,7 +245,6 @@
               "projects/ri-home-assistant/src/assets"
             ],
             "styles": [
-              "projects/ri-home-assistant/src/styles.scss"
             ],
             "scripts": []
           },

@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../out-tsc/app",
-    "target": "es2015",
-    "types": []
+    "target": "es2015"
   },
   "files": [
     "src/main.ts",

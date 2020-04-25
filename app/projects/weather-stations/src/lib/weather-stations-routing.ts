@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { WeatherStationsListComponent } from './containers/weather-stations-list/weather-stations-list.component';
 import { WeatherStationDetailsComponent } from './containers/weather-station-details/weather-station-details.component';
@@ -8,7 +7,7 @@ import { WeatherStationIdResolverService } from './services/resolvers/weather-st
 import { WeatherStationDetailsGuardService } from './services/guards/weather-station-details-guard.service';
 
 
-const routes: Routes = [
+export const weatherStationRoutes: Routes = [
   {
     path: '',
     resolve: [WeatherStationsListResolverService],
@@ -36,10 +35,3 @@ const routes: Routes = [
     redirectTo: '',
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class WeatherStationsRoutingModule {
-}

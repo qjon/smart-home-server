@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/theming';
+$app-primary: mat-palette($mat-indigo);
+$app-accent: mat-palette($mat-yellow);
+$app-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+@include angular-material-theme($app-theme);
+@include mat-core();
+
+$material-icons-font-path: '~material-icons/iconfont/';
+@import '~material-icons/iconfont/material-icons.scss';
+
+.text-disabled {
+  color: #aaaaaa;
+}
