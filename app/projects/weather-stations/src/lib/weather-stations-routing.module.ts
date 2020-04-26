@@ -5,6 +5,7 @@ import { WeatherStationsListComponent } from './containers/weather-stations-list
 import { WeatherStationDetailsComponent } from './containers/weather-station-details/weather-station-details.component';
 import { WeatherStationsListResolverService } from './services/resolvers/weather-stations-list-resolver.service';
 import { WeatherStationIdResolverService } from './services/resolvers/weather-station-id-resolver.service';
+import { WeatherStationDetailsGuardService } from './services/guards/weather-station-details-guard.service';
 
 
 const routes: Routes = [
@@ -18,6 +19,7 @@ const routes: Routes = [
       },
       {
         path: ':weatherStationId',
+        canActivate: [WeatherStationDetailsGuardService],
         component: WeatherStationDetailsComponent,
         resolve: {
           weatherStationId: WeatherStationIdResolverService,

@@ -18,6 +18,7 @@ It contains two application
 - add possibility to use more than one sensor on Weather Station device
 - allow to refresh all device data
 - send email notification when WS not response for an hour
+- add weather station configuration service
 
 ### v2.0.0
 
