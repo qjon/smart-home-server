@@ -1,15 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { environment } from './environments';
-import { SmartWsAdapterService } from './websocket/smart-ws-adapter/smart-ws-adapter.service';
-import * as express from 'express';
-import { NextFunction } from 'express';
-import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
-import * as http from 'http';
-import { join } from 'path';
 import * as fs from 'fs';
-import { DeviceService } from './database/services/device.service';
 import { Logger } from '@nestjs/common';
+import { HomeAssistantModule } from './home-assistant/home-assistant.module';
+import { Transport } from '@nestjs/microservices';
 
 const pidFile = __dirname + '/smart-home-server.pid';
 
@@ -18,46 +11,51 @@ async function bootstrap() {
 
   fs.writeFileSync(pidFile, '');
 
-  const server = express();
-
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(server));
-
-  app.enableCors();
-  app.useWebSocketAdapter(new SmartWsAdapterService());
-  app.useStaticAssets(join(__dirname, '..', 'app'));
-
-  const logRequestStart = (req: any, res: any, next: NextFunction) => {
-    console.info(`${req.method} ${req.originalUrl}`);
-
-    res.on('finish', () => {
-      console.info(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`);
-    });
-
-    next();
-  };
-
-  app.use(logRequestStart);
-
-  await app.init();
-
-  const serverHttp = http.createServer(server).listen(environment.apiPort);
-
-  const deviceService: DeviceService = app.get(DeviceService);
-  deviceService.disconnectAllDevices();
-
-  process.on('SIGTERM', () => {
-    serverHttp.close(() => {
-      logger.warn('HTTP Process terminated');
-    });
-
-    app.close()
-      .then(() => {
-        logger.log('Remove PID file');
-        fs.unlinkSync(pidFile);
-        logger.error('Process shutdown');
-      })
-      .then(() => process.exit(0));
+  const mqttSubscriber = await NestFactory.createMicroservice(HomeAssistantModule, {
+    transport: Transport.MQTT,
+    options: {
+      hostname: '192.168.100.3',
+      port: 1883,
+      username: 'subscriber',
+      password: 'mqttsubscriber',
+    },
   });
+
+  mqttSubscriber.listen(() => console.log('Microservice is listening'));
+
+  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  //
+  // app.enableCors();
+  // app.useWebSocketAdapter(new SmartWsAdapterService());
+  // app.useStaticAssets(join(__dirname, '..', 'app'));
+  //
+  // const logRequestStart = (req: any, res: any, next: NextFunction) => {
+  //   console.info(`${req.method} ${req.originalUrl}`);
+  //
+  //   res.on('finish', () => {
+  //     console.info(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`);
+  //   });
+  //
+  //   next();
+  // };
+  //
+  // app.use(logRequestStart);
+  // app.listen(environment.apiPort);
+  //
+  // await app.init();
+  //
+  // const deviceService: DeviceService = app.get(DeviceService);
+  // deviceService.disconnectAllDevices();
+  //
+  // process.on('SIGTERM', () => {
+  //   app.close()
+  //     .then(() => {
+  //       logger.log('Remove PID file');
+  //       fs.unlinkSync(pidFile);
+  //       logger.error('Process shutdown');
+  //     })
+  //     .then(() => process.exit(0));
+  // });
 }
 
 bootstrap()

@@ -10,12 +10,16 @@ import { environment } from './environments';
 import { WorkersModule } from './workers/workers.module';
 import { MdnsModule } from './mdns/mdns.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { HomeAssistantModule } from './home-assistant/home-assistant.module';
 
 @Module({
   imports: [
     WebsocketModule, SslModule, StorageModule, ApiModule, DatabaseModule,
 
-    TypeOrmModule.forRoot({
+
+    HomeAssistantModule,
+        TypeOrmModule.forRoot({
       type: 'mysql',
       host: environment.database.host,
       port: 3306,
@@ -36,6 +40,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         from: environment.mail.from,
       },
     }),
+
   ],
   controllers: [AppController],
   providers: [],
