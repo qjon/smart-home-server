@@ -7,4 +7,6 @@
 /smart-home/
 
 /templates/environment-smart-home.ts
-./config.env
+apps/smart-home-server/config.env
+apps/weather-stations-microservice/config.env
+apps/weather-stations-subscriber/config.env

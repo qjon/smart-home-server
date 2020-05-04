@@ -5,4 +5,3 @@ dist-projects
 /.editorconfig
 /app/proxy.config.json
 /server/config.env
-/app/proxy-ha.config.json

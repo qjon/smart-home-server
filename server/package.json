@@ -1,0 +1,90 @@
+{
+  "name": "smart-home-server",
+  "version": "3.0.0",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build:weather-stations-module": "nest build weather-stations-module",
+    "build:weather-stations-subscriber": "rm -rf dist/apps/weather-stations-subscriber && nest build weather-stations-subscriber && cp package-prod.json dist/apps/weather-stations-subscriber/package.json",
+    "build:smart-home-server": "rm -rf dist/apps/smart-home-server && nest build smart-home-server && cp package-prod.json dist/apps/smart-home-server/package.json",
+    "build:weather-stations-microservice": "rm -rf dist/apps/weather-stations-microservice && nest build weather-stations-microservice && cp package-prod.json dist/apps/weather-stations-microservice/package.json",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start:smart-home-server": "cp apps/smart-home-server/config.env dist/apps/smart-home-server && nest start smart-home-server --watch",
+    "start:weather-stations-microservice": "cp apps/weather-stations-microservice/config.env dist/apps/weather-stations-microservice && nest start weather-stations-microservice --watch",
+    "start:weather-stations-subscriber": "cp apps/weather-stations-subscriber/config.env dist/apps/weather-stations-subscriber && nest start weather-stations-subscriber --watch",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+  },
+  "dependencies": {
+    "@nestjs-modules/mailer": "^1.4.2",
+    "@nestjs/common": "^7.0.0",
+    "@nestjs/core": "^7.0.0",
+    "@nestjs/microservices": "^7.0.9",
+    "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/platform-ws": "^7.0.9",
+    "@nestjs/typeorm": "^7.0.0",
+    "@nestjs/websockets": "^7.0.9",
+    "dotenv": "^8.2.0",
+    "fs": "0.0.1-security",
+    "js-md5": "^0.7.3",
+    "mqtt": "^4.0.0",
+    "mysql": "^2.18.1",
+    "node-dns-sd": "^0.4.1",
+    "nodejs-websocket": "^1.7.2",
+    "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^6.5.4",
+    "socket.io": "^2.3.0",
+    "typeorm": "^0.2.24"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^7.0.0",
+    "@nestjs/schematics": "^7.0.0",
+    "@nestjs/testing": "^7.0.0",
+    "@types/express": "^4.17.3",
+    "@types/jest": "25.1.4",
+    "@types/node": "^13.9.1",
+    "@types/supertest": "^2.0.8",
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "25.2.1",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.6.2",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": ".",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "@ri/weather-stations-module/(.*)": "<rootDir>/libs/weather-stations-module/src/$1",
+      "@ri/weather-stations-module": "<rootDir>/libs/weather-stations-module/src"
+    }
+  }
+}

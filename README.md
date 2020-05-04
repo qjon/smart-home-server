@@ -13,11 +13,13 @@ It contains two application
 
 ## Change log
 
-### v2.1.0
+### v3.0.0
 
 - add possibility to use more than one sensor on Weather Station device
 - allow to refresh all device data
 - send email notification when WS not response for an hour
+- split Server and App to separate projects with owns package.json files 
+
 
 ### v2.0.0
 
