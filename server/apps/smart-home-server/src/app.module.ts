@@ -11,6 +11,7 @@ import { WorkersModule } from './workers/workers.module';
 import { MdnsModule } from './mdns/mdns.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { getMetadataArgsStorage } from 'typeorm';
+import { WeatherStationsModule } from '@ri/weather-stations-module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { getMetadataArgsStorage } from 'typeorm';
       entities: getMetadataArgsStorage().tables.map(tbl => tbl.target),
       synchronize: true,
     }),
+    WeatherStationsModule,
     WebsocketModule,
     WorkersModule,
   ],

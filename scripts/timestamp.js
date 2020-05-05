@@ -4,8 +4,8 @@ const buildDate = moment(new Date()).format("Y-MM-DD HH:mm:ss");
 
 const options = {
   files: [
-    'app/src/environments/environment.ts',
-    'app/src/environments/environment.prod.ts',
+    'src/environments/environment.ts',
+    'src/environments/environment.prod.ts',
   ],
   from: /buildDate: '(.*)'/g,
   to: "buildDate: '" + buildDate + "'",
