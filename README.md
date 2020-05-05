@@ -15,11 +15,10 @@ It contains two application
 
 ### v3.0.0
 
-- add possibility to use more than one sensor on Weather Station device
-- allow to refresh all device data
-- send email notification when WS not response for an hour
-- split Server and App to separate projects with owns package.json files 
+From that point Server and App are separated and Change Log also is split. Please read:
 
+- [App Change Log](app/README.md)
+- [Server Change Log](server/README.md)
 
 ### v2.0.0
 
@@ -71,75 +70,3 @@ It contains two application
 * possibility to turn ON all switches for device at once
 * works with firmware 3.3.0+
 * tested on devices T1 EU and S26E
-
-## Requirements
-
-* installed _mysql_ server
-* installed _netstat_ on server
-
-## Build app
-
-* clone repository or download it
-* install all dependencies
-
-    
-    npm i
-
-* init configuration scrip and answer on all questions (below script should create environment files for _app_ and _config.env_ for _server_) 
-
-
-    npm run config
-        
-* run
-
-
-    npm start
-   
-* in browser go to http://SERVER_IP:API_PORT, the app should start, but to see list of your devices you have to connected them to your local network (see instruction below)
-
-## Deploy
-
-* change _app_ production environment _app/src/environments/environment.prod.ts_
-* run
-
-    
-    npm deploy    
-
-* change _dist/config.env_ if necessary
-* after copy dist folder to target location, go inside that location and run
-
-
-    npm i --production
-    npm start
-    
-* application will start 
-
-
-## Connect SonOff device to server
-
-To connect your device to server you will need get:
- 
-* _API_KEY_ and _ID_ of device
-* eWelink app
-* access to your home router
-
-Step by step procedure using mobile:
- 
-* Hold on any button for 5 sec to make WiFi light blinking on your SonOff device
-* Now your device is in AP mode, you can now connect to your device 
-* connect mobile phone to AP SonOff
-* after connection you should be able to send request to your device via Rest Api Client
-    
-    
-    GET: http://10.10.7.1/ap
-    headers: Content-Type: application/json
-
-* response should not return error and you have been able to read device _ID_ and _API_KEY_ (write down it, it will be necessary in next step)
-* now using original eWelink app connect device via this app. When device is connected please upgrade firmware to 3.3.0+.
-* check if device works via eWelink app
-* enable _Lan Mode_
-* on your router please disable internet connection for your device and assign to it static IP (it is not necessary but simplify your life - I did not do test for dynamic IP)
-* check once again if everything works when Internet connection is disabled and only Lan Mode is enabled
-* open this application and _Add device_ using previously written _API_KEY_ and _ID_
-* generally that's all, after few seconds device should update its information to server (if not please restart server app)
- 

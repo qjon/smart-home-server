@@ -1,15 +1,13 @@
 {
   "name": "smart-home-app",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --project=smart-home --proxy-config proxy.config.json",
     "build:core": "ng build --project=core",
     "build:weather-stations": "ng build --project=weather-stations",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "build": "node scripts/timestamp.js && ng build",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -51,8 +49,10 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "moment": "^2.25.3",
     "ng-packagr": "^5.4.0",
     "protractor": "~5.4.0",
+    "replace-in-file": "^6.0.0",
     "ts-node": "~7.0.0",
     "tsickle": "^0.37.0",
     "tslint": "~5.15.0",
