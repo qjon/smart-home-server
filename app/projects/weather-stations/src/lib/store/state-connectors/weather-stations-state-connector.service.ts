@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { WeatherStationDto } from '../../interfaces/weather-station-dto';
@@ -34,7 +34,7 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
 
   public list$: Observable<WeatherStationDto[]>;
 
-  private weatherStation: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  private weatherStation: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   constructor(private store: Store<any>) {
 
@@ -65,7 +65,7 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     )
       .pipe(
         map(([weatherStationId, items]) => weatherStationId),
-        switchMap((weatherStationId: number) => this.store
+        switchMap((weatherStationId: string) => this.store
           .pipe(
             select(WeatherStationsSelectors.current, { weatherStationId }),
             first(),
@@ -74,7 +74,7 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
       );
   }
 
-  public addWeatherStationToCompare(weatherStationId: number, chartType: ChartType, date: Date): void {
+  public addWeatherStationToCompare(weatherStationId: string, chartType: ChartType, date: Date): void {
     this.store.dispatch(new WeatherStationCompareAddAction({ weatherStationId, type: chartType, date }));
   }
 
@@ -104,11 +104,11 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     this.store.dispatch(action);
   }
 
-  public removeWeatherStationFromCompare(weatherStationId: number): void {
+  public removeWeatherStationFromCompare(weatherStationId: string): void {
     this.store.dispatch(new WeatherStationCompareRemoveAction({weatherStationId}));
   }
 
-  public setWeatherStationId(weatherStationId: number): void {
+  public setWeatherStationId(weatherStationId: string): void {
     this.weatherStation.next(weatherStationId);
   }
 
@@ -116,7 +116,7 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     this.store.dispatch(new WeatherStationCompareEndAction());
   }
 
-  public initCompare(weatherStationId: number): void {
+  public initCompare(weatherStationId: string): void {
     this.store.dispatch(new WeatherStationCompareStartAction({weatherStationId}));
   }
 }

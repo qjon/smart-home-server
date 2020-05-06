@@ -10,14 +10,20 @@
       <mat-icon>calendar_today</mat-icon>
       <span>Today</span>
     </button>
-    <mat-button-toggle-group appearance="legacy" [value]="currentChartType" (change)="weatherStationChartTypeAndPeriodService.changeChartType($event.value)">
+    <mat-button-toggle-group *ngIf="allowYearChart || allowMonthChart || allowWeekChart"
+                             appearance="legacy"
+                             [value]="currentChartType"
+                             (change)="weatherStationChartTypeAndPeriodService.changeChartType($event.value)">
       <mat-button-toggle [value]="chartTypes.Day">Day</mat-button-toggle>
-      <mat-button-toggle [value]="chartTypes.Week">Week</mat-button-toggle>
-      <mat-button-toggle [value]="chartTypes.Month">Month</mat-button-toggle>
-      <mat-button-toggle [value]="chartTypes.Year">Year</mat-button-toggle>
+      <mat-button-toggle *ngIf="allowWeekChart" [value]="chartTypes.Week">Week</mat-button-toggle>
+      <mat-button-toggle *ngIf="allowMonthChart" [value]="chartTypes.Month">Month</mat-button-toggle>
+      <mat-button-toggle *ngIf="allowYearChart"[value]="chartTypes.Year">Year</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <button mat-icon-button [matMenuTriggerFor]="menu" id="small-device-menu">
+    <button *ngIf="allowYearChart || allowMonthChart || allowWeekChart"
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            id="small-device-menu">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -27,16 +33,19 @@
         <span>Day</span>
       </button>
       <button mat-menu-item
+              *ngIf="allowWeekChart"
               [ngClass]="{selected: currentChartType === chartTypes.Week}"
               (click)="weatherStationChartTypeAndPeriodService.changeChartType(chartTypes.Week)">
         <span>Week</span>
       </button>
       <button mat-menu-item
+              *ngIf="allowMonthChart"
               [ngClass]="{selected: currentChartType === chartTypes.Month}"
               (click)="weatherStationChartTypeAndPeriodService.changeChartType(chartTypes.Month)">
         <span>Month</span>
       </button>
       <button mat-menu-item
+              *ngIf="allowYearChart"
               [ngClass]="{selected: currentChartType === chartTypes.Year}"
               (click)="weatherStationChartTypeAndPeriodService.changeChartType(chartTypes.Year)">
         <span>Year</span>

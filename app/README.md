@@ -8,6 +8,7 @@ Simple Angular application to control some SonOff devices and read Weather Stati
 
 - add possibility to use more than one sensor on Weather Station device
 - allow to refresh all device data
+- Home Assistant elements module - module to export custom HTML elements to use in Home Assistant
 
 ## Installation
 

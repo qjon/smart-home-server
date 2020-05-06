@@ -1,5 +1,5 @@
 export interface WeatherStationDto {
-  id: number;
+  id: string;
   name: string;
   humidity: number;
   temperature: number;

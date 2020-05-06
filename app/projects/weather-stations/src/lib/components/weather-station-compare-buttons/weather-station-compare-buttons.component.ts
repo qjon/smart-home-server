@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 
 import { Destroyable } from '@rign/sh-core';
 
@@ -9,6 +9,10 @@ import { CompareWeatherStationButton } from '../../interfaces/compare-weather-st
 import { WeatherStationsStateConnectorService } from '../../store/state-connectors/weather-stations-state-connector.service';
 import { WeatherStationDto } from '../../interfaces/weather-station-dto';
 import { ChartType } from '../../interfaces/weather-station-chart-type';
+import {
+  WEATHER_STATION_CONFIGURATION,
+  WeatherStationConfigurationModel,
+} from '../../interfaces/weather-station-configuration.model';
 
 @Component({
   selector: 'sh-weather-station-compare-buttons',
@@ -33,13 +37,18 @@ export class WeatherStationCompareButtonsComponent extends Destroyable implement
 
   public isLimit$: Observable<boolean>;
 
-  private weatherStationId: number;
+  private weatherStationId: string;
 
-  constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService) {
+  public isAllowedCompare: boolean = true;
+
+  constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
+              @Inject(WEATHER_STATION_CONFIGURATION) private wsConfiguration: WeatherStationConfigurationModel) {
     super();
   }
 
   public ngOnInit(): void {
+    this.isAllowedCompare = this.wsConfiguration.allowCompare;
+
     this.list$ = this.weatherStationsStateConnectorService.compareButtonList$;
 
     this.isLimit$ = this.list$.pipe(map((items: CompareWeatherStationButton[]) => items.filter(item => item.isAdded).length >= 3));
@@ -55,11 +64,11 @@ export class WeatherStationCompareButtonsComponent extends Destroyable implement
     this.toggleCompare.emit(!this.isCompare);
   }
 
-  public addToCompare(id: number) {
+  public addToCompare(id: string) {
     this.weatherStationsStateConnectorService.addWeatherStationToCompare(id, this.chartType, this.date);
   }
 
-  public removeFromCompare(id: number) {
+  public removeFromCompare(id: string) {
     this.weatherStationsStateConnectorService.removeWeatherStationFromCompare(id);
   }
 }

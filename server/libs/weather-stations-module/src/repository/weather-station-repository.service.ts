@@ -52,4 +52,13 @@ export class WeatherStationRepositoryService {
       .orderBy('ws.name')
       .getMany();
   }
+
+  public fetchByIPWithLastData(ips: string[]): Promise<WeatherStationEntity[]> {
+    return this.repository
+      .createQueryBuilder('ws')
+      .leftJoinAndSelect('ws.lastData', 'wsd')
+      .andWhere('ws.host  IN (:...ips)', {ips})
+      .orderBy('ws.name')
+      .getMany();
+  }
 }

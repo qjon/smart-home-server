@@ -37,13 +37,21 @@ export class WeatherStationsController {
   protected weatherStationService: WeatherStationService;
 
   @Get()
-  async list(@Req() req: Request): Promise<WeatherStationDto[]> {
+  async list(@Req() req: Request, @Query('ip') ip: string): Promise<WeatherStationDto[]> {
     this.logger.log(`REQ | API | ${req.url}`);
+    let response: WeatherStationDto[] = [];
 
-    const response = await this.weatherStationRepositoryService.fetchAllWithLastData()
-      .then((data) => {
-        return data.map(ws => ws.toJSON());
-      });
+    if (Boolean(ip)) {
+      response = await this.weatherStationRepositoryService.fetchByIPWithLastData(ip.split(';'))
+        .then((data) => {
+          return data.map(ws => ws.toJSON());
+        });
+    } else {
+      response = await this.weatherStationRepositoryService.fetchAllWithLastData()
+        .then((data) => {
+          return data.map(ws => ws.toJSON());
+        });
+    }
 
     this.logger.log(`RES | API | ${req.url} | ${JSON.stringify(response)}`);
     return response;

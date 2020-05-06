@@ -11,7 +11,6 @@ import { CoreModule } from '@rign/sh-core';
 
 import { ChartModule } from 'angular-highcharts';
 
-import { WeatherStationsRoutingModule } from './weather-stations-routing.module';
 import { WeatherStationsListComponent } from './containers/weather-stations-list/weather-stations-list.component';
 import { WeatherStationItemComponent } from './components/weather-station-item/weather-station-item.component';
 import { WeatherStationsStoreModule } from './store/weather-stations-store.module';
@@ -20,6 +19,7 @@ import { WeatherStationsServicesModule } from './services/weather-stations-servi
 import { WeatherStationChartComponent } from './components/weather-station-chart/weather-station-chart.component';
 import { WeatherStationDetailsChartComponent } from './components/weather-station-details-chart/weather-station-details-chart.component';
 import { WeatherStationCompareButtonsComponent } from './components/weather-station-compare-buttons/weather-station-compare-buttons.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -39,11 +39,11 @@ import { WeatherStationCompareButtonsComponent } from './components/weather-stat
     MatDividerModule,
     MatIconModule,
     CoreModule,
-    WeatherStationsRoutingModule,
     WeatherStationsServicesModule,
     WeatherStationsStoreModule,
     MatButtonToggleModule,
     MatMenuModule,
+    RouterModule,
     CoreModule,
   ],
 })

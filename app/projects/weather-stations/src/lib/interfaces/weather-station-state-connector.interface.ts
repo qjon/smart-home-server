@@ -17,18 +17,18 @@ export interface WeatherStationStateConnectorInterface {
 
   compareButtonList$: Observable<CompareWeatherStationButton[]>;
 
-  addWeatherStationToCompare(weatherStationId: number, chartType: ChartType, date: Date): void;
+  addWeatherStationToCompare(weatherStationId: string, chartType: ChartType, date: Date): void;
 
   endCompare(): void;
 
-  initCompare(weatherStationId: number): void;
+  initCompare(weatherStationId: string): void;
 
   loadList(): void;
 
   loadAggregateData(type: ChartType, year: number, month?: number, day?: number): void;
 
-  removeWeatherStationFromCompare(weatherStationId: number): void;
+  removeWeatherStationFromCompare(weatherStationId: string): void;
 
-  setWeatherStationId(weatherStationId: number): void;
+  setWeatherStationId(weatherStationId: string): void;
 
 }

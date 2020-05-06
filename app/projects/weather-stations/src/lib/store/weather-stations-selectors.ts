@@ -11,7 +11,7 @@ const list = createSelector(weatherStationFeatureSelector, (s: WeatherStationsSt
 
 const data = createSelector(weatherStationFeatureSelector, (s: WeatherStationsState) => s.data);
 
-const current = createSelector(weatherStationFeatureSelector, (s: WeatherStationsState, params: { weatherStationId: number }): WeatherStationDto => s.stations[params.weatherStationId] || null);
+const current = createSelector(weatherStationFeatureSelector, (s: WeatherStationsState, params: { weatherStationId: string }): WeatherStationDto => s.stations[params.weatherStationId] || null);
 
 const compareList = createSelector(weatherStationFeatureSelector, (s: WeatherStationsState): InputChartDataSeries[] => {
   const dataSeries: InputChartDataSeries[] = [];
@@ -32,7 +32,7 @@ const compareList = createSelector(weatherStationFeatureSelector, (s: WeatherSta
 });
 
 const compareButtonList = createSelector(weatherStationFeatureSelector, (s: WeatherStationsState): CompareWeatherStationButton[] => {
-  return s.ids.map((id: number) => {
+  return s.ids.map((id: string) => {
     const ws: WeatherStationDto = s.stations[id];
 
     return {

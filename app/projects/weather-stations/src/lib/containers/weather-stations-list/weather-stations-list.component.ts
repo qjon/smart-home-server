@@ -22,7 +22,7 @@ export class WeatherStationsListComponent {
     this.weatherStationsStateConnectorService.setWeatherStationId(null);
   }
 
-  public trackBy(item: WeatherStationDto): number {
+  public trackBy(item: WeatherStationDto): string {
     return item.id;
   }
 

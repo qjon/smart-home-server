@@ -12,12 +12,9 @@
     "build:smart-home-server": "rm -rf dist/apps/smart-home-server && nest build smart-home-server && cp package-prod.json dist/apps/smart-home-server/package.json",
     "build:weather-stations-microservice": "rm -rf dist/apps/weather-stations-microservice && nest build weather-stations-microservice && cp package-prod.json dist/apps/weather-stations-microservice/package.json",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
-    "start:smart-home-server": "cp apps/smart-home-server/config.env dist/apps/smart-home-server && nest start smart-home-server --watch",
-    "start:weather-stations-microservice": "cp apps/weather-stations-microservice/config.env dist/apps/weather-stations-microservice && nest start weather-stations-microservice --watch",
-    "start:weather-stations-subscriber": "cp apps/weather-stations-subscriber/config.env dist/apps/weather-stations-subscriber && nest start weather-stations-subscriber --watch",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:smart-home-server": "mkdir -p dist/apps/smart-home-server && cp apps/smart-home-server/config.env dist/apps/smart-home-server && nest start smart-home-server --watch",
+    "start:weather-stations-microservice": "mkdir -p dist/apps/weather-stations-microservice && cp apps/weather-stations-microservice/config.env dist/apps/weather-stations-microservice && nest start weather-stations-microservice --watch",
+    "start:weather-stations-subscriber": "mkdir -p dist/apps/weather-stations-subscriber && cp apps/weather-stations-subscriber/config.env dist/apps/weather-stations-subscriber && nest start weather-stations-subscriber --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {

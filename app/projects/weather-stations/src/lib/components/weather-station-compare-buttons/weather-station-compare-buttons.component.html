@@ -1,5 +1,6 @@
 <div class="compare-button-list">
-  <button mat-raised-button
+  <button *ngIf="isAllowedCompare"
+          mat-raised-button
           color="primary"
           class="compare-button"
           (click)="clickToggleCompare()"

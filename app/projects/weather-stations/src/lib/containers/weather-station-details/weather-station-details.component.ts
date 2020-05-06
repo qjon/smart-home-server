@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,6 +13,10 @@ import { WeatherStationDto } from '../../interfaces/weather-station-dto';
 import { ChartType } from '../../interfaces/weather-station-chart-type';
 import { WeatherStationChartTypeAndPeriodService } from '../../services/chart/weather-station-chart-type-and-period.service';
 import { CompareWeatherStationButton } from '../../interfaces/compare-weather-station-button';
+import {
+  WEATHER_STATION_CONFIGURATION,
+  WeatherStationConfigurationModel,
+} from '../../interfaces/weather-station-configuration.model';
 
 @Component({
   selector: 'sh-weather-station-details',
@@ -33,13 +37,20 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
 
   public weatherStation$: Observable<WeatherStationDto>;
 
+  public allowMonthChart: boolean = true;
+  public allowWeekChart: boolean = true;
+  public allowYearChart: boolean = true;
+
   private date: Date;
+
   private isCompareMode: boolean = false;
+
 
   constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              public weatherStationChartTypeAndPeriodService: WeatherStationChartTypeAndPeriodService) {
+              public weatherStationChartTypeAndPeriodService: WeatherStationChartTypeAndPeriodService,
+              @Inject(WEATHER_STATION_CONFIGURATION) private wsConfiguration: WeatherStationConfigurationModel) {
     super();
 
     this.weatherStation$ = this.weatherStationsStateConnectorService.current$;
@@ -50,6 +61,10 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
   }
 
   public ngOnInit(): void {
+    this.allowWeekChart = this.wsConfiguration.additionalPeriodOfTime.indexOf(ChartType.Week) > -1;
+    this.allowMonthChart = this.wsConfiguration.additionalPeriodOfTime.indexOf(ChartType.Month) > -1;
+    this.allowYearChart = this.wsConfiguration.additionalPeriodOfTime.indexOf(ChartType.Year) > -1;
+
     this.listenOnDateChange();
     this.listenOnChartTypeChange();
     this.listenOnParamsChange();
@@ -86,7 +101,7 @@ export class WeatherStationDetailsComponent extends Destroyable implements OnIni
         filter(() => !this.isCompareMode),
         takeUntil(this.destroy$),
       )
-      .subscribe(([val, date, chartType]: [number, Date, ChartType]) => {
+      .subscribe(([val, date, chartType]: [string, Date, ChartType]) => {
         this.loadDataByChartType(chartType, date);
       });
 
