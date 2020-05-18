@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ObjectsModule } from '@ri/objects';
-
 import { WeatherStationEntity } from './entity/weather-station.entity';
 import { WeatherStationDataEntity } from './entity/weather-station-data.entity';
 import { WeatherStationRepositoryService } from './repository/weather-station-repository.service';
@@ -20,7 +18,6 @@ import { WeatherStationsController } from './controllers/weather-stations.contro
     WeatherStationService,
   ],
   imports: [
-    ObjectsModule,
     TypeOrmModule.forFeature([
       WeatherStationEntity,
       WeatherStationDataEntity,

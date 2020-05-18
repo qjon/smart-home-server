@@ -28,6 +28,15 @@ export class WeatherStationRepositoryService {
       .getOne();
   }
 
+  public fetchWeatherStationByEntityIdAndSensor(entityId: number, sensor: number = 0): Promise<WeatherStationEntity> {
+    return this.repository
+      .createQueryBuilder('ws')
+      .leftJoinAndSelect('ws.lastData', 'wsd')
+      .andWhere('ws.entityId = :entityId', { entityId })
+      .andWhere('ws.sensor = :sensor', { sensor })
+      .getOne();
+  }
+
   public fetchWeatherStationByHost(host: string): Promise<WeatherStationEntity> {
     return this.repository
       .createQueryBuilder('ws')

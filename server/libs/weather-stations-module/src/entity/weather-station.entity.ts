@@ -1,23 +1,19 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+
 import { WeatherStationDataEntity } from './weather-station-data.entity';
 import { WeatherStationDto } from '../models/weather-station-dto';
 
 @Entity('weather_station')
+@Index('entity_idx', ['entityId', 'sensor'])
 export class WeatherStationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: null, nullable: true })
+  entityId: number;
+
   @Column({ length: 50, default: '' })
   name: string;
-
-  @Column({ length: 15, default: '' })
-  host: string;
-
-  @Column({ length: 6, default: '' })
-  symbol: string;
-
-  @Column({ length: 255, default: '' })
-  topic: string;
 
   @Column({ default: 0 })
   sensor: number;

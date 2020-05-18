@@ -26,4 +26,11 @@ export class ObjectsEntityRepositoryService {
       .andWhere('e.topic = :wsTopic', {wsTopic})
       .getOne();
   }
+
+  public fetchEntityObjectByFullSensorTopic(topic: string): Promise<ObjectEntity> {
+    return this.repository
+      .createQueryBuilder('e')
+      .andWhere('e.topicSensorFull = :topic', {topic})
+      .getOne();
+  }
 }

@@ -1,16 +1,18 @@
 import { Controller, Inject, Logger } from '@nestjs/common';
 import { Ctx, MessagePattern, MqttContext, Payload } from '@nestjs/microservices';
-import { EntityManager } from 'typeorm';
-import { HomeAssistantSubscriberService } from './app.service';
+
+import { ObjectEntity, ObjectsEntityRepositoryService } from '@ri/objects';
 import {
   WeatherStationDataEntity,
   WeatherStationDataInterface,
   WeatherStationDataRepositoryService, WeatherStationEntity,
   WeatherStationRepositoryService,
 } from '@ri/weather-stations-module';
-import { environment } from '../environment';
+
+import { EntityManager } from 'typeorm';
+
+import { HomeAssistantSubscriberService } from './app.service';
 import { InfoModuleModel } from './models/info-module.model';
-import { ObjectEntity, ObjectsEntityRepositoryService } from '@ri/objects';
 import { MainStatusConfigDataModel } from './models/main-status-config-data.model';
 
 export enum WeatherStationTemperatureUnit {
@@ -82,35 +84,37 @@ export class HomeAssistantControllerController {
     this.logger.log('--------------------------------------------------------------');
   }
 
-  //
-  // @MessagePattern('tele/+/SENSOR')
-  // async saveSensorData(@Payload() data: MqttWeatherStationPayload, @Ctx() context: MqttContext) {
-  //   this.logger.log('--------------------------------------------------------------');
-  //   const deviceSymbol: string = this.homeAssistantSubscriberService.convertTopicToDeviceSymbol(context.getTopic());
-  //   this.logger.log(`MQTT - Sensor data message: ${deviceSymbol}`);
-  //   this.logger.log('Data: ' + JSON.stringify(data));
-  //   const sensorOneData: WeatherStationDataInterface = this.getDataForSensor(data, 0);
-  //   const sensorTwoData: WeatherStationDataInterface = this.getDataForSensor(data, 1);
-  //   if (sensorOneData) {
-  //
-  //     const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationBySymbolAndSensor(deviceSymbol, 0);
-  //     if (weatherStation) {
-  //
-  //       this.saveStationData(weatherStation, sensorOneData);
-  //       this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - ${weatherStation.symbol} (${weatherStation.sensor})`);
-  //     }
-  //   }
-  //   if (sensorTwoData) {
-  //
-  //     const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationBySymbolAndSensor(deviceSymbol, 1);
-  //     if (weatherStation) {
-  //
-  //       this.saveStationData(weatherStation, sensorOneData);
-  //       this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - ${weatherStation.symbol} (${weatherStation.sensor})`);
-  //     }
-  //   }
-  //   this.logger.log('--------------------------------------------------------------');
-  // }
+
+  @MessagePattern('tele/+/SENSOR')
+  async saveSensorData(@Payload() data: MqttWeatherStationPayload, @Ctx() context: MqttContext) {
+    this.logger.log('--------------------------------------------------------------');
+    this.logger.log(`MQTT - Sensor data message: ${context.getTopic()}`);
+    this.logger.log('Data: ' + JSON.stringify(data));
+
+    const entity: ObjectEntity = await this.objectsEntityRepositoryService.fetchEntityObjectByFullSensorTopic(context.getTopic())
+
+    const sensorOneData: WeatherStationDataInterface = this.getDataForSensor(data, 0);
+    const sensorTwoData: WeatherStationDataInterface = this.getDataForSensor(data, 1);
+
+    if (sensorOneData) {
+      const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByEntityIdAndSensor(entity.id, 0);
+      if (weatherStation) {
+
+        this.saveStationData(weatherStation, sensorOneData);
+        this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - (${weatherStation.sensor})`);
+      }
+    }
+
+    if (sensorTwoData) {
+      const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByEntityIdAndSensor(entity.id, 1);
+      if (weatherStation) {
+
+        this.saveStationData(weatherStation, sensorOneData);
+        this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - (${weatherStation.sensor})`);
+      }
+    }
+    this.logger.log('--------------------------------------------------------------');
+  }
 
   private saveStationData(weatherStation: WeatherStationEntity, entityData: WeatherStationDataInterface): void {
     const entity: WeatherStationDataEntity = this.entityManager.create(WeatherStationDataEntity, entityData);
