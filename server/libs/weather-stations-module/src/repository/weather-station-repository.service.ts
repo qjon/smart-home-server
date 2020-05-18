@@ -70,4 +70,13 @@ export class WeatherStationRepositoryService {
       .orderBy('ws.name')
       .getMany();
   }
+
+  public fetchByEntityIdWithLastData(entityIdList: number[]): Promise<WeatherStationEntity[]> {
+    return this.repository
+      .createQueryBuilder('ws')
+      .leftJoinAndSelect('ws.lastData', 'wsd')
+      .andWhere('ws.entityId  IN (:...entityIdList)', {entityIdList})
+      .orderBy('ws.name')
+      .getMany();
+  }
 }

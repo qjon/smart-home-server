@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -7,8 +7,6 @@ import { ObjectEntity } from '../entity/object.entity';
 
 @Injectable()
 export class ObjectsEntityRepositoryService {
-  private logger = new Logger(this.constructor.name);
-
   public constructor(@InjectRepository(ObjectEntity) protected repository: Repository<ObjectEntity>) {
 
   }
@@ -32,5 +30,12 @@ export class ObjectsEntityRepositoryService {
       .createQueryBuilder('e')
       .andWhere('e.topicSensorFull = :topic', {topic})
       .getOne();
+  }
+
+  public fetchEntityByUniqId(uniqIdList: string[]): Promise<ObjectEntity[]> {
+    return this.repository
+      .createQueryBuilder('e')
+      .andWhere('e.uniqId  IN (:...uniqIdList)', {uniqIdList})
+      .getMany();
   }
 }

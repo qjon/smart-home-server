@@ -1,6 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { ObjectEntityDto } from '../models/object-entity-dto';
 
 @Entity('entity')
+@Index('unqi_id_idx', ['uniqId'])
 export class ObjectEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -21,5 +23,13 @@ export class ObjectEntity {
   topicSensorFull: string;
 
   @Column({ length: 255, default: null, nullable: true })
-  uniqueId: string;
+  uniqId: string;
+
+  toJSON(): ObjectEntityDto {
+    return {
+      id: this.id.toString(),
+      name: this.name,
+      uniqId: this.uniqId,
+    };
+  }
 }

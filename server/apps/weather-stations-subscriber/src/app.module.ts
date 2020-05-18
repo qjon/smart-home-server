@@ -18,7 +18,7 @@ import { ObjectsModule } from '@ri/objects';
       password: environment.database.password,
       database: environment.database.name,
       entities: getMetadataArgsStorage().tables.map(tbl => tbl.target),
-      synchronize: true,
+      synchronize: false,
     }),
     WeatherStationsModule,
   ],
