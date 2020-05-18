@@ -2,14 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "../../dist/libs/weather-stations-module",
+    "outDir": "../../dist/libs/objects",
     "paths": {
-      "@ri/objects": [
-        "libs/objects/src"
-      ],
-      "@ri/objects/*": [
-        "libs/objects/src/*"
-      ]
     }
   },
   "include": ["src/**/*"],

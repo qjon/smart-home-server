@@ -4,7 +4,8 @@
   "monorepo": true,
   "root": "apps/smart-home-server",
   "compilerOptions": {
-    "tsConfigPath": "apps/smart-home-server/tsconfig.app.json"
+    "tsConfigPath": "apps/smart-home-server/tsconfig.app.json",
+    "webpack": true
   },
   "projects": {
     "smart-home-server": {
@@ -48,6 +49,15 @@
       "compilerOptions": {
         "webpack": true,
         "tsConfigPath": "apps/weather-stations-subscriber/tsconfig.app.json"
+      }
+    },
+    "objects": {
+      "type": "library",
+      "root": "libs/objects",
+      "entryFile": "index",
+      "sourceRoot": "libs/objects/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/objects/tsconfig.lib.json"
       }
     }
   }

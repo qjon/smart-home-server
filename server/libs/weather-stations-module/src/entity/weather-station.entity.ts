@@ -16,6 +16,9 @@ export class WeatherStationEntity {
   @Column({ length: 6, default: '' })
   symbol: string;
 
+  @Column({ length: 255, default: '' })
+  topic: string;
+
   @Column({ default: 0 })
   sensor: number;
 

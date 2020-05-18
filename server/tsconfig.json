@@ -16,6 +16,12 @@
       ],
       "@ri/weather-stations-module/*": [
         "libs/weather-stations-module/src/*"
+      ],
+      "@ri/objects": [
+        "libs/objects/src"
+      ],
+      "@ri/objects/*": [
+        "libs/objects/src/*"
       ]
     }
   },

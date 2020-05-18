@@ -82,7 +82,9 @@
     ],
     "moduleNameMapper": {
       "@ri/weather-stations-module/(.*)": "<rootDir>/libs/weather-stations-module/src/$1",
-      "@ri/weather-stations-module": "<rootDir>/libs/weather-stations-module/src"
+      "@ri/weather-stations-module": "<rootDir>/libs/weather-stations-module/src",
+      "obj/objects/(.*)": "<rootDir>/libs/objects/src/$1",
+      "obj/objects": "<rootDir>/libs/objects/src"
     }
   }
 }
