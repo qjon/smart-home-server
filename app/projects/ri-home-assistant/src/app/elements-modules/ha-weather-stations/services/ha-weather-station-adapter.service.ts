@@ -1,25 +1,21 @@
 import { Injectable } from '@angular/core';
 
-import { WeatherStationsStateConnectorService } from '@rign/sh-weather-stations';
-
-
 import { isEqual } from 'lodash';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
-import { first, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { HaWeatherStationsServicesModule } from './ha-weather-stations-services.module';
 import { HaWeatherStationItemConfigModel } from '../models/ha-weather-station-item-config.model';
 import { HaWeatherStationConfigModel } from '../models/ha-weather-station-config.model';
 import { HomeAssistantHassModel } from '../../../models/home-assistant-hass.model';
 import { HomeAssistantAdapterModel } from '../../../models/home-assistant-adapter.model';
-import { HaEntityModel } from '../models/ha-entity.model';
+import { HaEntityRegistryModel } from '../models/ha-entity-registry.model';
 
 @Injectable({
   providedIn: HaWeatherStationsServicesModule,
 })
 export class HaWeatherStationAdapterService implements HomeAssistantAdapterModel<HaWeatherStationConfigModel> {
-  public readonly ipList$: Observable<string[]>;
+  public readonly uniqIds$: Observable<string[]>;
 
   private config: HaWeatherStationConfigModel;
 
@@ -27,12 +23,16 @@ export class HaWeatherStationAdapterService implements HomeAssistantAdapterModel
 
   private entitiesLastUpdate: { [key: string]: string } = {};
 
-  private ipList: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private uniqIds: Subject<Map<string, string>> = new Subject<Map<string, string>>();
 
-  private hasIpList: boolean = false;
+  private uniqIdMap: Map<string, string> = new Map<string, string>();
 
-  public constructor(private weatherStationsStateConnectorService: WeatherStationsStateConnectorService) {
-    this.ipList$ = this.ipList.asObservable();
+  public constructor() {
+    this.uniqIds$ = this.uniqIds.asObservable()
+      .pipe(
+        map((uniqIds: Map<string, any>) => Array.from(uniqIds.values())),
+        filter((uniqIdList: string[]) => uniqIdList && uniqIdList.length > 0 && !uniqIdList.some(x => x === null)),
+      );
   }
 
   public getToken(): string {
@@ -42,6 +42,9 @@ export class HaWeatherStationAdapterService implements HomeAssistantAdapterModel
   public setConfig(config: HaWeatherStationConfigModel): void {
     this.config = config;
 
+    config.ws.forEach((ws: HaWeatherStationItemConfigModel) => {
+      this.uniqIdMap.set(ws.entityId, null);
+    });
   }
 
   public setHass(hass: HomeAssistantHassModel): void {
@@ -50,27 +53,26 @@ export class HaWeatherStationAdapterService implements HomeAssistantAdapterModel
     const entitiesLastUpdate: { [key: string]: string } = this.getConfigEntitiesLastUpdate();
 
     if (!isEqual(this.entitiesLastUpdate, entitiesLastUpdate)) {
-      this.entitiesLastUpdate = entitiesLastUpdate;
 
-      this.weatherStationsStateConnectorService.loadList();
+      const promiseArray = [];
 
-      if (!this.hasIpList) {
-        const ips$: Observable<string>[] = [];
+      let id: number = Math.ceil(Math.random() * 10000);
 
-        this.config.ws.forEach((item: HaWeatherStationItemConfigModel) => {
-          ips$.push(this.convertEntityIdToIp(item.entityId));
-        });
+      this.config.ws.forEach((ws: HaWeatherStationItemConfigModel) => {
+        promiseArray.push(this.hass.callWS({ type: 'config/entity_registry/get', entity_id: ws.entityId, id: ++id }));
+      });
 
-        combineLatest(...ips$)
-          .pipe(
-            first()
-          )
-          .subscribe((ips: string[]) => {
-            this.ipList.next(ips);
+      Promise.all(promiseArray)
+        .then((items: HaEntityRegistryModel[]) => {
+          items.map((entity: HaEntityRegistryModel) => {
+            this.uniqIdMap.set(entity.entity_id, entity.unique_id);
           });
 
-        this.hasIpList = true;
-      }
+          this.uniqIds.next(this.uniqIdMap);
+        });
+
+
+      this.entitiesLastUpdate = entitiesLastUpdate;
     }
   }
 
@@ -79,36 +81,11 @@ export class HaWeatherStationAdapterService implements HomeAssistantAdapterModel
 
     if (this.isHassState()) {
       this.config.ws.forEach((ws: HaWeatherStationItemConfigModel) => {
-        entities[ws.entityId] = this.hass.states[ws.entityId].last_changed;
+        entities[ws.entityId] = this.hass.states[ws.entityId].context.id;
       });
     }
 
     return entities;
-  }
-
-  private convertEntityIdToIp(entityId: string): Observable<string> {
-    const state: HaEntityModel = this.hass.states[entityId];
-
-    const entityIpAddress = this.getIpAddressFromEntityState(state);
-    if (entityIpAddress) {
-      return of(entityIpAddress);
-    } else {
-      return fromPromise(this.hass.callApi('get', 'history/period/2020-05-14T17:10:00?end_date=2020-05-14T17:40:00&filter_entity_id=' + entityId))
-        .pipe(
-          map((response: Array<HaEntityModel[]>) => {
-            const foundNotEmptySate: HaEntityModel = response[0].find((item: HaEntityModel) => {
-              const itemIpAddress = this.getIpAddressFromEntityState(item);
-
-              return Boolean(itemIpAddress);
-            });
-            return this.getIpAddressFromEntityState(foundNotEmptySate);
-          }),
-        );
-    }
-  }
-
-  private getIpAddressFromEntityState(state: HaEntityModel): string | null {
-    return state && state.attributes && state.attributes.IPAddress ? state.attributes.IPAddress : null;
   }
 
   private isHassState(): boolean {

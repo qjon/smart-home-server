@@ -10,9 +10,10 @@ import {
 } from '@rign/sh-weather-stations';
 
 import { Observable } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 import { HaWeatherStationAdapterService } from './ha-weather-station-adapter.service';
+import { EntityModel } from '../models/entity.model';
 
 @Injectable()
 export class HaWeatherStationsApiService implements WeatherStationsApi {
@@ -23,11 +24,13 @@ export class HaWeatherStationsApiService implements WeatherStationsApi {
   }
 
   public getList(): Observable<WeatherStationDto[]> {
-    return this.haWeatherStationAdapterService.ipList$
+    return this.haWeatherStationAdapterService.uniqIds$
       .pipe(
-        filter((weatherStationIPs: string[]) => weatherStationIPs.length > 0),
-        switchMap((weatherStationIPs: string[]) => {
-          return this.httpClient.get<WeatherStationDto[]>(this.weatherStationsConfigurationService.apiHost + '/api/weather-stations?ip=' + weatherStationIPs.join(';'));
+        switchMap((uniqIdList: string[]) => this.httpClient.get(this.weatherStationsConfigurationService.apiHost + '/api/objects?uniqId=' + uniqIdList.join(';'))),
+        map((entityList: EntityModel[]) => entityList.map(e => e.id)),
+        filter((entityIdList: string[]) => entityIdList.length > 0),
+        switchMap((entityIdList: string[]) => {
+          return this.httpClient.get<WeatherStationDto[]>(this.weatherStationsConfigurationService.apiHost + '/api/weather-stations?entityId=' + entityIdList.join(';'));
         }),
       );
   }
