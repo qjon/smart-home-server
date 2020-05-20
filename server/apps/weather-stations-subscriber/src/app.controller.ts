@@ -28,8 +28,6 @@ export interface WeatherStationData {
 
 export interface MqttWeatherStationPayload {
   Time: string;
-  DHT11?: WeatherStationData;
-  DHT22?: WeatherStationData;
   TempUnit: WeatherStationTemperatureUnit;
 }
 
@@ -90,32 +88,24 @@ export class HomeAssistantControllerController {
     this.logger.log('--------------------------------------------------------------');
     this.logger.log(`MQTT - Sensor data message: ${context.getTopic()}`);
     this.logger.log('Data: ' + JSON.stringify(data));
-    try {
+    const entity: ObjectEntity = await this.objectsEntityRepositoryService.fetchEntityObjectByFullSensorTopic(context.getTopic());
 
-      const entity: ObjectEntity = await this.objectsEntityRepositoryService.fetchEntityObjectByFullSensorTopic(context.getTopic())
+    const dataSensorSymbols: string[] = this.getDataSensorSymbols(data);
 
-      const sensorOneData: WeatherStationDataInterface = this.getDataForSensor(data, 0);
-      const sensorTwoData: WeatherStationDataInterface = this.getDataForSensor(data, 1);
+    for (const symbol of dataSensorSymbols) {
+      try {
+        const sensorData: WeatherStationDataInterface = this.getDataForSensor(data, symbol);
 
-      if (sensorOneData) {
-        const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByEntityIdAndSensor(entity.id, 0);
+        const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByEntityIdAndSensor(entity.id, symbol);
+
         if (weatherStation) {
 
-          this.saveStationData(weatherStation, sensorOneData);
+          this.saveStationData(weatherStation, sensorData);
           this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - (${weatherStation.sensor})`);
         }
+      } catch (e) {
+        this.logger.error(e.toString());
       }
-
-      if (sensorTwoData) {
-        const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByEntityIdAndSensor(entity.id, 1);
-        if (weatherStation) {
-
-          this.saveStationData(weatherStation, sensorOneData);
-          this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - (${weatherStation.sensor})`);
-        }
-      }
-    } catch (e) {
-      this.logger.error(e.toString());
     }
     this.logger.log('--------------------------------------------------------------');
   }
@@ -130,18 +120,15 @@ export class HomeAssistantControllerController {
     this.entityManager.save([entity, weatherStation]);
   }
 
-  private getDataForSensor(data: MqttWeatherStationPayload, sensor: number): WeatherStationDataInterface | null {
-    let sensorData: WeatherStationData = null;
+  private getDataSensorSymbols(data: MqttWeatherStationPayload): string[] {
+    const dataKeys: string[] = Object.keys(data)
+      .filter((key: string) => key !== 'Time' && key !== 'TempUnit');
 
-    if (sensor === 0) {
-      if (Boolean(data.DHT11)) {
-        sensorData = data.DHT11;
-      }
-    } else {
-      if (Boolean(data.DHT22)) {
-        sensorData = data.DHT22;
-      }
-    }
+    return dataKeys;
+  }
+
+  private getDataForSensor(data: MqttWeatherStationPayload, sensorSymbol: string): WeatherStationDataInterface | null {
+    let sensorData: WeatherStationData = data[sensorSymbol];
 
     if (!Boolean(sensorData)) {
       return null;

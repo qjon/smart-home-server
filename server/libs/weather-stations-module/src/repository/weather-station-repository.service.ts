@@ -19,7 +19,7 @@ export class WeatherStationRepositoryService {
       .getOne();
   }
 
-  public fetchWeatherStationBySymbolAndSensor(weatherStationSymbol: string, sensor: number = 0): Promise<WeatherStationEntity> {
+  public fetchWeatherStationBySymbolAndSensor(weatherStationSymbol: string, sensor: string = null): Promise<WeatherStationEntity> {
     return this.repository
       .createQueryBuilder('ws')
       .leftJoinAndSelect('ws.lastData', 'wsd')
@@ -28,7 +28,7 @@ export class WeatherStationRepositoryService {
       .getOne();
   }
 
-  public fetchWeatherStationByEntityIdAndSensor(entityId: number, sensor: number = 0): Promise<WeatherStationEntity> {
+  public fetchWeatherStationByEntityIdAndSensor(entityId: number, sensor: string = null): Promise<WeatherStationEntity> {
     return this.repository
       .createQueryBuilder('ws')
       .leftJoinAndSelect('ws.lastData', 'wsd')
@@ -45,11 +45,11 @@ export class WeatherStationRepositoryService {
       .getOne();
   }
 
-  public fetchWeatherStationByHostAndSensor(host: string, sensor: number = 0): Promise<WeatherStationEntity> {
+  public fetchWeatherStationByEntityAndSensor(entityId: number, sensor: string = null): Promise<WeatherStationEntity> {
     return this.repository
       .createQueryBuilder('ws')
       .leftJoinAndSelect('ws.lastData', 'wsd')
-      .andWhere('ws.host = :host', { host })
+      .andWhere('ws.entityId = :entityId', { entityId })
       .andWhere('ws.sensor = :sensor', { sensor })
       .getOne();
   }

@@ -7,8 +7,12 @@ import { ObjectsModule } from '@ri/objects';
 import { getMetadataArgsStorage } from 'typeorm';
 
 import { environment } from '../environment';
+import { WeatherStationsSyncController } from './controllers/weather-stations-sync.controller';
 
 @Module({
+  controllers: [
+    WeatherStationsSyncController
+  ],
   imports: [
     ObjectsModule,
     TypeOrmModule.forRoot({
@@ -23,7 +27,6 @@ import { environment } from '../environment';
     }),
     WeatherStationsModule
   ],
-  controllers: [],
   providers: [],
 })
 export class WeatherStationsMicroserviceModule {}

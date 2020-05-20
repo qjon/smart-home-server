@@ -176,22 +176,4 @@ export class WeatherStationsController {
 
     return response;
   }
-
-  @Post('sync')
-  async sync2(@Req() req: Request,
-              @Body() body: { ip: string, sensor: number, data: WeatherStationSyncDataInterface[] }): Promise<any[]> {
-    this.logger.log(`REQ | API | ${req.url} | ${JSON.stringify(body)}`);
-
-    const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByHostAndSensor(body.ip, body.sensor || 0);
-
-    const entities: WeatherStationDataResponseItem[] = await this.weatherStationService.syncData(weatherStation, body.data);
-
-    const response: any[] = entities.map((value: WeatherStationDataResponseItem) => {
-      return { time: value.originalTimestamp, sync: !value.isValid || (value.isValid && value.entity.id > 0) };
-    });
-
-    this.logger.log(`RES | API | ${req.url}: ${JSON.stringify(response)}`);
-
-    return response;
-  }
 }

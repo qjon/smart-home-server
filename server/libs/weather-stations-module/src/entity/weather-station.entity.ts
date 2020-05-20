@@ -15,8 +15,8 @@ export class WeatherStationEntity {
   @Column({ length: 50, default: '' })
   name: string;
 
-  @Column({ default: 0 })
-  sensor: number;
+  @Column({ length: 50, default: null, nullable: true })
+  sensor: string;
 
   @OneToMany(type => WeatherStationDataEntity, data => data.weatherStation)
   data: WeatherStationDataEntity[];
