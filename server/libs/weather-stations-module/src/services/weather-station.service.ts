@@ -27,8 +27,9 @@ export class WeatherStationService {
   async syncData(weatherStation: WeatherStationEntity, data: WeatherStationSyncDataInterface[]): Promise<WeatherStationDataResponseItem[]> {
     const currentTimestamp = Math.ceil(Date.now() / 1000);
 
-    const wrongTimestampData: WeatherStationDataResponseItem[] = this.filterWrongTimestampData(data, currentTimestamp);
+    data = this.filterDuplicateTimestampData(data);
 
+    const wrongTimestampData: WeatherStationDataResponseItem[] = this.filterWrongTimestampData(data, currentTimestamp);
 
     const findEntity = async (wsd: WeatherStationSyncDataInterface): Promise<WeatherStationDataResponseItem> => {
       const timestamp = wsd.time;
@@ -91,5 +92,19 @@ export class WeatherStationService {
           isValid: false,
         };
       });
+  }
+
+  private filterDuplicateTimestampData(data: WeatherStationSyncDataInterface[]): WeatherStationSyncDataInterface[] {
+    const isTimestampUse: number[] = [];
+
+    return data.filter((item: WeatherStationSyncDataInterface) => {
+      if (isTimestampUse.indexOf(item.time) === -1) {
+        isTimestampUse.push(item.time);
+
+        return true;
+      } else {
+        return false;
+      }
+    })
   }
 }

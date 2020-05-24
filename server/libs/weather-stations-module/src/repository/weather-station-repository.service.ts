@@ -50,7 +50,7 @@ export class WeatherStationRepositoryService {
       .createQueryBuilder('ws')
       .leftJoinAndSelect('ws.lastData', 'wsd')
       .andWhere('ws.entityId = :entityId', { entityId })
-      .andWhere('ws.sensor = :sensor', { sensor })
+      .andWhere('ws.sensor = :sensor', { sensor: sensor || '0' })
       .getOne();
   }
 

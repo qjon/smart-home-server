@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { isEqual } from 'lodash';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { HaWeatherStationsServicesModule } from './ha-weather-stations-services.module';
@@ -23,7 +23,7 @@ export class HaWeatherStationAdapterService implements HomeAssistantAdapterModel
 
   private entitiesLastUpdate: { [key: string]: string } = {};
 
-  private uniqIds: Subject<Map<string, string>> = new Subject<Map<string, string>>();
+  private uniqIds: BehaviorSubject<Map<string, string>> = new BehaviorSubject<Map<string, string>>(new Map());
 
   private uniqIdMap: Map<string, string> = new Map<string, string>();
 

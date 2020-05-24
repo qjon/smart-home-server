@@ -41,10 +41,7 @@ export class WeatherStationsSyncController {
 
     const entity: ObjectEntity = await this.objectsEntityRepositoryService.fetchEntityObjectByIP(body.ip);
 
-    this.logger.log(entity.id);
     const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByEntityAndSensor(entity.id, body.sensor || null);
-
-    this.logger.log(weatherStation.id);
 
     const entities: WeatherStationDataResponseItem[] = await this.weatherStationService.syncData(weatherStation, body.data);
 
