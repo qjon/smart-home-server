@@ -30,6 +30,7 @@ export class ObjectEntity {
       id: this.id.toString(),
       name: this.name,
       uniqId: this.uniqId,
+      ip: this.ip,
     };
   }
 }

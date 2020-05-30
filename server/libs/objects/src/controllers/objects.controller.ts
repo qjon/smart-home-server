@@ -14,7 +14,7 @@ export class ObjectsController {
   async list(@Req() req: Request, @Query('uniqId') uniqId: string = ''): Promise<ObjectEntityDto[]> {
     this.logger.log(`REQ | API | ${req.url}`);
 
-    const response: ObjectEntityDto[] = await this.objectsEntityRepositoryService.fetchEntityByUniqId(uniqId.split(';'))
+    const response: ObjectEntityDto[] = await this.objectsEntityRepositoryService.fetchEntitiesByUniqId(uniqId.split(';'))
       .then((data: ObjectEntity[]) => {
         return data.map((objectEntity: ObjectEntity) => objectEntity.toJSON());
       });

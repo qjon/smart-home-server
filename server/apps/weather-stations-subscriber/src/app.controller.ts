@@ -1,12 +1,14 @@
 import { Controller, Inject, Logger } from '@nestjs/common';
 import { Ctx, MessagePattern, MqttContext, Payload } from '@nestjs/microservices';
 
-import { ObjectEntity, ObjectsEntityRepositoryService } from '@ri/objects';
+import { ObjectEntity, ObjectsEntityCreatorService, ObjectsEntityRepositoryService } from '@ri/objects';
 import {
   WeatherStationDataEntity,
   WeatherStationDataInterface,
-  WeatherStationDataRepositoryService, WeatherStationEntity,
+  WeatherStationDataRepositoryService,
+  WeatherStationEntity,
   WeatherStationRepositoryService,
+  WeatherStationService,
 } from '@ri/weather-stations-module';
 
 import { EntityManager } from 'typeorm';
@@ -14,6 +16,7 @@ import { EntityManager } from 'typeorm';
 import { HomeAssistantSubscriberService } from './app.service';
 import { InfoModuleModel } from './models/info-module.model';
 import { MainStatusConfigDataModel } from './models/main-status-config-data.model';
+import { ObjectEntityDataDto } from '@ri/objects/models/object-entity-data-dto';
 
 export enum WeatherStationTemperatureUnit {
   Celsius = 'C',
@@ -29,6 +32,27 @@ export interface WeatherStationData {
 export interface MqttWeatherStationPayload {
   Time: string;
   TempUnit: WeatherStationTemperatureUnit;
+}
+
+export interface WeatherStationMqttData {
+  uniqId: string;
+  sensor: number;
+  payload: {
+    time: number;
+    temp: string;
+    hum: string;
+  }
+}
+
+export interface WeatherStationSensorWelcomeData {
+  symbol: number;
+  name: string;
+}
+
+export interface WeatherStationWelcomeData {
+  uniqId: string;
+  sensors: WeatherStationSensorWelcomeData[];
+  ip: string;
 }
 
 @Controller()
@@ -49,16 +73,60 @@ export class HomeAssistantControllerController {
   @Inject(EntityManager)
   private entityManager: EntityManager;
 
+  @Inject(ObjectsEntityCreatorService)
+  private objectsEntityCreatorService: ObjectsEntityCreatorService;
+
+  @Inject(WeatherStationService)
+  private weatherStationService: WeatherStationService;
+
   private logger = new Logger(this.constructor.name);
 
-  @MessagePattern('tele/+/LWT')
-  async registerESP(@Payload() data: any, @Ctx() context: MqttContext) {
+  @MessagePattern('ws/+/SENSOR')
+  async wsSensor(@Payload() data: WeatherStationMqttData, @Ctx() context: MqttContext) {
     const deviceSymbol: string = this.homeAssistantSubscriberService.convertTopicToDeviceSymbol(context.getTopic());
     this.logger.log('--------------------------------------------------------------');
     this.logger.log(`MQTT - Welcome device message: ${deviceSymbol}`);
     this.logger.log('Data: ' + JSON.stringify(data));
+
+    const entity: ObjectEntity = await this.objectsEntityRepositoryService.fetchEntityByUniqId(data.uniqId);
+
+    try {
+      const sensorData: WeatherStationDataInterface = this.convertDataForSensor(data);
+
+      const weatherStation: WeatherStationEntity = await this.weatherStationRepositoryService.fetchWeatherStationByEntityIdAndSensor(entity.id, data.sensor.toString());
+
+      if (weatherStation) {
+        this.saveStationData(weatherStation, sensorData);
+        this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - (${weatherStation.sensor})`);
+      }
+    } catch (e) {
+      this.logger.error(e.toString());
+    }
+
+
     this.logger.log('--------------------------------------------------------------');
   }
+
+  @MessagePattern('ws/+/INFO')
+  async registerWS(@Payload() data: WeatherStationWelcomeData, @Ctx() context: MqttContext) {
+    const deviceSymbol: string = this.homeAssistantSubscriberService.convertTopicToDeviceSymbol(context.getTopic());
+    this.logger.log('--------------------------------------------------------------');
+    this.logger.log(`MQTT - Welcome device message: ${deviceSymbol}`);
+    this.logger.log('Data: ' + JSON.stringify(data));
+
+    try {
+      const entity: ObjectEntity = await this.createOrUpdateObjectEntity(data);
+
+      await Promise.all(data.sensors.map((sensor: WeatherStationSensorWelcomeData) => {
+        return this.weatherStationService.createWeatherStation(entity.id, sensor.symbol, sensor.name);
+      }));
+    } catch (e) {
+      this.logger.error(e.toString());
+    }
+
+    this.logger.log('--------------------------------------------------------------');
+  }
+
 
   @MessagePattern('tele/+/INFO2')
   async infoIP(@Payload() data: InfoModuleModel, @Ctx() context: MqttContext) {
@@ -110,6 +178,27 @@ export class HomeAssistantControllerController {
     this.logger.log('--------------------------------------------------------------');
   }
 
+  private async createOrUpdateObjectEntity(data: WeatherStationWelcomeData): Promise<ObjectEntity> {
+    let entity: ObjectEntity;
+
+    entity = await this.objectsEntityRepositoryService.fetchEntityByUniqId(data.uniqId);
+
+    if (entity) {
+      // update ip
+      entity.ip = data.ip;
+      return this.entityManager.save(entity);
+    } else {
+      const { uniqId, ip } = data;
+      const objectEntityData: ObjectEntityDataDto = {
+        uniqId,
+        name: uniqId,
+        ip,
+      };
+
+      return this.objectsEntityCreatorService.create(objectEntityData);
+    }
+  }
+
   private saveStationData(weatherStation: WeatherStationEntity, entityData: WeatherStationDataInterface): void {
     const entity: WeatherStationDataEntity = this.entityManager.create(WeatherStationDataEntity, entityData);
 
@@ -140,6 +229,14 @@ export class HomeAssistantControllerController {
       humidity: sensorData.Humidity,
       temperature: sensorData.Temperature,
       timestamp: timestampInSec,
+    };
+  }
+
+  private convertDataForSensor(data: WeatherStationMqttData): WeatherStationDataInterface | null {
+    return {
+      humidity: parseFloat(data.payload.hum),
+      temperature: parseFloat(data.payload.temp),
+      timestamp: data.payload.time,
     };
   }
 

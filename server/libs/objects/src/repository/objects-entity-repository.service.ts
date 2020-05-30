@@ -32,10 +32,17 @@ export class ObjectsEntityRepositoryService {
       .getOne();
   }
 
-  public fetchEntityByUniqId(uniqIdList: string[]): Promise<ObjectEntity[]> {
+  public fetchEntitiesByUniqId(uniqIdList: string[]): Promise<ObjectEntity[]> {
     return this.repository
       .createQueryBuilder('e')
       .andWhere('e.uniqId  IN (:...uniqIdList)', {uniqIdList})
       .getMany();
+  }
+
+  public fetchEntityByUniqId(uniqId: string): Promise<ObjectEntity> {
+    return this.repository
+      .createQueryBuilder('e')
+      .andWhere('e.uniqId = :uniqId', {uniqId})
+      .getOne();
   }
 }

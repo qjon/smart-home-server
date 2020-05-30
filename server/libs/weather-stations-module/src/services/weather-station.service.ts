@@ -7,6 +7,7 @@ import {
   WeatherStationSyncDataInterface,
 } from '../models/weather-station-data';
 import { WeatherStationDataRepositoryService } from '../repository/weather-station-data-repository.service';
+import { WeatherStationRepositoryService } from '../repository/weather-station-repository.service';
 
 export interface WeatherStationDataResponseItem {
   originalTimestamp: number;
@@ -17,11 +18,28 @@ export interface WeatherStationDataResponseItem {
 @Injectable()
 export class WeatherStationService {
 
+  @Inject(WeatherStationRepositoryService)
+  public weatherStationRepositoryService: WeatherStationRepositoryService;
+
   @Inject(WeatherStationDataRepositoryService)
   public weatherStationDataRepositoryService: WeatherStationDataRepositoryService;
 
   public constructor(private readonly entityManager: EntityManager) {
 
+  }
+
+  public async createWeatherStation(entityId: number, sensor: number, name: string): Promise<WeatherStationEntity> {
+    let ws: WeatherStationEntity;
+
+    ws = await this.weatherStationRepositoryService.fetchWeatherStationByEntityIdAndSensor(entityId, sensor.toString());
+
+    if (ws) {
+      return ws;
+    } else {
+      ws = this.entityManager.create<WeatherStationEntity>(WeatherStationEntity, {entityId, sensor: sensor.toString(), name});
+
+      return this.entityManager.save<WeatherStationEntity>(ws);
+    }
   }
 
   async syncData(weatherStation: WeatherStationEntity, data: WeatherStationSyncDataInterface[]): Promise<WeatherStationDataResponseItem[]> {

@@ -1,5 +1,5 @@
-export interface ObjectEntityDto {
+import { ObjectEntityDataDto } from './object-entity-data-dto';
+
+export interface ObjectEntityDto extends ObjectEntityDataDto {
   id: string;
-  name: string;
-  uniqId: string;
 }
