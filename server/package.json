@@ -15,7 +15,8 @@
     "start:smart-home-server": "mkdir -p dist/apps/smart-home-server && cp apps/smart-home-server/config.env dist/apps/smart-home-server && nest start smart-home-server --watch",
     "start:weather-stations-microservice": "mkdir -p dist/apps/weather-stations-microservice && cp apps/weather-stations-microservice/config.env dist/apps/weather-stations-microservice && nest start weather-stations-microservice --watch",
     "start:weather-stations-subscriber": "mkdir -p dist/apps/weather-stations-subscriber && cp apps/weather-stations-subscriber/config.env dist/apps/weather-stations-subscriber && nest start weather-stations-subscriber --watch",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test:weather-stations-microservice:e2e": "jest --config ./apps/weather-stations-microservice/test/jest-e2e.json --detectOpenHandles"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.4.2",

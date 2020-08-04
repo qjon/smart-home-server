@@ -1,5 +1,5 @@
 import { Controller, Inject, Logger } from '@nestjs/common';
-import { Ctx, MessagePattern, MqttContext, Payload } from '@nestjs/microservices';
+import { ClientProxy, Ctx, MessagePattern, MqttContext, Payload, Transport } from '@nestjs/microservices';
 
 import { ObjectEntity, ObjectsEntityCreatorService, ObjectsEntityRepositoryService } from '@ri/objects';
 import {
@@ -79,13 +79,16 @@ export class HomeAssistantControllerController {
   @Inject(WeatherStationService)
   private weatherStationService: WeatherStationService;
 
+  @Inject('WS_MQTT_SERVICE')
+  private client: ClientProxy;
+
   private logger = new Logger(this.constructor.name);
 
   @MessagePattern('ws/+/SENSOR')
   async wsSensor(@Payload() data: WeatherStationMqttData, @Ctx() context: MqttContext) {
     const deviceSymbol: string = this.homeAssistantSubscriberService.convertTopicToDeviceSymbol(context.getTopic());
     this.logger.log('--------------------------------------------------------------');
-    this.logger.log(`MQTT - Welcome device message: ${deviceSymbol}`);
+    this.logger.log(`MQTT - Sensor data: ${deviceSymbol}`);
     this.logger.log('Data: ' + JSON.stringify(data));
 
     const entity: ObjectEntity = await this.objectsEntityRepositoryService.fetchEntityByUniqId(data.uniqId);
@@ -98,11 +101,12 @@ export class HomeAssistantControllerController {
       if (weatherStation) {
         this.saveStationData(weatherStation, sensorData);
         this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - (${weatherStation.sensor})`);
+
+        // this.client.emit(`ws/${data.uniqId}/cmd/saved`, {time: data.payload.time, sensor: data.sensor});
       }
     } catch (e) {
-      this.logger.error(e.toString());
+      this.logger.warn(`Data already saved for ${data.payload.time}`);
     }
-
 
     this.logger.log('--------------------------------------------------------------');
   }
@@ -168,7 +172,7 @@ export class HomeAssistantControllerController {
 
         if (weatherStation) {
 
-          this.saveStationData(weatherStation, sensorData);
+          await this.saveStationData(weatherStation, sensorData);
           this.logger.log(`MQTT - sensor data saved for device: ${weatherStation.name} - (${weatherStation.sensor})`);
         }
       } catch (e) {
@@ -199,14 +203,17 @@ export class HomeAssistantControllerController {
     }
   }
 
-  private saveStationData(weatherStation: WeatherStationEntity, entityData: WeatherStationDataInterface): void {
+  private saveStationData(weatherStation: WeatherStationEntity, entityData: WeatherStationDataInterface): Promise<any> {
     const entity: WeatherStationDataEntity = this.entityManager.create(WeatherStationDataEntity, entityData);
 
     entity.weatherStation = weatherStation;
 
     weatherStation.lastData = entity;
 
-    this.entityManager.save([entity, weatherStation]);
+    return this.entityManager.save([entity, weatherStation])
+      .catch(() => {
+        this.logger.warn(`Data already saved for ${entityData.timestamp}`);
+      });
   }
 
   private getDataSensorSymbols(data: MqttWeatherStationPayload): string[] {

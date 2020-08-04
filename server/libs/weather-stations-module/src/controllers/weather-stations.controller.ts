@@ -1,16 +1,15 @@
 import {
-  Body,
   Controller,
   Get,
   Inject,
   Logger,
-  Param, Post, Query,
+  Param, Query,
   Req,
   Request,
 } from '@nestjs/common';
 import { WeatherStationRepositoryService } from '../repository/weather-station-repository.service';
 import { WeatherStationDataRepositoryService } from '../repository/weather-station-data-repository.service';
-import { WeatherStationDataResponseItem, WeatherStationService } from '../services/weather-station.service';
+import { WeatherStationService } from '../services/weather-station.service';
 import { WeatherStationDto } from '../models/weather-station-dto';
 import {
   WeatherStationDataDto, WeatherStationDayAvgDataDto,
@@ -18,11 +17,8 @@ import {
   WeatherStationYearAvgDataDto,
 } from '../models/weather-station-data-dto';
 import { WeatherStationDataEntity } from '../entity/weather-station-data.entity';
-import { WeatherStationSyncDataInterface } from '../models/weather-station-data';
-import { WeatherStationEntity } from '../entity/weather-station.entity';
 
 @Controller('/api/weather-stations')
-// @UseFilters(new ApiExceptionFilters())
 export class WeatherStationsController {
 
   protected logger = new Logger(WeatherStationsController.name);

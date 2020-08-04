@@ -1,8 +1,9 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 
-console.log(process.argv);
 const envConfig = dotenv.parse(fs.readFileSync(__dirname + '/config.env'));
+
+const runner: string = process.argv[1].split('/').pop();
 
 export const environment = {
   database: {
@@ -10,7 +11,7 @@ export const environment = {
     port: envConfig.DB_PORT,
     user: envConfig.DB_USER,
     password: envConfig.DB_PASS,
-    name: envConfig.DB_SCHEMA,
+    name: envConfig.DB_SCHEMA + ((runner === 'jest') ? '_test': ''),
   },
   server: {
     port: envConfig.SERVER_PORT,

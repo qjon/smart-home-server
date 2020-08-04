@@ -6,10 +6,23 @@ import { HomeAssistantControllerController } from './app.controller';
 import { WeatherStationsModule } from '@ri/weather-stations-module';
 import { environment } from '../environment';
 import { ObjectsModule } from '@ri/objects';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     ObjectsModule,
+    ClientsModule.register([
+      {
+        name: 'WS_MQTT_SERVICE',
+        transport: Transport.MQTT,
+        options: {
+          hostname: environment.mqtt.host,
+          port: parseInt(environment.mqtt.port, 10),
+          username: environment.mqtt.user,
+          password: environment.mqtt.password,
+        },
+      },
+    ]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: environment.database.host,
