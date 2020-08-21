@@ -1,34 +1,52 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { first, map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { WeatherStationDto } from '../../interfaces/weather-station-dto';
 import { WeatherStationStateConnectorInterface } from '../../interfaces/weather-station-state-connector.interface';
 import { WeatherStationsSelectors } from '../weather-stations-selectors';
 import { WeatherStationsStoreModule } from '../weather-stations-store.module';
 import {
-  WeatherStationLoadAggregateDataForDayAction, WeatherStationLoadAggregateDataForWeekAction,
-  WeatherStationLoadDataForMonthAction,
-  WeatherStationLoadDataForYearAction,
+  WeatherStationCompareAddAction,
+  WeatherStationCompareEndAction, WeatherStationCompareRemoveAction,
+  WeatherStationCompareStartAction,
+  WeatherStationLoadAggregateDataAction,
   WeatherStationsLoadAction,
 } from '../weather-stations-actions';
 import { WeatherStationDataDto } from '../../interfaces/weather-station-data-dto';
+import { ChartType } from '../../interfaces/weather-station-chart-type';
+import { CompareWeatherStationButton } from '../../interfaces/compare-weather-station-button';
+import { InputChartDataSeries } from '../../services/chart/weather-station-chart-data-parser.service';
 
 @Injectable({
   providedIn: WeatherStationsStoreModule,
 })
 export class WeatherStationsStateConnectorService implements WeatherStationStateConnectorInterface {
-  public current$: Observable<WeatherStationDto>;
+  public compareList$: Observable<InputChartDataSeries[]>;
 
-  public list$: Observable<WeatherStationDto[]>;
+  public compareButtonList$: Observable<CompareWeatherStationButton[]>;
+
+  public current$: Observable<WeatherStationDto>;
 
   public data$: Observable<WeatherStationDataDto[]>;
 
-  private weatherStation: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  public list$: Observable<WeatherStationDto[]>;
+
+  private weatherStation: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   constructor(private store: Store<any>) {
+
+    this.compareButtonList$ = this.store
+      .pipe(
+        select(WeatherStationsSelectors.compareButtonList),
+      );
+
+    this.compareList$ = this.store
+      .pipe(
+        select(WeatherStationsSelectors.compareList),
+      );
 
     this.list$ = this.store
       .pipe(
@@ -38,6 +56,7 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     this.data$ = this.store
       .pipe(
         select(WeatherStationsSelectors.data),
+        shareReplay()
       );
 
     this.current$ = combineLatest(
@@ -46,7 +65,7 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
     )
       .pipe(
         map(([weatherStationId, items]) => weatherStationId),
-        switchMap((weatherStationId: number) => this.store
+        switchMap((weatherStationId: string) => this.store
           .pipe(
             select(WeatherStationsSelectors.current, { weatherStationId }),
             first(),
@@ -55,45 +74,49 @@ export class WeatherStationsStateConnectorService implements WeatherStationState
       );
   }
 
+  public addWeatherStationToCompare(weatherStationId: string, chartType: ChartType, date: Date): void {
+    this.store.dispatch(new WeatherStationCompareAddAction({ weatherStationId, type: chartType, date }));
+  }
+
   public loadList(): void {
     this.store.dispatch(new WeatherStationsLoadAction());
   }
 
+  public loadAggregateData(type: ChartType.Day | ChartType.Week, year: number, month: number, day: number);
+  public loadAggregateData(type: ChartType.Month, year: number, month: number);
+  public loadAggregateData(type: ChartType.Year, year: number);
+  public loadAggregateData(type: ChartType, year: number, month?: number, day?: number): void {
+    let action: WeatherStationLoadAggregateDataAction;
 
-  public loadAggregateDataForDay(year: number, month: number, day: number): void {
-    this.store.dispatch(new WeatherStationLoadAggregateDataForDayAction({
-      weatherStationId: this.weatherStation.getValue(),
-      year,
-      month,
-      day
-    }));
+    switch (type) {
+      case ChartType.Day:
+      case ChartType.Week:
+        action = new WeatherStationLoadAggregateDataAction(type, this.weatherStation.getValue(), year, month, day);
+        break;
+      case ChartType.Month:
+        action = new WeatherStationLoadAggregateDataAction(ChartType.Month, this.weatherStation.getValue(), year, month);
+        break;
+      case ChartType.Year:
+        action = new WeatherStationLoadAggregateDataAction(ChartType.Year, this.weatherStation.getValue(), year);
+        break;
+    }
+
+    this.store.dispatch(action);
   }
 
-  public loadAggregateDataForWeek(year: number, month: number, day: number): void {
-    this.store.dispatch(new WeatherStationLoadAggregateDataForWeekAction({
-      weatherStationId: this.weatherStation.getValue(),
-      year,
-      month,
-      day
-    }));
+  public removeWeatherStationFromCompare(weatherStationId: string): void {
+    this.store.dispatch(new WeatherStationCompareRemoveAction({weatherStationId}));
   }
 
-  public loadDataForMonth(year: number, month: number): void {
-    this.store.dispatch(new WeatherStationLoadDataForMonthAction({
-      weatherStationId: this.weatherStation.getValue(),
-      year,
-      month,
-    }));
-  }
-
-  public loadDataForYear(year: number): void {
-    this.store.dispatch(new WeatherStationLoadDataForYearAction({
-      weatherStationId: this.weatherStation.getValue(),
-      year,
-    }));
-  }
-
-  public setWeatherStationId(weatherStationId: number): void {
+  public setWeatherStationId(weatherStationId: string): void {
     this.weatherStation.next(weatherStationId);
+  }
+
+  public endCompare(): void {
+    this.store.dispatch(new WeatherStationCompareEndAction());
+  }
+
+  public initCompare(weatherStationId: string): void {
+    this.store.dispatch(new WeatherStationCompareStartAction({weatherStationId}));
   }
 }

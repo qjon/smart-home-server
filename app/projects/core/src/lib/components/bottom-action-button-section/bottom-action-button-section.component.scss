@@ -1,0 +1,9 @@
+.bottom-actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1em 0;
+
+  ::ng-deep > * {
+    margin-left: 1em;
+  }
+}

@@ -1,0 +1,6 @@
+<sh-weather-station-compare-buttons [isCompare]="isCompare"
+                                    [chartType]="weatherStationChartTypeAndPeriodService.chartType$ | async"
+                                    [date]="weatherStationChartTypeAndPeriodService.date$ | async"
+                                    (toggleCompare)="toggleCompare($event)"></sh-weather-station-compare-buttons>
+
+<sh-weather-station-chart [chartObject]="chart"></sh-weather-station-chart>

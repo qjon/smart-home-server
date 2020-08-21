@@ -1,2 +1,10 @@
-<sh-weather-station-item *ngFor="let item of (list$ | async); trackBy: trackBy;"
-                         [weatherStation]="item"></sh-weather-station-item>
+<sh-core-main-action-button-section [hasBackButton]="false" title="Weather Stations">
+  <button mat-raised-button color="primary" (click)="refresh()">
+    <mat-icon>refresh</mat-icon>
+    Refresh
+  </button>
+</sh-core-main-action-button-section>
+<div class="sensor-list">
+  <sh-weather-station-item *ngFor="let item of (list$ | async); trackBy: trackBy;"
+                           [weatherStation]="item"></sh-weather-station-item>
+</div>

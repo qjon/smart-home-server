@@ -1,0 +1,13 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "moduleNameMapper": {
+    "@ri/objects": "<rootDir>/../../../libs/objects/src",
+    "@ri/weather-stations-module": "<rootDir>/../../../libs/weather-stations-module/src"
+  },
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  }
+}

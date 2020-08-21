@@ -32,6 +32,23 @@ The simplest way to use that library is to create _Wrapper_ module, which will i
     })
     export class WeatherStationsWrapperModule { }
     
+## Configuration
+
+Create service _WeatherStationsWrapperConfigurationService_ in your module and implements interface
+
+    export interface WeatherStationConfigurationModel {
+      allowDetails: boolean;
+      allowCompare: boolean;
+      additionalPeriodOfTime: ChartType[];
+    }
+  
+Then add it to your providers:
+
+    providers: [
+        ...,
+        { provide: WEATHER_STATION_CONFIGURATION, useClass: WeatherStationsWrapperConfigurationService },
+    ],
+  
 ## API
 
 To use this module with your ecosystem you need provide data for it.
@@ -111,6 +128,14 @@ That's all now you are able to enter weather station module.
 
 
 # Change Log
+
+## v1.3.0
+
+- allow to refresh all device data
+- update dependency _@rign/sh-core to v1.1.0_
+- change displaying charts - now you can see hours/days without input data (if some data missing)
+- possibility to compare up to three Weather Station data
+- weather station configuration
 
 ## v1.2.0
 

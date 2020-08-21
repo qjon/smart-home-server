@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+
 import { CoreModule } from '@rign/sh-core';
 
 @NgModule({
@@ -7,6 +8,7 @@ import { CoreModule } from '@rign/sh-core';
   imports: [
     CommonModule,
     CoreModule,
-  ]
+  ],
+  providers: [DatePipe]
 })
 export class WeatherStationsServicesModule { }

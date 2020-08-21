@@ -1,5 +1,64 @@
 {
-  "language": "ts",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/smart-home-server/src",
+  "monorepo": true,
+  "root": "apps/smart-home-server",
+  "compilerOptions": {
+    "tsConfigPath": "apps/smart-home-server/tsconfig.app.json",
+    "webpack": true
+  },
+  "projects": {
+    "smart-home-server": {
+      "type": "application",
+      "root": "apps/smart-home-server",
+      "entryFile": "main",
+      "sourceRoot": "apps/smart-home-server/src",
+      "compilerOptions": {
+        "webpack": true,
+        "tsConfigPath": "apps/smart-home-server/tsconfig.app.json"
+      }
+    },
+    "weather-stations-microservice": {
+      "type": "application",
+      "root": "apps/weather-stations-microservice",
+      "entryFile": "main",
+      "sourceRoot": "apps/weather-stations-microservice/src",
+      "compilerOptions": {
+        "webpack": true,
+        "tsConfigPath": "apps/weather-stations-microservice/tsconfig.app.json",
+        "assets": [
+          "./config.env"
+        ]
+      }
+    },
+    "weather-stations-module": {
+      "type": "library",
+      "root": "libs/weather-stations-module",
+      "entryFile": "index",
+      "sourceRoot": "libs/weather-stations-module/src",
+      "compilerOptions": {
+        "webpack": true,
+        "tsConfigPath": "libs/weather-stations-module/tsconfig.lib.json"
+      }
+    },
+    "weather-stations-subscriber": {
+      "type": "application",
+      "root": "apps/weather-stations-subscriber",
+      "entryFile": "main",
+      "sourceRoot": "apps/weather-stations-subscriber/src",
+      "compilerOptions": {
+        "webpack": true,
+        "tsConfigPath": "apps/weather-stations-subscriber/tsconfig.app.json"
+      }
+    },
+    "objects": {
+      "type": "library",
+      "root": "libs/objects",
+      "entryFile": "index",
+      "sourceRoot": "libs/objects/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/objects/tsconfig.lib.json"
+      }
+    }
+  }
 }

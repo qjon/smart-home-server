@@ -1,13 +1,32 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "target": "es6",
-    "outDir": "../dist/server",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
     "baseUrl": "./",
-    "typeRoots": []
+    "incremental": true,
+    "paths": {
+      "@ri/weather-stations-module": [
+        "libs/weather-stations-module/src"
+      ],
+      "@ri/weather-stations-module/*": [
+        "libs/weather-stations-module/src/*"
+      ],
+      "@ri/objects": [
+        "libs/objects/src"
+      ],
+      "@ri/objects/*": [
+        "libs/objects/src/*"
+      ]
+    }
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
