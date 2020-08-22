@@ -8,6 +8,8 @@ import { getMetadataArgsStorage } from 'typeorm';
 
 import { environment } from '../environment';
 import { WeatherStationsSyncController } from './controllers/weather-stations-sync.controller';
+import { WeatherStationsWorkersModule } from './workers/weather-stations-workers.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   controllers: [
@@ -15,6 +17,13 @@ import { WeatherStationsSyncController } from './controllers/weather-stations-sy
   ],
   imports: [
     ObjectsModule,
+    MailerModule.forRoot({
+      transport: 'smtps://' + environment.mail.username + ':' + environment.mail.password + '@' + environment.mail.smtp,
+      defaults: {
+        from: environment.mail.from,
+        to: environment.mail.to,
+      },
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: environment.database.host,
@@ -25,7 +34,8 @@ import { WeatherStationsSyncController } from './controllers/weather-stations-sy
       entities: getMetadataArgsStorage().tables.map(tbl => tbl.target),
       synchronize: true,
     }),
-    WeatherStationsModule
+    WeatherStationsModule,
+    WeatherStationsWorkersModule,
   ],
   providers: [],
 })

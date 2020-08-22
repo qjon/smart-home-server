@@ -16,4 +16,15 @@ export const environment = {
   server: {
     port: envConfig.SERVER_PORT,
   },
+  mail: {
+    username: envConfig.MAIL_USERNAME,
+    password: envConfig.MAIL_PASSWORD,
+    smtp: envConfig.MAIL_SMTP,
+    from: envConfig.MAIL_FROM,
+    to: envConfig.MAIL_TO,
+  },
+  notifications: {
+    send:envConfig.SEND_NOTIFICATIONS,
+    exclude: envConfig.EXCLUDE_DEVICES.split('|') || [],
+  }
 };
