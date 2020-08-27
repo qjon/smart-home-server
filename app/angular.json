@@ -160,7 +160,7 @@
         }
       }
     },
-    "weather-station": {
+    "weather-stations": {
       "projectType": "library",
       "root": "projects/weather-stations",
       "sourceRoot": "projects/weather-stations/src",

@@ -4,6 +4,10 @@ Simple Angular application to control some SonOff devices and read Weather Stati
 
 ## Change Log
 
+### v3.0.1
+
+- fix build configuration for weather-stations project 
+
 ### v3.0.0
 
 - add possibility to use more than one sensor on Weather Station device
