@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { WeatherStationDataEntity } from '../entity/weather-station-data.entity';
 import {
   WeatherStationDayAvgDataDto,
@@ -114,6 +114,8 @@ export class WeatherStationDataRepositoryService {
     return queryBuilder
       .addSelect('AVG(humidity)', 'avgHumidity')
       .addSelect('AVG(temperature)', 'avgTemperature')
+      .addSelect('AVG(dewPoint)', 'avgDewPoint')
+      .addSelect('AVG(pressure)', 'avgPressure')
       .andWhere('wsd.weatherStationId = :weatherStationId', { weatherStationId })
       .andWhere('wsd.timestamp >= :from', { from })
       .andWhere('wsd.timestamp < :to', { to })

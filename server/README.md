@@ -10,6 +10,12 @@ It contains three applications:
 
 ## Change Log
 
+### v3.2.0
+
+- change database schema, add fields isDev (dev entity), dewPoint, pressure
+- change API: return dewPoint and pressure
+- change list API: now by default return all entities that are not marked as isDev, if you want to get all WS entities, you need add query param "dev" equal "true" 
+
 ### v3.1.0
 
 - email notification will be send when Weather Station device not send proper data for one hour

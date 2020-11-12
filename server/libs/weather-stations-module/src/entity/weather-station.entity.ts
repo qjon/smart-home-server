@@ -18,6 +18,9 @@ export class WeatherStationEntity {
   @Column({ length: 50, default: null, nullable: true })
   sensor: string;
 
+  @Column({ default: false })
+  isDev: boolean;
+
   @OneToMany(type => WeatherStationDataEntity, data => data.weatherStation)
   data: WeatherStationDataEntity[];
 
@@ -32,6 +35,8 @@ export class WeatherStationEntity {
       humidity: this.lastData ? this.lastData.humidity : null,
       temperature: this.lastData ? this.lastData.temperature : null,
       timestamp: this.lastData ? this.lastData.timestamp * 1000 : null,
+      dewPoint: this.lastData ? this.lastData.dewPoint : null,
+      pressure: this.lastData ? this.lastData.pressure : null,
     };
   }
 }

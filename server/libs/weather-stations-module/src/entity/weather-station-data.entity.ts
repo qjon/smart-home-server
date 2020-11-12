@@ -17,6 +17,12 @@ export class WeatherStationDataEntity {
   @Column({ type: 'double', precision: 4, scale: 2 })
   humidity: number;
 
+  @Column({ type: 'double', precision: 4, scale: 2, default: null })
+  dewPoint: number;
+
+  @Column({ type: 'double', precision: 6, scale: 2, default: null })
+  pressure: number;
+
   @Column({ nullable: true })
   private weatherStationId: number;
 
@@ -29,6 +35,8 @@ export class WeatherStationDataEntity {
       timestamp: this.timestamp * 1000,
       humidity: this.humidity,
       temperature: this.temperature,
+      dewPoint: this.dewPoint,
+      pressure: this.pressure,
     };
   }
 }

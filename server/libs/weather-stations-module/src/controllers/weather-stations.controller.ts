@@ -33,19 +33,24 @@ export class WeatherStationsController {
   protected weatherStationService: WeatherStationService;
 
   @Get()
-  async list(@Req() req: Request, @Query('entityId') entityId: string): Promise<WeatherStationDto[]> {
+  async list(@Req() req: Request, @Query('entityId') entityId: string, @Query('dev') dev: string): Promise<WeatherStationDto[]> {
     this.logger.log(`REQ | API | ${req.url}`);
     let response: WeatherStationDto[] = [];
+    const alsoDev: boolean = dev === 'true';
 
     if (Boolean(entityId)) {
       response = await this.weatherStationRepositoryService.fetchByEntityIdWithLastData(entityId.split(';').map(x => parseInt(x, 10)))
         .then((data) => {
-          return data.map(ws => ws.toJSON());
+          return data
+            .filter(ws => alsoDev ? true : !ws.isDev)
+            .map(ws => ws.toJSON());
         });
     } else {
       response = await this.weatherStationRepositoryService.fetchAllWithLastData()
         .then((data) => {
-          return data.map(ws => ws.toJSON());
+          return data
+            .filter(ws => alsoDev ? true : !ws.isDev)
+            .map(ws => ws.toJSON());
         });
     }
 
@@ -87,6 +92,8 @@ export class WeatherStationsController {
             timestamp: (new Date(year, month, wsd.day)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
+            dewPoint: wsd.avgDewPoint ? parseFloat(wsd.avgDewPoint.toFixed(2)) : null,
+            pressure: wsd.avgPressure ? parseFloat(wsd.avgPressure.toFixed(2)) : null,
           };
         });
       });
@@ -110,6 +117,8 @@ export class WeatherStationsController {
             timestamp: (new Date(year, wsd.month - 1, 1)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
+            dewPoint: wsd.avgDewPoint ? parseFloat(wsd.avgDewPoint.toFixed(2)) : null,
+            pressure: wsd.avgPressure ? parseFloat(wsd.avgPressure.toFixed(2)) : null,
           };
         });
       });
@@ -139,6 +148,8 @@ export class WeatherStationsController {
             timestamp: (new Date(year, wsd.month - 1, wsd.day, 0, 0, 0)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
+            dewPoint: wsd.avgDewPoint ? parseFloat(wsd.avgDewPoint.toFixed(2)) : null,
+            pressure: wsd.avgPressure ? parseFloat(wsd.avgPressure.toFixed(2)) : null,
           };
         });
       });
@@ -164,6 +175,8 @@ export class WeatherStationsController {
             timestamp: (new Date(year, month - 1, day, wsd.hour, 0, 0)).getTime(),
             temperature: parseFloat(wsd.avgTemperature.toFixed(2)),
             humidity: parseFloat(wsd.avgHumidity.toFixed(2)),
+            dewPoint: wsd.avgDewPoint ? parseFloat(wsd.avgDewPoint.toFixed(2)) : null,
+            pressure: wsd.avgPressure ? parseFloat(wsd.avgPressure.toFixed(2)) : null,
           };
         });
       });
