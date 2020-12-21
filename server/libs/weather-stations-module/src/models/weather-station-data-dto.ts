@@ -3,11 +3,15 @@ export interface WeatherStationDataDto {
   timestamp: number;
   temperature: number;
   humidity: number;
+  dewPoint: number;
+  pressure: number;
 }
 
 export interface WeatherStationAvgDataDto {
   avgHumidity: number;
   avgTemperature: number;
+  avgDewPoint: number;
+  avgPressure: number;
 }
 
 export interface WeatherStationDayAvgDataDto extends WeatherStationAvgDataDto{

@@ -41,6 +41,8 @@ export interface WeatherStationMqttData {
     time: number;
     temp: string;
     hum: string;
+    dewPoint?: string;
+    pressure?: string;
   }
 }
 
@@ -236,6 +238,8 @@ export class HomeAssistantControllerController {
       humidity: sensorData.Humidity,
       temperature: sensorData.Temperature,
       timestamp: timestampInSec,
+      dewPoint: sensorData.DewPoint,
+      pressure: null,
     };
   }
 
@@ -244,6 +248,8 @@ export class HomeAssistantControllerController {
       humidity: parseFloat(data.payload.hum),
       temperature: parseFloat(data.payload.temp),
       timestamp: data.payload.time,
+      dewPoint: data.payload.dewPoint ? Math.round(parseFloat(data.payload.dewPoint) * 100) / 100 : null,
+      pressure: data.payload.pressure ? parseFloat(data.payload.pressure) : null,
     };
   }
 

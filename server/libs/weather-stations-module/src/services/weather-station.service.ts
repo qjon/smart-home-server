@@ -55,6 +55,8 @@ export class WeatherStationService {
       const entityData: WeatherStationDataInterface = {
         humidity: parseFloat(wsd.hum),
         temperature: parseFloat(wsd.temp),
+        dewPoint: parseFloat(wsd.dewPoint),
+        pressure: parseFloat(wsd.pressure),
         timestamp,
       };
 

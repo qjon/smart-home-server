@@ -11,6 +11,20 @@ export class ObjectsEntityRepositoryService {
 
   }
 
+  public fetchEntityObjectById(id: number): Promise<ObjectEntity> {
+    return this.repository
+      .createQueryBuilder('e')
+      .andWhere('e.id = :id', {id})
+      .getOne();
+  }
+
+  public fetchEntityObjectsByIds(ids: number[]): Promise<ObjectEntity[]> {
+    return this.repository
+      .createQueryBuilder('e')
+      .andWhere('e.id  IN (:...ids)', {ids})
+      .getMany();
+  }
+
   public fetchEntityObjectByIP(ip: string): Promise<ObjectEntity> {
     return this.repository
       .createQueryBuilder('e')

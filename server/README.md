@@ -10,6 +10,16 @@ It contains three applications:
 
 ## Change Log
 
+### v3.2.0
+
+- change database schema, add fields isDev (dev entity), dewPoint, pressure
+- change API: return dewPoint and pressure
+- change list API: now by default return all entities that are not marked as isDev, if you want to get all WS entities, you need add query param "dev" equal "true" 
+
+### v3.1.0
+
+- email notification will be send when Weather Station device not send proper data for one hour
+
 ### v3.0.0
 
 - feat. create _weather-stations-microservice_ application
@@ -46,6 +56,14 @@ Described in main README.md file.
     DB_SCHEMA=....
     # Server
     SERVER_PORT=8080
+    # Mail
+    MAIL_USERNAME=...
+    MAIL_PASSWORD=...
+    MAIL_SMTP=...
+    MAIL_FROM=...
+    MAIL_TO=...
+    SEND_NOTIFICATIONS=true // false - mail will not be send
+    EXCLUDE_DEVICES='192.168.100.211|08A3A9_status' // devices ip or uniqId seperated by "|"
     
 - now you can run local version of that server:
 

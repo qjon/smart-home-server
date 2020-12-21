@@ -4,4 +4,6 @@ export interface WeatherStationDto {
   temperature: number;
   humidity: number;
   timestamp: number;
+  pressure: number;
+  dewPoint: number;
 }
